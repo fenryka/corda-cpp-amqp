@@ -30,6 +30,11 @@ operator << (std::ostream& stream, pn_data_t * data_) {
                 stream << " " << std::string (str.start, str.size);
                 break;
             }
+        case PN_INT :
+            {
+                stream << " " << pn_data_get_int (data_);
+                break;
+            }
         case PN_BOOL :
             {
                 stream << " " << (pn_data_get_bool (data_) ? "true" : "false");

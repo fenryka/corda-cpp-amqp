@@ -151,3 +151,88 @@ namespace amqp {
 }
 
 /******************************************************************************/
+
+namespace amqp {
+
+    class ChoiceDescriptor : public AMQPDescriptor {
+        public :
+            ChoiceDescriptor() : AMQPDescriptor() { }
+
+            ChoiceDescriptor(const std::string & symbol_, int val_)
+                : AMQPDescriptor(symbol_, val_)
+            { }
+
+            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+    };
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
+    class ReferencedObjectDescriptor : public AMQPDescriptor {
+        public :
+            ReferencedObjectDescriptor() : AMQPDescriptor() { }
+
+            ReferencedObjectDescriptor(const std::string & symbol_, int val_)
+                : AMQPDescriptor(symbol_, val_)
+            { }
+
+            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+    };
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
+    class TransformSchemaDescriptor : public AMQPDescriptor {
+        public :
+            TransformSchemaDescriptor() : AMQPDescriptor() { }
+
+            TransformSchemaDescriptor(const std::string & symbol_, int val_)
+                : AMQPDescriptor(symbol_, val_)
+            { }
+
+            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+    };
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
+    class TransformElementDescriptor : public AMQPDescriptor {
+        public :
+            TransformElementDescriptor() : AMQPDescriptor() { }
+
+            TransformElementDescriptor(const std::string & symbol_, int val_)
+                : AMQPDescriptor(symbol_, val_)
+            { }
+
+            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+    };
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
+    class TransformElementKeyDescriptor : public AMQPDescriptor {
+        public :
+            TransformElementKeyDescriptor() : AMQPDescriptor() { }
+
+            TransformElementKeyDescriptor(const std::string & symbol_, int val_)
+                : AMQPDescriptor(symbol_, val_)
+            { }
+
+            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+    };
+
+}
+
+/******************************************************************************/

@@ -23,10 +23,11 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     }
 
     pn_data_next(data_);
-
+/*
     if (pn_data_type(data_) != PN_LIST) {
         throw std::runtime_error ("Envelope should be list");
     }
+    */
 }
 
 /******************************************************************************/
@@ -83,7 +84,6 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
          * The scehama
          */
         dispatchDescribed (data_);
-
 
         pn_data_next(data_);
 
@@ -277,7 +277,69 @@ CompositeDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::AMQPDescribed>
 amqp::
 RestrictedDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
     std::cout << "RESTRICTED " << data_ << std::endl;
+
+    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::AMQPDescribed>
+amqp::
+ChoiceDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
+    std::cout << "CHOICE " << data_ << std::endl;
+
+    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::AMQPDescribed>
+amqp::
+ReferencedObjectDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
+    std::cout << "REFERENCED OBJECT " << data_ << std::endl;
+
+    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::AMQPDescribed>
+amqp::
+TransformSchemaDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
+    std::cout << "TRANSFORM SCHEMA " << data_ << std::endl;
+
+    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::AMQPDescribed>
+amqp::
+TransformElementDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
+    std::cout << "TRANFORM ELEMENT " << data_ << std::endl;
+
+    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::AMQPDescribed>
+amqp::
+TransformElementKeyDescriptor::build(pn_data_t * data_) const {
+    validateAndNext(data_);
+
+    std::cout << "TRANSFORM ELEMENT KEY" << data_ << std::endl;
 
     return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
 }

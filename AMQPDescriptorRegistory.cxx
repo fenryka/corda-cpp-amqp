@@ -69,16 +69,34 @@ namespace amqp {
             6L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<RestrictedDescriptor> (
                     RestrictedDescriptor ("RESTRICTED_TYPE", internal::RESTRICTED_TYPE))
+        },
+        {
+            7L | internal::DESCRIPTOR_TOP_32BITS,
+            std::make_shared<ChoiceDescriptor> (
+                    ChoiceDescriptor ("CHOICE", internal::CHOICE))
+        },
+        {
+            8L | internal::DESCRIPTOR_TOP_32BITS,
+            std::make_shared<ReferencedObjectDescriptor> (
+                    ReferencedObjectDescriptor ("REFERENCED_OBJECT", internal::REFERENCED_OBJECT))
+        },
+        {
+            9L | internal::DESCRIPTOR_TOP_32BITS,
+            std::make_shared<TransformSchemaDescriptor> (
+                    TransformSchemaDescriptor ("TRANSFORM_SCHEMA", internal::TRANSFORM_SCHEMA))
+        },
+        {
+            10L | internal::DESCRIPTOR_TOP_32BITS,
+            std::make_shared<TransformElementDescriptor> (
+                TransformElementDescriptor ("TRANSFORM_ELEMENT", internal::TRANSFORM_ELEMENT))
+        },
+        {
+            11L | internal::DESCRIPTOR_TOP_32BITS,
+            std::make_shared<TransformElementKeyDescriptor> (
+                TransformElementKeyDescriptor ("TRANSFORM_ELEMENT_KEY", internal::TRANSFORM_ELEMENT_KEY))
         }
     };
 
-    /*
-    {  7L | DESCRIPTOR_TOP_32BITS, AMQPDescriptor ("CHOICE", 7) },
-    {  8L | DESCRIPTOR_TOP_32BITS, AMQPDescriptor ("REFERENCED_OBJECT", 8) },
-    {  9L | DESCRIPTOR_TOP_32BITS, AMQPDescriptor ("TRANSFORM_SCHEMA", 9) },
-    { 10L | DESCRIPTOR_TOP_32BITS, AMQPDescriptor ("TRANSFORM_ELEMENT", 10) },
-    { 11L | DESCRIPTOR_TOP_32BITS, AMQPDescriptor ("TRANSFORM_ELEMENT_KEY", 11) }
-    */
 
 }
 
