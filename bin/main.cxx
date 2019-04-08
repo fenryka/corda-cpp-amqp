@@ -7,11 +7,11 @@
 #include <proton/codec.h>
 #include <sys/stat.h>
 
-#include "proton_wrapper.h"
+#include "proton/proton_wrapper.h"
 
-#include "amqp_header.h"
-#include "amqp_section_id.h"
-#include "AMQPDescriptorRegistory.h"
+#include "amqp/AMQPHeader.h"
+#include "amqp/AMQPSectionId.h"
+#include "amqp/AMQPDescriptorRegistory.h"
 
 /******************************************************************************/
 
@@ -60,15 +60,15 @@ main (int argc, char **argv) {
     std::array<char, 7> header;
     f.read(header.data(), 7);
 
-    if (header == AMQP_HEADER) {
+    if (header == amqp::internal::AMQP_HEADER) {
         std::cout << "YES" << std::endl;
     }
 
-    amqp_section_id_t encoding;
+    amqp::internal::amqp_section_id_t encoding;
     f.read((char *)&encoding, 1);
     std::cout << "encoding = " << encoding << std::endl;
 
-    if (encoding == DATA_AND_STOP) {
+    if (encoding == amqp::internal::DATA_AND_STOP) {
         data_and_stop(f, results.st_size - 8);
     }
 

@@ -34,6 +34,8 @@ namespace amqp {
                 , m_val (val_)
             { }
 
+            virtual ~AMQPDescriptor() { }
+
 
             const std::string & symbol() const { return m_symbol; }
 
@@ -60,6 +62,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~EnvelopeDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -76,6 +80,8 @@ namespace amqp {
             SchemaDescriptor(const std::string & symbol_, int val_)
                 : AMQPDescriptor(symbol_, val_)
             { }
+
+            virtual ~SchemaDescriptor() { }
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
@@ -94,6 +100,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~ObjectDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -110,6 +118,8 @@ namespace amqp {
             FieldDescriptor(const std::string & symbol_, int val_)
                 : AMQPDescriptor(symbol_, val_)
             { }
+
+            virtual ~FieldDescriptor() { }
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
@@ -128,6 +138,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~CompositeDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -144,6 +156,8 @@ namespace amqp {
             RestrictedDescriptor(const std::string & symbol_, int val_)
                 : AMQPDescriptor(symbol_, val_)
             { }
+
+            virtual ~RestrictedDescriptor() { }
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
@@ -162,6 +176,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~ChoiceDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -178,6 +194,8 @@ namespace amqp {
             ReferencedObjectDescriptor(const std::string & symbol_, int val_)
                 : AMQPDescriptor(symbol_, val_)
             { }
+
+            virtual ~ReferencedObjectDescriptor() { }
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
@@ -196,6 +214,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~TransformSchemaDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -213,6 +233,8 @@ namespace amqp {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
+            virtual ~TransformElementDescriptor() { }
+
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
@@ -229,6 +251,8 @@ namespace amqp {
             TransformElementKeyDescriptor(const std::string & symbol_, int val_)
                 : AMQPDescriptor(symbol_, val_)
             { }
+
+            virtual ~TransformElementKeyDescriptor() { }
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };

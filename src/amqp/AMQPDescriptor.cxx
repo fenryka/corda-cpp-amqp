@@ -6,7 +6,7 @@
 #include <proton/codec.h>
 
 #include "Envelope.h"
-#include "proton_wrapper.h"
+#include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
 
 /******************************************************************************/
