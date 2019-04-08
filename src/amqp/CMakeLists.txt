@@ -3,7 +3,7 @@ include_directories (described)
 
 
 set (amqp_sources
-    descriptors/AMQPDescriptor.cxx
+    descriptors/AMQPDescriptors.cxx
     descriptors/AMQPDescriptorRegistory.cxx
     described/Envelope.cxx
 )

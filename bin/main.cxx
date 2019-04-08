@@ -11,7 +11,7 @@
 
 #include "amqp/AMQPHeader.h"
 #include "amqp/AMQPSectionId.h"
-#include "amqp/AMQPDescriptorRegistory.h"
+#include "amqp/descriptors/AMQPDescriptorRegistory.h"
 
 /******************************************************************************/
 
@@ -60,7 +60,7 @@ main (int argc, char **argv) {
     std::array<char, 7> header;
     f.read(header.data(), 7);
 
-    if (header == amqp::internal::AMQP_HEADER) {
+    if (header == amqp::AMQP_HEADER) {
         std::cout << "YES" << std::endl;
     }
 

@@ -9,6 +9,7 @@
 /******************************************************************************/
 
 #include "AMQPDescribed.h"
+#include "amqp/AMQPDescriptor.h"
 
 /******************************************************************************/
 
@@ -17,42 +18,7 @@ struct pn_data_t;
 /******************************************************************************/
 
 namespace amqp {
-
-    class AMQPDescriptor {
-        protected :
-            std::string m_symbol;
-            int m_val;
-
-        public :
-            AMQPDescriptor()
-                : m_symbol ("ERROR")
-                , m_val (-1)
-            { }
-
-            AMQPDescriptor(const std::string & symbol_, int val_)
-                : m_symbol (symbol_)
-                , m_val (val_)
-            { }
-
-            virtual ~AMQPDescriptor() { }
-
-
-            const std::string & symbol() const { return m_symbol; }
-
-            void validateAndNext (pn_data_t * const ) const;
-
-            std::unique_ptr<AMQPDescribed> dispatchDescribed(pn_data_t * data_) const;
-
-            virtual std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const {
-                return std::unique_ptr<AMQPDescribed>(nullptr);
-            }
-    };
-
-}
-
-/******************************************************************************/
-
-namespace amqp {
+namespace internal {
 
     class EnvelopeDescriptor : public AMQPDescriptor {
         public :
@@ -68,10 +34,13 @@ namespace amqp {
     };
 
 }
+}
+
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class SchemaDescriptor : public AMQPDescriptor {
         public :
@@ -87,10 +56,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class ObjectDescriptor : public AMQPDescriptor {
         public :
@@ -106,10 +77,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class FieldDescriptor : public AMQPDescriptor {
         public :
@@ -125,10 +98,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class CompositeDescriptor : public AMQPDescriptor {
         public :
@@ -144,10 +119,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class RestrictedDescriptor : public AMQPDescriptor {
         public :
@@ -163,10 +140,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class ChoiceDescriptor : public AMQPDescriptor {
         public :
@@ -182,10 +161,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class ReferencedObjectDescriptor : public AMQPDescriptor {
         public :
@@ -201,10 +182,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class TransformSchemaDescriptor : public AMQPDescriptor {
         public :
@@ -220,10 +203,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class TransformElementDescriptor : public AMQPDescriptor {
         public :
@@ -239,10 +224,12 @@ namespace amqp {
     };
 
 }
+}
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class TransformElementKeyDescriptor : public AMQPDescriptor {
         public :
@@ -257,6 +244,7 @@ namespace amqp {
             std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
     };
 
+}
 }
 
 /******************************************************************************/

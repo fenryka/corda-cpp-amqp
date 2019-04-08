@@ -1,4 +1,4 @@
-#include "AMQPDescriptor.h"
+#include "AMQPDescriptors.h"
 
 #include <string>
 #include <iostream>
@@ -47,7 +47,7 @@ AMQPDescriptor::dispatchDescribed (pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 EnvelopeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -100,7 +100,7 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 SchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -127,7 +127,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 ObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -148,7 +148,7 @@ ObjectDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 FieldDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -218,7 +218,7 @@ FieldDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 CompositeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -275,7 +275,7 @@ CompositeDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 RestrictedDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -287,7 +287,7 @@ RestrictedDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 ChoiceDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -299,7 +299,7 @@ ChoiceDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 ReferencedObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -311,7 +311,7 @@ ReferencedObjectDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 TransformSchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -323,7 +323,7 @@ TransformSchemaDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 TransformElementDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
@@ -335,7 +335,7 @@ TransformElementDescriptor::build(pn_data_t * data_) const {
 /******************************************************************************/
 
 std::unique_ptr<amqp::AMQPDescribed>
-amqp::
+amqp::internal::
 TransformElementKeyDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
