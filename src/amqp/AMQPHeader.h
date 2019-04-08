@@ -3,7 +3,6 @@
 #include <array>
 
 namespace amqp {
-namespace internal {
 
     /**
      * The 8th byte is used to store weather the stream is compressed or 
@@ -11,5 +10,4 @@ namespace internal {
      */
     std::array<char, 7> AMQP_HEADER = { { 'c', 'o', 'r', 'd', 'a', 1, 0 } };
 
-}
 }

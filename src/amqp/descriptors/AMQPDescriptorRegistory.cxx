@@ -1,5 +1,6 @@
-
 #include "AMQPDescriptorRegistory.h"
+
+/******************************************************************************/
 
 namespace amqp {
 namespace internal {
