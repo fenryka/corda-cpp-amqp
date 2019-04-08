@@ -8,4 +8,9 @@ MacOS.
 
 If I've got time, this might get better!.
 
+## Deendencies
+
+ * qpid-proton
+ * C++14
+
 

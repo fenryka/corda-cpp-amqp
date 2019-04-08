@@ -1,11 +1,11 @@
 include_directories (descriptors)
-include_directories (described)
-
+include_directories (schema)
 
 set (amqp_sources
     descriptors/AMQPDescriptors.cxx
     descriptors/AMQPDescriptorRegistory.cxx
-    described/Envelope.cxx
+    schema/Envelope.cxx
+    schema/Field.cxx
 )
 
 ADD_LIBRARY ( amqp ${amqp_sources} )

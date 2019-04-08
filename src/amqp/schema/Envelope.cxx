@@ -2,6 +2,6 @@
 
 #include "Envelope.h"
 
-amqp::
+amqp::internal::schema::
 Envelope::Envelope() {
 }

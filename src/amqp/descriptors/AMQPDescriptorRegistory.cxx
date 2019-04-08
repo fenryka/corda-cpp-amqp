@@ -32,7 +32,6 @@ namespace internal {
 }
 }
 
-
 /******************************************************************************/
 
 /**
@@ -40,7 +39,7 @@ namespace internal {
  */
 namespace amqp {
 
-    std::map<uint64_t, std::shared_ptr<AMQPDescriptor>>
+    std::map<uint64_t, std::shared_ptr<internal::AMQPDescriptor>>
     AMQPDescriptorRegistory = {
         {
             1L | internal::DESCRIPTOR_TOP_32BITS,
@@ -65,37 +64,58 @@ namespace amqp {
         {
             5L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::CompositeDescriptor> (
-                    internal::CompositeDescriptor ("COMPOSITE_TYPE", internal::COMPOSITE_TYPE))
+                    internal::CompositeDescriptor (
+                        "COMPOSITE_TYPE",
+                        internal::COMPOSITE_TYPE)
+                    )
         },
         {
             6L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::RestrictedDescriptor> (
-                    internal::RestrictedDescriptor ("RESTRICTED_TYPE", internal::RESTRICTED_TYPE))
+                    internal::RestrictedDescriptor (
+                        "RESTRICTED_TYPE",
+                        internal::RESTRICTED_TYPE)
+                    )
         },
         {
             7L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::ChoiceDescriptor> (
-                    internal::ChoiceDescriptor ("CHOICE", internal::CHOICE))
+                    internal::ChoiceDescriptor (
+                        "CHOICE",
+                        internal::CHOICE)
+                    )
         },
         {
             8L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::ReferencedObjectDescriptor> (
-                    internal::ReferencedObjectDescriptor ("REFERENCED_OBJECT", internal::REFERENCED_OBJECT))
+                    internal::ReferencedObjectDescriptor (
+                        "REFERENCED_OBJECT",
+                        internal::REFERENCED_OBJECT)
+                    )
         },
         {
             9L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::TransformSchemaDescriptor> (
-                    internal::TransformSchemaDescriptor ("TRANSFORM_SCHEMA", internal::TRANSFORM_SCHEMA))
+                    internal::TransformSchemaDescriptor (
+                        "TRANSFORM_SCHEMA",
+                        internal::TRANSFORM_SCHEMA)
+                    )
         },
         {
             10L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::TransformElementDescriptor> (
-                internal::TransformElementDescriptor ("TRANSFORM_ELEMENT", internal::TRANSFORM_ELEMENT))
+                internal::TransformElementDescriptor (
+                    "TRANSFORM_ELEMENT",
+                    internal::TRANSFORM_ELEMENT)
+                )
         },
         {
             11L | internal::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::TransformElementKeyDescriptor> (
-                internal::TransformElementKeyDescriptor ("TRANSFORM_ELEMENT_KEY", internal::TRANSFORM_ELEMENT_KEY))
+                internal::TransformElementKeyDescriptor (
+                    "TRANSFORM_ELEMENT_KEY",
+                    internal::TRANSFORM_ELEMENT_KEY)
+                )
         }
     };
 }

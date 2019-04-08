@@ -27,6 +27,11 @@ if(APPLE)
     link_directories (/usr/local/lib)
 endif()
 
+#
+# Interface include files
+#
+include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/include)
+
 add_compile_options(-std=c++14)
 
 ADD_SUBDIRECTORY (src)

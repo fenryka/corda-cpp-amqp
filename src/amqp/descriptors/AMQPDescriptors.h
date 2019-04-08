@@ -8,8 +8,9 @@
 
 /******************************************************************************/
 
-#include "AMQPDescribed.h"
+#include "amqp/AMQPDescribed.h"
 #include "amqp/AMQPDescriptor.h"
+#include "amqp/schema/Descriptor.h"
 
 /******************************************************************************/
 
@@ -30,7 +31,7 @@ namespace internal {
 
             virtual ~EnvelopeDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -52,7 +53,7 @@ namespace internal {
 
             virtual ~SchemaDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -73,7 +74,7 @@ namespace internal {
 
             virtual ~ObjectDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -94,7 +95,7 @@ namespace internal {
 
             virtual ~FieldDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -115,7 +116,7 @@ namespace internal {
 
             virtual ~CompositeDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -136,7 +137,7 @@ namespace internal {
 
             virtual ~RestrictedDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -157,7 +158,7 @@ namespace internal {
 
             virtual ~ChoiceDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -178,7 +179,7 @@ namespace internal {
 
             virtual ~ReferencedObjectDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -199,7 +200,7 @@ namespace internal {
 
             virtual ~TransformSchemaDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -220,7 +221,7 @@ namespace internal {
 
             virtual ~TransformElementDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
@@ -241,7 +242,7 @@ namespace internal {
 
             virtual ~TransformElementKeyDescriptor() { }
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const override;
+            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }

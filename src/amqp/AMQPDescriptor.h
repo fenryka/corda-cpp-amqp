@@ -8,7 +8,7 @@
 
 /******************************************************************************/
 
-#include "described/AMQPDescribed.h"
+#include "AMQPDescribed.h"
 
 /******************************************************************************/
 
@@ -17,6 +17,7 @@ struct pn_data_t;
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
 
     class AMQPDescriptor {
         protected :
@@ -41,11 +42,10 @@ namespace amqp {
 
             void validateAndNext (pn_data_t * const ) const;
 
-            std::unique_ptr<AMQPDescribed> dispatchDescribed(pn_data_t * data_) const;
-
             virtual std::unique_ptr<AMQPDescribed> build (pn_data_t * data_) const = 0;
     };
 
+}
 }
 
 /******************************************************************************/

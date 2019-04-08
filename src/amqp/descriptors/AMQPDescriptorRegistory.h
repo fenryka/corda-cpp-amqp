@@ -55,8 +55,7 @@ namespace internal {
  */
 namespace amqp {
 
-    extern std::map<uint64_t, std::shared_ptr<AMQPDescriptor>> AMQPDescriptorRegistory;
-
+    extern std::map<uint64_t, std::shared_ptr<internal::AMQPDescriptor>> AMQPDescriptorRegistory;
 
 }
 

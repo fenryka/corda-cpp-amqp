@@ -89,6 +89,57 @@ proton::is_ulong (pn_data_t * data_) {
     }
 }
 
+/******************************************************************************/
+
+inline void
+proton::is_symbol (pn_data_t * data_) {
+    if (pn_data_type(data_) != PN_SYMBOL) {
+        throw std::runtime_error ("Expected an unsigned long");
+    }
+}
+
+/******************************************************************************/
+
+inline void
+proton::is_string (pn_data_t * data_, bool allowNull) {
+    if (pn_data_type(data_) != PN_STRING) {
+        if (allowNull && pn_data_type(data_) != PN_NULL) {
+            throw std::runtime_error ("Expected a String");
+        }
+    }
+}
+
+/******************************************************************************/
+
+pn_bytes_t
+proton::get_symbol (pn_data_t * data_) {
+    is_symbol (data_);
+    return pn_data_get_symbol(data_);
+}
+
+/******************************************************************************/
+
+std::string
+proton::get_string (pn_data_t * data_, bool allowNull) {
+    if (pn_data_type(data_) == PN_STRING) {
+        auto str = pn_data_get_string (data_);
+        return std::string (str.start, str.size);
+    } else  if (allowNull && pn_data_type(data_) == PN_NULL) {
+        return "";
+    }
+    throw std::runtime_error ("Expected a String");
+}
+
+/******************************************************************************/
+
+bool
+proton::get_boolean (pn_data_t * data_) {
+    if (pn_data_type(data_) == PN_BOOL) {
+        return pn_data_get_bool (data_);
+    }
+    throw std::runtime_error ("Expected a boolean");
+}
+
 /******************************************************************************
  *
  * proton::auto_enter

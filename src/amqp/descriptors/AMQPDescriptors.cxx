@@ -5,14 +5,58 @@
 #include <proton/types.h>
 #include <proton/codec.h>
 
+#include "Field.h"
 #include "Envelope.h"
+#include "Composite.h"
+
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+namespace {
+
+    /**
+     * Look up a described type by its ID in the AMQPDescriptorRegistory and
+     * return the coresponding schema type. Specialised below to avoid
+     * the cast and re-owning of the unigue pointer when we're happy
+     * with a simple std::unique_ptr<AMQPDescribed>
+     */
+    template<class T = amqp::internal::AMQPDescribed>
+    std::unique_ptr<T>
+    dispatchDescribed (pn_data_t * data_) {
+        proton::is_described(data_);
+        proton::auto_enter p (data_);
+        proton::is_ulong(data_);
+
+        auto id = pn_data_get_ulong(data_);
+
+        return std::unique_ptr<T> (
+              static_cast<T *>(amqp::AMQPDescriptorRegistory[id]->build(data_).release()));
+
+    }
+
+    template<>
+    std::unique_ptr<amqp::internal::AMQPDescribed>
+    dispatchDescribed (pn_data_t * data_) {
+        proton::is_described(data_);
+        proton::auto_enter p (data_);
+        proton::is_ulong(data_);
+
+        auto id = pn_data_get_ulong(data_);
+
+        return amqp::AMQPDescriptorRegistory[id]->build(data_);
+    }
+}
 
 /******************************************************************************/
 
 void
-amqp::
+amqp::internal::
 AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     if (pn_data_type(data_) != PN_ULONG) {
         throw std::runtime_error ("Bad type for a descriptor");
@@ -30,23 +74,13 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     */
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::internal::EnvelopeDescriptor
+ *
+ ******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
-amqp::
-AMQPDescriptor::dispatchDescribed (pn_data_t * data_) const {
-    proton::is_described(data_);
-    proton::auto_enter p (data_);
-    proton::is_ulong(data_);
-
-    auto id = pn_data_get_ulong(data_);
-
-    return amqp::AMQPDescriptorRegistory[id]->build(data_);
-}
-
-/******************************************************************************/
-
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 EnvelopeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
@@ -83,7 +117,9 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
         /*
          * The scehama
          */
+        std::cout << "----------------------" << std::endl;
         dispatchDescribed (data_);
+        std::cout << "----------------------" << std::endl;
 
         pn_data_next(data_);
 
@@ -94,12 +130,12 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
     }
 
 
-    return std::unique_ptr<amqp::Envelope>(nullptr);
+    return std::unique_ptr<amqp::internal::schema::Envelope>(nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 SchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
@@ -113,111 +149,106 @@ SchemaDescriptor::build(pn_data_t * data_) const {
     {
         proton::auto_list_enter p (data_);
 
-        while (pn_data_next(data_)) {
+        for (int i (0) ; pn_data_next(data_) ; ++i) {
             proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
+            for (int j (0) ; pn_data_next(data_) ; ++j) {
+                std::cout << "      : " << i << ":" << j << std::endl;
                 dispatchDescribed(data_);
             }
         }
     }
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::internal::ObjectDescriptor
+ *
+ ******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+/**
+ * 
+ */
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 ObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "OBJECT " << data_ << std::endl;
+    {
+        proton::auto_enter p (data_);
 
-     {
-        proton::auto_list_enter p (data_);
+        auto symbol = proton::get_symbol (data_);
 
-        while (pn_data_next(data_)) {
-            std::cout << "       " << data_ << std::endl;
-        }
+        return std::make_unique<schema::Descriptor> (
+                schema::Descriptor (std::string (symbol.start, symbol.size)));
     }
-
-
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::internal::FieldDescriptor
+ *
+ ******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 FieldDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "FIELD: " << data_ << std::endl;
+    proton::auto_enter p (data_);
 
+    /* name: String */
+    auto name = proton::get_string(data_);
+
+    pn_data_next(data_);
+
+    /* type: String */
+    auto type = proton::get_string(data_);
+
+    pn_data_next(data_);
+
+    /* requires: List<String> */
+    std::list<std::string> requires;
     {
-        proton::auto_enter p (data_);
-
-        /* name: String */
-        {
-            std::cout << "    name: " << data_ << std::endl;
+        proton::auto_list_enter p (data_);
+        while (pn_data_next(data_)) {
+            requires.push_back (proton::get_string(data_));
         }
-
-        pn_data_next(data_);
-
-        /* type: String */
-        {
-            std::cout << "    type: " << data_ << std::endl;
-        }
-
-        pn_data_next(data_);
-
-        /* requires: List<String> */
-        {
-            std::cout << "    requires: " << data_ << std::endl;
-            proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
-                std::cout << "        " << data_ << std::endl;
-            }
-        }
-
-        pn_data_next(data_);
-
-        /* default: String? */
-        {
-            std::cout << "    default: " << data_ << std::endl;
-        }
-
-        pn_data_next(data_);
-
-        /* label: String? */
-        {
-            std::cout << "    label: " << data_ << std::endl;
-        }
-
-        pn_data_next(data_);
-
-        /* mandatory: Boolean - copes with the Kotlin concept of nullability.
-           If something is mandatory then it cannot be null */
-        {
-            std::cout << "    mandatory: " << data_ << std::endl;
-        }
-
-        pn_data_next(data_);
-
-        /* multiple: Boolean */
-        {
-            std::cout << "    multiple: " << data_ << std::endl;
-        }
-
     }
 
+    pn_data_next(data_);
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    /* default: String? */
+    auto def = proton::get_string(data_, true);
+
+    pn_data_next(data_);
+
+    /* label: String? */
+    auto label = proton::get_string(data_, true);
+
+    pn_data_next(data_);
+
+    /* mandatory: Boolean - copes with the Kotlin concept of nullability.
+       If something is mandatory then it cannot be null */
+    auto mandatory = proton::get_boolean(data_);
+
+    pn_data_next(data_);
+
+    /* multiple: Boolean */
+    auto multiple = proton::get_boolean(data_);
+
+    return std::make_unique<schema::Field> (name, type, requires,
+            def, label, mandatory, multiple);
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::internal::CompositeDescriptor
+ *
+ ******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 CompositeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
@@ -227,16 +258,14 @@ CompositeDescriptor::build(pn_data_t * data_) const {
         proton::auto_enter p (data_);
 
         /* Class Name - String */
-        {
-            std::cout << "    " << data_ << std::endl;
-        }
+        auto name = proton::get_string(data_);
+        std::cout << "    name: " << name << std::endl;
 
         pn_data_next(data_);
 
         /* Label Name - Nullable String */
-        {
-            std::cout << "    " << data_ << std::endl;
-        }
+        auto label = proton::get_string(data_, true);
+        std::cout << "    label: \"" << label << "\"" << std::endl;
 
         pn_data_next(data_);
 
@@ -252,96 +281,95 @@ CompositeDescriptor::build(pn_data_t * data_) const {
         pn_data_next(data_);
 
         /* descriptor: Descriptor */
-        {
-            dispatchDescribed(data_);
-        }
+        auto descriptor = dispatchDescribed<schema::Descriptor>(data_);
+
+        std::cout << "    descirption = " << descriptor->name() << std::endl;
 
         pn_data_next(data_);
 
         /* fields: List<Described>*/
+        std::list<std::unique_ptr<schema::Field>> fields;
         {
-            std::cout << "    FIELDS: " << data_ << std::endl;
-
             proton::auto_list_enter p (data_);
             while (pn_data_next(data_)) {
-                dispatchDescribed(data_);
+                fields.push_back (dispatchDescribed<schema::Field>(data_));
             }
         }
     }
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::schema::Composite> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 RestrictedDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "RESTRICTED " << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 ChoiceDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "CHOICE " << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 ReferencedObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "REFERENCED OBJECT " << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 TransformSchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "TRANSFORM SCHEMA " << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 TransformElementDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "TRANFORM ELEMENT " << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 TransformElementKeyDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
     std::cout << "TRANSFORM ELEMENT KEY" << data_ << std::endl;
 
-    return std::unique_ptr<amqp::AMQPDescribed> (nullptr);
+    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
 
 /******************************************************************************/

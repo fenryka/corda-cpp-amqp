@@ -7,7 +7,7 @@
 /******************************************************************************/
 
 struct pn_data_t;
-
+struct pn_bytes_t;
 
 /******************************************************************************/
 
@@ -28,6 +28,12 @@ namespace proton {
 
     void is_described (pn_data_t *);
     void is_ulong (pn_data_t *);
+    void is_symbol (pn_data_t *);
+    void is_string (pn_data_t *, bool allowNull = false);
+
+    pn_bytes_t get_symbol (pn_data_t *);
+    bool get_boolean (pn_data_t *);
+    std::string get_string (pn_data_t *, bool allowNull = false);
 
     class auto_enter {
         private :

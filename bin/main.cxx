@@ -34,10 +34,7 @@ data_and_stop(std::ifstream & f_, size_t sz) {
         auto a = pn_data_get_ulong(d);
 
         amqp::AMQPDescriptorRegistory[a]->build(d);
-
-
     }
-
 }
 
 /******************************************************************************/
@@ -64,11 +61,11 @@ main (int argc, char **argv) {
         std::cout << "YES" << std::endl;
     }
 
-    amqp::internal::amqp_section_id_t encoding;
+    amqp::amqp_section_id_t encoding;
     f.read((char *)&encoding, 1);
     std::cout << "encoding = " << encoding << std::endl;
 
-    if (encoding == amqp::internal::DATA_AND_STOP) {
+    if (encoding == amqp::DATA_AND_STOP) {
         data_and_stop(f, results.st_size - 8);
     }
 
