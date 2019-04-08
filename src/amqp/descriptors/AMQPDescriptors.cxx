@@ -149,10 +149,9 @@ SchemaDescriptor::build(pn_data_t * data_) const {
     {
         proton::auto_list_enter p (data_);
 
-        for (int i (0) ; pn_data_next(data_) ; ++i) {
+        while (pn_data_next(data_)) {
             proton::auto_list_enter p (data_);
-            for (int j (0) ; pn_data_next(data_) ; ++j) {
-                std::cout << "      : " << i << ":" << j << std::endl;
+            while (pn_data_next(data_)) {
                 dispatchDescribed(data_);
             }
         }
@@ -253,51 +252,45 @@ amqp::internal::
 CompositeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "COMPOSITE " << data_ << std::endl;
+    proton::auto_enter p (data_);
+
+    /* Class Name - String */
+    auto name = proton::get_string(data_);
+
+    pn_data_next(data_);
+
+    /* Label Name - Nullable String */
+    auto label = proton::get_string(data_, true);
+
+    pn_data_next(data_);
+
+    /* provides: List<String> */
+    std::list<std::string> provides;
     {
-        proton::auto_enter p (data_);
-
-        /* Class Name - String */
-        auto name = proton::get_string(data_);
-        std::cout << "    name: " << name << std::endl;
-
-        pn_data_next(data_);
-
-        /* Label Name - Nullable String */
-        auto label = proton::get_string(data_, true);
-        std::cout << "    label: \"" << label << "\"" << std::endl;
-
-        pn_data_next(data_);
-
-        /* provides: List<String> */
-        {
-            std::cout << "    provides: " << data_ << std::endl;
-            proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
-                std::cout << "        " << data_ << std::endl;
-            }
-        }
-
-        pn_data_next(data_);
-
-        /* descriptor: Descriptor */
-        auto descriptor = dispatchDescribed<schema::Descriptor>(data_);
-
-        std::cout << "    descirption = " << descriptor->name() << std::endl;
-
-        pn_data_next(data_);
-
-        /* fields: List<Described>*/
-        std::list<std::unique_ptr<schema::Field>> fields;
-        {
-            proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
-                fields.push_back (dispatchDescribed<schema::Field>(data_));
-            }
+        proton::auto_list_enter p (data_);
+        while (pn_data_next(data_)) {
+            provides.push_back (proton::get_string (data_));
         }
     }
 
-    return std::unique_ptr<amqp::internal::schema::Composite> (nullptr);
+    pn_data_next(data_);
+
+    /* descriptor: Descriptor */
+    auto descriptor = dispatchDescribed<schema::Descriptor>(data_);
+
+    pn_data_next(data_);
+
+    /* fields: List<Described>*/
+    std::list<std::unique_ptr<schema::Field>> fields;
+    {
+        proton::auto_list_enter p (data_);
+        while (pn_data_next(data_)) {
+            fields.push_back (dispatchDescribed<schema::Field>(data_));
+        }
+    }
+
+    return std::make_unique<schema::Composite> (
+        schema::Composite (name, label, provides, descriptor, fields));
 }
 
 /******************************************************************************/

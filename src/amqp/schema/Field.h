@@ -53,18 +53,6 @@ namespace schema {
               , m_mandatory (mandatory_)
               , m_mulitple (multiple_)
             { }
-
-            /*
-            Field (const Field & field_)
-              : m_name (field_->m_name)
-              , m_type (field_->m_type)
-              , m_requires (field_->m_requires)
-              , m_default (field_->m_default)
-              , m_label (field_->m_label)
-              , m_mandatory (field_->m_mandatory)
-              , m_mulitple (field_->m_multiple)
-            { }
-            */
     };
 
 }

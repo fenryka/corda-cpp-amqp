@@ -52,8 +52,8 @@ namespace schema {
                 const std::string & name_,
                 const std::string & label_,
                 const std::list<std::string> & provides_,
-                std::unique_ptr<Descriptor> descriptor_,
-                std::list<std::unique_ptr<Field>> fields_
+                std::unique_ptr<Descriptor> & descriptor_,
+                std::list<std::unique_ptr<Field>> & fields_
             ) : m_name (name_)
               , m_label (label_)
               , m_provides (provides_)
