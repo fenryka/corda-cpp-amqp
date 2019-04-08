@@ -1,4 +1,9 @@
+# Vi files
 .*.swp
 .*.swo
 
-prog
+# CMake
+*.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
