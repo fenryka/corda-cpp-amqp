@@ -2,6 +2,7 @@
 
 /******************************************************************************/
 
+#include <iosfwd>
 #include <string>
 
 #include "amqp/AMQPDescribed.h"
@@ -19,13 +20,11 @@ namespace schema {
         public :
             Descriptor() = default;
 
-            Descriptor (const std::string & name_)
-                : m_name (name_)
-            { }
+            Descriptor (const std::string &);
 
-            const std::string & name() const {
-                return m_name;
-            }
+            const std::string & name() const;
+
+            friend std::ostream & operator << (std::ostream &, const Descriptor&);
     };
 
 }

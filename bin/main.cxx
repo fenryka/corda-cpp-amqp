@@ -13,6 +13,8 @@
 #include "amqp/AMQPSectionId.h"
 #include "amqp/descriptors/AMQPDescriptorRegistory.h"
 
+#include "amqp/schema/Envelope.h"
+
 /******************************************************************************/
 
 void
@@ -23,17 +25,22 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
     pn_data_t * d = pn_data(sz);
 
+    // returns how many bytes we processed which right now we don't care
+    // about but I assume there is a case where it doesn't process the
+    // entire file
     auto rtn = pn_data_decode (d, blob, sz);
-
-    std::cout << "rtn - " << rtn << std::endl;
-    std::cout << d << std::endl;
 
     if (pn_data_is_described(d)) {
         proton::auto_enter p (d);
 
         auto a = pn_data_get_ulong(d);
 
-        amqp::AMQPDescriptorRegistory[a]->build(d);
+        auto envelope = std::unique_ptr<amqp::internal::schema::Envelope> (
+            static_cast<amqp::internal::schema::Envelope *> (
+                amqp::AMQPDescriptorRegistory[a]->build(d).release()));
+
+        std::cout << std::endl << "Types in schema: " << std::endl
+            << *envelope << std::endl;
     }
 }
 
@@ -41,75 +48,32 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
 int
 main (int argc, char **argv) {
-    std::cout << "File = " << argv[1] << std::endl;
+    std::cout << "Inspecting = " << argv[1] << std::endl;
     struct stat results;
 
-    if (stat(argv[1], &results) == 0) {
-        std::cout << "size = " << results.st_size << std::endl;
-        // The size of the file in bytes is in
-        // results.st_size
-    } else {
+    if (stat(argv[1], &results) != 0) {
         return EXIT_FAILURE;
     }
 
     std::ifstream f (argv[1], std::ios::in | std::ios::binary);
-    f.seekg(0);
     std::array<char, 7> header;
     f.read(header.data(), 7);
 
-    if (header == amqp::AMQP_HEADER) {
-        std::cout << "YES" << std::endl;
+    if (header != amqp::AMQP_HEADER) {
+        std::cerr << "Bad Header in blob" << std::endl;
+        return EXIT_FAILURE;
     }
 
     amqp::amqp_section_id_t encoding;
     f.read((char *)&encoding, 1);
-    std::cout << "encoding = " << encoding << std::endl;
 
     if (encoding == amqp::DATA_AND_STOP) {
         data_and_stop(f, results.st_size - 8);
+    } else {
+        return EXIT_FAILURE;
     }
 
-
-
-    /*
-    f.read((char *)&z, sizeof (z));
-    //z = __builtin_bswap64(z);
-    std::cout << "z = " << (int)z << " " << std::hex << (int)z << std::dec << std::endl;
-
-    f.read((char *)&z, sizeof (z));
-    //z = __builtin_bswap64(z);
-    std::cout << "z = " << (int)z << " " << std::hex << (int)z << std::dec << std::endl;
-
-    unsigned long l = 0;
-    f.read(reinterpret_cast<char *>(&l), sizeof (l));
-    std::cout << "L = " << l << " " << std::hex << l << std::dec << " " << std::endl;;
-
-    std::cout << "swap L = " << __builtin_bswap64(l) << std::endl;
-    */
-
-
-
-    //proton::message m;
-    //
-
-
-    /*
-
-
-    for (int i(0) ; i < 50 ; ++i) {
-        int x;
-        f.read((char *)&x, sizeof (int));
-        std::cout << std::setfill(' ') << std::setw(12) << x << "  #  ";
-        std::cout << "'" << *(char *)&x << "' ";
-        std::cout << "'" << *((char *)&x + 1) << "' ";
-        std::cout << "'" << *((char *)&x + 2) << "' ";
-        std::cout << "'" << *((char *)&x + 3) << "'" << "  #  ";
-        std::cout << (int)*(char *)&x << " ";
-        std::cout << (int)*((char *)&x + 1) << " ";
-        std::cout << (int)*((char *)&x + 2) << " ";
-        std::cout << (int)*((char *)&x + 3) << " " << std::endl;
-    }
-    */
+    return EXIT_SUCCESS;
 }
 
 /******************************************************************************/

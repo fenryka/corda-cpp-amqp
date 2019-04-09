@@ -6,6 +6,7 @@
 #include <proton/codec.h>
 
 #include "Field.h"
+#include "Schema.h"
 #include "Envelope.h"
 #include "Composite.h"
 
@@ -85,52 +86,45 @@ amqp::internal::
 EnvelopeDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "ENVELOPE: " << data_ << std::endl;
+    proton::auto_enter p (data_);
+
+    /*
+     * The actual blob
+     */
+    proton::is_described(data_);
 
     {
+        // the type descriptor
         proton::auto_enter p (data_);
+        //std::cout << "    " << data_ << std::endl;
 
-        /*
-         * The actual blob
-         */
-        std::cout << "    " << data_ << std::endl;
-        proton::is_described(data_);
-
+        // list of values
+        pn_data_next(data_);
+        //std::cout << "    " << data_ << std::endl;
         {
-            // the type descriptor
-            proton::auto_enter p (data_);
-            std::cout << "    " << data_ << std::endl;
-
-            // list of values
-            pn_data_next(data_);
-            std::cout << "    " << data_ << std::endl;
-            {
-                proton::auto_list_enter p (data_);
-                while (pn_data_next(data_)) {
-                    std::cout << "      data: " << data_ << std::endl;
-                }
+            proton::auto_list_enter p (data_);
+            while (pn_data_next(data_)) {
+                //std::cout << "      data: " << data_ << std::endl;
             }
         }
-
-        pn_data_next(data_);
-
-        /*
-         * The scehama
-         */
-        std::cout << "----------------------" << std::endl;
-        dispatchDescribed (data_);
-        std::cout << "----------------------" << std::endl;
-
-        pn_data_next(data_);
-
-        /*
-         * The transforms schema
-         */
-        dispatchDescribed (data_);
     }
 
+    pn_data_next(data_);
 
-    return std::unique_ptr<amqp::internal::schema::Envelope>(nullptr);
+    /*
+     * The scehama
+     */
+    auto schema_ = dispatchDescribed<schema::Schema> (data_);
+
+    pn_data_next(data_);
+
+    /*
+     * The transforms schema
+     */
+    // Skip for now
+    // dispatchDescribed (data_);
+
+    return std::make_unique<schema::Envelope> (schema::Envelope (schema_));
 }
 
 /******************************************************************************/
@@ -140,8 +134,7 @@ amqp::internal::
 SchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "SCHEMA: " << data_ << std::endl;
-
+    std::map<std::string, std::unique_ptr<schema::Composite>> types;
 
     /*
      * The Schema is stored as a list of listf of described objects
@@ -152,12 +145,13 @@ SchemaDescriptor::build(pn_data_t * data_) const {
         while (pn_data_next(data_)) {
             proton::auto_list_enter p (data_);
             while (pn_data_next(data_)) {
-                dispatchDescribed(data_);
+                auto type = dispatchDescribed<schema::Composite>(data_);
+                types[type->name()] = std::move(type);
             }
         }
     }
 
-    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
+    return std::make_unique<schema::Schema> (schema::Schema (types));
 }
 
 /******************************************************************************
@@ -174,14 +168,12 @@ amqp::internal::
 ObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    {
-        proton::auto_enter p (data_);
+    proton::auto_enter p (data_);
 
-        auto symbol = proton::get_symbol (data_);
+    auto symbol = proton::get_symbol (data_);
 
-        return std::make_unique<schema::Descriptor> (
-                schema::Descriptor (std::string (symbol.start, symbol.size)));
-    }
+    return std::make_unique<schema::Descriptor> (
+        schema::Descriptor (std::string (symbol.start, symbol.size)));
 }
 
 /******************************************************************************
@@ -237,8 +229,8 @@ FieldDescriptor::build(pn_data_t * data_) const {
     /* multiple: Boolean */
     auto multiple = proton::get_boolean(data_);
 
-    return std::make_unique<schema::Field> (name, type, requires,
-            def, label, mandatory, multiple);
+    return std::make_unique<schema::Field> (name, type, requires, def, label,
+            mandatory, multiple);
 }
 
 /******************************************************************************

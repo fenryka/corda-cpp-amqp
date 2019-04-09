@@ -5,7 +5,9 @@ set (amqp_sources
     descriptors/AMQPDescriptors.cxx
     descriptors/AMQPDescriptorRegistory.cxx
     schema/Envelope.cxx
-    schema/Field.cxx
+    schema/Schema.cxx
+    schema/Composite.cxx
+    schema/Descriptor.cxx
 )
 
 ADD_LIBRARY ( amqp ${amqp_sources} )

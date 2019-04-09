@@ -3,11 +3,14 @@
 /******************************************************************************/
 
 #include <list>
+#include <iosfwd>
 #include <string>
 
+#include "Field.h"
 #include "Descriptor.h"
 
 #include "amqp/AMQPDescribed.h"
+
 
 /******************************************************************************/
 
@@ -61,6 +64,9 @@ namespace schema {
               , m_fields (std::move (fields_))
             { }
 
+            const std::string & name() const { return m_name; }
+
+            friend std::ostream & operator << (std::ostream &, const Composite&);
     };
 
 }
