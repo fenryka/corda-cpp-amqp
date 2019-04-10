@@ -6,6 +6,7 @@
 
 #include <list>
 #include <string>
+#include <iosfwd>
 
 /******************************************************************************/
 
@@ -53,6 +54,8 @@ namespace schema {
               , m_mandatory (mandatory_)
               , m_mulitple (multiple_)
             { }
+
+            friend std::ostream & operator << (std::ostream &, const Field &);
     };
 
 }

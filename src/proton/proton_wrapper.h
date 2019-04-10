@@ -26,10 +26,11 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
-    void is_described (pn_data_t *);
+    void is_list (pn_data_t *);
     void is_ulong (pn_data_t *);
     void is_symbol (pn_data_t *);
     void is_string (pn_data_t *, bool allowNull = false);
+    void is_described (pn_data_t *);
 
     pn_bytes_t get_symbol (pn_data_t *);
     bool get_boolean (pn_data_t *);

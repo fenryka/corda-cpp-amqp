@@ -2,14 +2,18 @@
 
 /******************************************************************************/
 
+namespace amqp {
+namespace internal {
 namespace serialiser {
 
-    class Serialiser {
+    template <typename T>
+    class Composite : public ProtonReader<T> {
 
     };
 
 }
+}
+}
 
 /******************************************************************************/
-
 

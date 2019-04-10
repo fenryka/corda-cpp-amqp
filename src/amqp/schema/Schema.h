@@ -26,16 +26,16 @@ namespace schema {
      * val fields: List<Field>
      */
     class Schema : public AMQPDescribed {
+        public :
+            friend std::ostream & operator << (std::ostream &, const Schema &);
+
         private :
             std::map<std::string, std::unique_ptr<Composite>> m_types;
-        public :
 
+        public :
             Schema (std::map<std::string, std::unique_ptr<Composite>> & types_)
                 : m_types (std::move (types_))
             { }
-
-
-            friend std::ostream & operator << (std::ostream &, const Schema &);
     };
 
 }

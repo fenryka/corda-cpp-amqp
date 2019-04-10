@@ -2,19 +2,23 @@
 
 /******************************************************************************/
 
-#include <array>
+struct pn_data_t;
 
 /******************************************************************************/
 
 namespace amqp {
+namespace internal {
+namespace serialiser {
 
-    /**
-     * The 8th byte is used to store weather the stream is compressed or 
-     * not
-     */
-    std::array<char, 7> AMQP_HEADER = { { 'c', 'o', 'r', 'd', 'a', 1, 0 } };
+    class ProtonReader {
+        public :
+            template<typename T>
+            virtual T read (pn_data_t *) {
+            }
+    }
 
+}
+}
 }
 
 /******************************************************************************/
-

@@ -27,7 +27,7 @@ namespace {
      * the cast and re-owning of the unigue pointer when we're happy
      * with a simple std::unique_ptr<AMQPDescribed>
      */
-    template<class T = amqp::internal::AMQPDescribed>
+    template<class T>
     std::unique_ptr<T>
     dispatchDescribed (pn_data_t * data_) {
         proton::is_described(data_);
@@ -41,17 +41,6 @@ namespace {
 
     }
 
-    template<>
-    std::unique_ptr<amqp::internal::AMQPDescribed>
-    dispatchDescribed (pn_data_t * data_) {
-        proton::is_described(data_);
-        proton::auto_enter p (data_);
-        proton::is_ulong(data_);
-
-        auto id = pn_data_get_ulong(data_);
-
-        return amqp::AMQPDescriptorRegistory[id]->build(data_);
-    }
 }
 
 /******************************************************************************/
@@ -75,6 +64,31 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     */
 }
 
+/******************************************************************************/
+
+namespace {
+    void
+    consumeBlob (pn_data_t * data_) {
+        proton::is_described(data_);
+        proton::auto_enter p (data_);
+        std::cout << data_ << std::endl;
+        proton::is_symbol (data_);
+        pn_data_next (data_);
+        proton::is_list (data_);
+        {
+            proton::auto_list_enter p (data_);
+            while (pn_data_next(data_)) {
+                if (pn_data_is_described (data_)) {
+                    consumeBlob (data_);
+                }
+                else {
+                    std::cout << data_ << std::endl;
+                }
+            }
+        }
+    }
+}
+
 /******************************************************************************
  *
  * amqp::internal::EnvelopeDescriptor
@@ -89,25 +103,12 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
     proton::auto_enter p (data_);
 
     /*
-     * The actual blob
+     * The actual blob... if this was java we would use the type symbols
+     * in the blob to look up serialisers in the cache... but we don't 
+     * have any so we are actually going to need to use the schema
+     * which we parse *after* this to be able to read any data!
      */
-    proton::is_described(data_);
-
-    {
-        // the type descriptor
-        proton::auto_enter p (data_);
-        //std::cout << "    " << data_ << std::endl;
-
-        // list of values
-        pn_data_next(data_);
-        //std::cout << "    " << data_ << std::endl;
-        {
-            proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
-                //std::cout << "      data: " << data_ << std::endl;
-            }
-        }
-    }
+    consumeBlob(data_);
 
     pn_data_next(data_);
 

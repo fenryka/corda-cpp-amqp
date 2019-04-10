@@ -1,5 +1,7 @@
 #include "proton_wrapper.h"
 
+#include <sstream>
+#include <iomanip>
 #include <iostream>
 
 #include <proton/types.h>
@@ -10,7 +12,7 @@
 std::ostream&
 operator << (std::ostream& stream, pn_data_t * data_) {
     auto type = pn_data_type(data_);
-    stream << type << " " <<  pn_type_name (type);
+    stream << std::setw (2) << type << " " <<  pn_type_name (type);
 
     switch (type) {
         case PN_ULONG :
@@ -84,8 +86,11 @@ proton::is_described (pn_data_t * data_) {
 
 void
 proton::is_ulong (pn_data_t * data_) {
-    if (pn_data_type(data_) != PN_ULONG) {
-        throw std::runtime_error ("Expected an unsigned long");
+    auto t = pn_data_type(data_);
+    if (t != PN_ULONG) {
+        std::stringstream ss;
+        ss << "Expected an unsigned long but recieved " << pn_type_name (t);
+        throw std::runtime_error (ss.str());
     }
 }
 
@@ -95,6 +100,15 @@ inline void
 proton::is_symbol (pn_data_t * data_) {
     if (pn_data_type(data_) != PN_SYMBOL) {
         throw std::runtime_error ("Expected an unsigned long");
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::is_list (pn_data_t * data_) {
+    if (pn_data_type(data_) != PN_LIST) {
+        throw std::runtime_error ("Expected a list");
     }
 }
 
