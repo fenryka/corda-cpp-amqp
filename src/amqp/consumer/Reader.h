@@ -14,6 +14,7 @@ namespace amqp {
 
     class StringReader {
         public :
+            virtual ~StringReader() = default;
             virtual std::string read(pn_data_t *) const = 0;
     };
 

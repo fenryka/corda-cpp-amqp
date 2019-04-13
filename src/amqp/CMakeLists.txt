@@ -12,7 +12,7 @@ set (amqp_sources
     schema/Descriptor.cxx
     consumer/PropertyReader.cxx
     consumer/CompositeReader.cxx
-    consumer/CompositeFactory.cxx
+    CompositeFactory.cxx
 )
 
 ADD_LIBRARY ( amqp ${amqp_sources} )

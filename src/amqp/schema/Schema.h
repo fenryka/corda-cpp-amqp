@@ -36,6 +36,8 @@ namespace schema {
             Schema (std::map<std::string, std::unique_ptr<Composite>> & types_)
                 : m_types (std::move (types_))
             { }
+
+            const std::map<std::string, std::unique_ptr<Composite>> & types() const;
     };
 
 }

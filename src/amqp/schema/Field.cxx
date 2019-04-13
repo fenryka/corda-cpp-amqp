@@ -18,3 +18,30 @@ operator << (std::ostream & stream_, const Field & field_) {
 
 /******************************************************************************/
 
+const std::string &
+amqp::internal::schema::
+Field::name() const {
+    return m_name;
+}
+
+/******************************************************************************/
+
+const std::string &
+amqp::internal::schema::
+Field::type() const {
+    return m_type;
+}
+
+/******************************************************************************/
+
+bool
+amqp::internal::schema::
+Field::primitive() const {
+    return (m_type == "string" ||
+            m_type == "long" ||
+            m_type == "boolean" ||
+            m_type == "int" ||
+            m_type == "double");
+}
+
+/******************************************************************************/

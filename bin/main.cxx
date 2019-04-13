@@ -14,6 +14,7 @@
 #include "amqp/descriptors/AMQPDescriptorRegistory.h"
 
 #include "amqp/schema/Envelope.h"
+#include "CompositeFactory.h"
 
 /******************************************************************************/
 
@@ -30,18 +31,26 @@ data_and_stop(std::ifstream & f_, size_t sz) {
     // entire file
     auto rtn = pn_data_decode (d, blob, sz);
 
+    std::unique_ptr<amqp::internal::schema::Envelope> envelope{};
+
     if (pn_data_is_described(d)) {
         proton::auto_enter p (d);
 
         auto a = pn_data_get_ulong(d);
 
-        auto envelope = std::unique_ptr<amqp::internal::schema::Envelope> (
+        envelope.reset (
             static_cast<amqp::internal::schema::Envelope *> (
                 amqp::AMQPDescriptorRegistory[a]->build(d).release()));
 
         std::cout << std::endl << "Types in schema: " << std::endl
             << *envelope << std::endl;
     }
+
+    CompositeFactory cf;
+
+    cf.process (envelope->schema());
+
+
 }
 
 /******************************************************************************/

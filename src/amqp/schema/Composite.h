@@ -68,6 +68,10 @@ namespace schema {
             { }
 
             const std::string & name() const { return m_name; }
+
+            const std::list<std::unique_ptr<Field>> & fields() const {
+                return m_fields;
+            }
     };
 
 }
