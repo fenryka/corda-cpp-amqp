@@ -31,13 +31,15 @@ namespace schema {
 
         private :
             std::map<std::string, std::unique_ptr<Composite>> m_types;
+            std::map<std::string, std::string> m_descriptorToType;
 
         public :
-            Schema (std::map<std::string, std::unique_ptr<Composite>> & types_)
-                : m_types (std::move (types_))
-            { }
+            Schema (std::map<std::string, std::unique_ptr<Composite>> & types_);
 
             const std::map<std::string, std::unique_ptr<Composite>> & types() const;
+
+            decltype (m_types)::const_iterator fromType (const std::string &) const;
+            decltype (m_types)::const_iterator fromDescriptor (const std::string &) const;
     };
 
 }

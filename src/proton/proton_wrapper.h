@@ -3,11 +3,10 @@
 /******************************************************************************/
 
 #include <iosfwd>
+#include <string>
 
-/******************************************************************************/
-
-struct pn_data_t;
-struct pn_bytes_t;
+#include <proton/types.h>
+#include <proton/codec.h>
 
 /******************************************************************************/
 
@@ -32,7 +31,13 @@ namespace proton {
     void is_string (pn_data_t *, bool allowNull = false);
     void is_described (pn_data_t *);
 
-    pn_bytes_t get_symbol (pn_data_t *);
+    template<typename T>
+    T get_symbol (pn_data_t * data_) {
+        return T {};
+    }
+
+    std::string get_symbol (pn_data_t *);
+
     bool get_boolean (pn_data_t *);
     std::string get_string (pn_data_t *, bool allowNull = false);
 
@@ -70,3 +75,14 @@ namespace proton {
 
 /******************************************************************************/
 
+namespace proton {
+
+    template<typename T>
+    T
+    readAndNext (pn_data_t * data_) {
+        return T{};
+    }
+
+}
+
+/******************************************************************************/

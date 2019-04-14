@@ -50,7 +50,23 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
     cf.process (envelope->schema());
 
+    std::cout << "Env.top = " << envelope->descriptor() << std::endl;
 
+    auto reader = cf.byDescriptor (envelope->descriptor());
+    assert (reader);
+
+    {
+        proton::auto_enter p (d);
+        pn_data_next (d);
+        proton::is_list (d);
+        assert (pn_data_get_list (d) == 3);
+        {
+            proton::auto_enter p (d);
+
+            reader->dump (d, envelope->schema());
+        }
+
+    }
 }
 
 /******************************************************************************/

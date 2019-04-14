@@ -125,14 +125,6 @@ proton::is_string (pn_data_t * data_, bool allowNull) {
 
 /******************************************************************************/
 
-pn_bytes_t
-proton::get_symbol (pn_data_t * data_) {
-    is_symbol (data_);
-    return pn_data_get_symbol(data_);
-}
-
-/******************************************************************************/
-
 std::string
 proton::get_string (pn_data_t * data_, bool allowNull) {
     if (pn_data_type(data_) == PN_STRING) {
@@ -142,6 +134,23 @@ proton::get_string (pn_data_t * data_, bool allowNull) {
         return "";
     }
     throw std::runtime_error ("Expected a String");
+}
+
+/******************************************************************************/
+
+template<>
+std::string
+proton::get_symbol<std::string> (pn_data_t * data_) {
+        is_symbol (data_);
+        auto symbol = pn_data_get_symbol(data_);
+        return std::string (symbol.start, symbol.size);
+}
+
+template<>
+pn_bytes_t
+proton::get_symbol (pn_data_t * data_) {
+    is_symbol (data_);
+    return pn_data_get_symbol(data_);
 }
 
 /******************************************************************************/
@@ -222,6 +231,65 @@ size_t
 proton::
 auto_list_enter::elements() const {
     return m_elements;
+}
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+template<>
+int32_t
+proton::
+readAndNext<int32_t> (pn_data_t * data_) {
+    int rtn = pn_data_get_int (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+std::string
+proton::
+readAndNext<std::string> (pn_data_t * data_) {
+    auto bytes = pn_data_get_string (data_);
+    pn_data_next(data_);
+    return std::string (bytes.start, bytes.size);
+}
+
+/******************************************************************************/
+
+template<>
+bool
+proton::
+readAndNext<bool> (pn_data_t * data_) {
+    bool rtn = pn_data_get_bool (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+double
+proton::
+readAndNext<double> (pn_data_t * data_) {
+    double rtn = pn_data_get_double (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+long
+proton::
+readAndNext<long> (pn_data_t * data_) {
+    long rtn = pn_data_get_long (data_);
+    pn_data_next(data_);
+    return rtn;
 }
 
 /******************************************************************************/

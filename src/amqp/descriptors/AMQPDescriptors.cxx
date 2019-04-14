@@ -67,25 +67,11 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
 /******************************************************************************/
 
 namespace {
-    void
+    const std::string
     consumeBlob (pn_data_t * data_) {
-        proton::is_described(data_);
+        proton::is_described (data_);
         proton::auto_enter p (data_);
-        std::cout << data_ << std::endl;
-        proton::is_symbol (data_);
-        pn_data_next (data_);
-        proton::is_list (data_);
-        {
-            proton::auto_list_enter p (data_);
-            while (pn_data_next(data_)) {
-                if (pn_data_is_described (data_)) {
-                    consumeBlob (data_);
-                }
-                else {
-                    std::cout << data_ << std::endl;
-                }
-            }
-        }
+        return proton::get_symbol<std::string> (data_);
     }
 }
 
@@ -108,9 +94,10 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
      * have any so we are actually going to need to use the schema
      * which we parse *after* this to be able to read any data!
      */
-    consumeBlob(data_);
+    std::string outerType = consumeBlob(data_);
 
-    pn_data_next(data_);
+    pn_data_next (data_);
+
 
     /*
      * The scehama
@@ -125,7 +112,7 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
     // Skip for now
     // dispatchDescribed (data_);
 
-    return std::make_unique<schema::Envelope> (schema::Envelope (schema_));
+    return std::make_unique<schema::Envelope> (schema::Envelope (schema_, outerType));
 }
 
 /******************************************************************************/
@@ -171,10 +158,9 @@ ObjectDescriptor::build(pn_data_t * data_) const {
 
     proton::auto_enter p (data_);
 
-    auto symbol = proton::get_symbol (data_);
+    auto symbol = proton::get_symbol<std::string> (data_);
 
-    return std::make_unique<schema::Descriptor> (
-        schema::Descriptor (std::string (symbol.start, symbol.size)));
+    return std::make_unique<schema::Descriptor> (schema::Descriptor (symbol));
 }
 
 /******************************************************************************

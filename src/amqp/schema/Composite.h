@@ -72,6 +72,8 @@ namespace schema {
             const std::list<std::unique_ptr<Field>> & fields() const {
                 return m_fields;
             }
+
+            const std::string & descriptor() const { return m_descriptor->name(); }
     };
 
 }
