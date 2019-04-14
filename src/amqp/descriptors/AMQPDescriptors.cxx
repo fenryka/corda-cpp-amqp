@@ -260,11 +260,12 @@ CompositeDescriptor::build(pn_data_t * data_) const {
     pn_data_next(data_);
 
     /* fields: List<Described>*/
-    std::list<std::unique_ptr<schema::Field>> fields;
+    std::vector<std::unique_ptr<schema::Field>> fields;
+    fields.reserve (pn_data_get_list (data_));
     {
         proton::auto_list_enter p (data_);
         while (pn_data_next(data_)) {
-            fields.push_back (dispatchDescribed<schema::Field>(data_));
+            fields.emplace_back (dispatchDescribed<schema::Field>(data_));
         }
     }
 

@@ -56,6 +56,8 @@ data_and_stop(std::ifstream & f_, size_t sz) {
     assert (reader);
 
     {
+        // move to the actual blob entry in the tree - ideally we'd have
+        // saved this on the Envelope but that's not available
         proton::auto_enter p (d);
         pn_data_next (d);
         proton::is_list (d);

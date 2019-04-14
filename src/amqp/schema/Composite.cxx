@@ -14,6 +14,7 @@ operator << (std::ostream & stream_, const Composite & clazz_) {
         << "descriptor : " << *clazz_.m_descriptor << std::endl
         << "fields     : ";
 
+    std::cout << "LEN = " << clazz_.m_fields.size() << std::endl;
     for (auto const & i : clazz_.m_fields) stream_ << *i << std::setw (13) << " ";
     stream_ << std::setw(0);
 

@@ -3,6 +3,7 @@
 /******************************************************************************/
 
 #include <list>
+#include <vector>
 #include <iosfwd>
 #include <string>
 
@@ -47,19 +48,18 @@ namespace schema {
 
             std::unique_ptr<Descriptor> m_descriptor;
 
-            std::list<std::unique_ptr<Field>> m_fields;
+            /**
+             * The properties of the Class
+             */
+            std::vector<std::unique_ptr<Field>> m_fields;
 
         public :
-            Composite()
-                : m_descriptor (std::make_unique<Descriptor> (nullptr))
-            { }
-
             Composite (
                 const std::string & name_,
                 const std::string & label_,
                 const std::list<std::string> & provides_,
                 std::unique_ptr<Descriptor> & descriptor_,
-                std::list<std::unique_ptr<Field>> & fields_
+                std::vector<std::unique_ptr<Field>> & fields_
             ) : m_name (name_)
               , m_label (label_)
               , m_provides (provides_)
@@ -69,7 +69,7 @@ namespace schema {
 
             const std::string & name() const { return m_name; }
 
-            const std::list<std::unique_ptr<Field>> & fields() const {
+            const std::vector<std::unique_ptr<Field>> & fields() const {
                 return m_fields;
             }
 
