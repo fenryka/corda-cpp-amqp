@@ -40,6 +40,7 @@ namespace schema {
 
             decltype (m_types)::const_iterator fromType (const std::string &) const;
             decltype (m_types)::const_iterator fromDescriptor (const std::string &) const;
+            decltype (m_types)::const_iterator end() const;
     };
 
 }

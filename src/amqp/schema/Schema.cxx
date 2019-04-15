@@ -73,3 +73,11 @@ Schema::fromDescriptor (const std::string & descriptor_) const {
 
 /******************************************************************************/
 
+decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::
+Schema::end() const {
+    return std::end (m_types);
+}
+
+/******************************************************************************/
+

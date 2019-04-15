@@ -24,50 +24,117 @@ namespace amqp {
             virtual ~PropertyReader() = default;
 
             virtual std::string readString(pn_data_t *) const override = 0;
+
             virtual std::any read (pn_data_t *) const override = 0;
-            virtual std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override = 0;
+
+            virtual std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override = 0;
+
+            virtual const std::string & name() const override = 0;
     };
 
 
     class StringPropertyReader : public PropertyReader {
+        private :
+            static const std::string m_name;
+
         public :
             std::string readString (pn_data_t *) const override;
+
             std::any read (pn_data_t *) const override;
-            std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+
+            std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override;
+
+            const std::string & name() const override {
+                return m_name;
+            }
     };
 
     class IntPropertyReader : public PropertyReader {
+        private :
+            static const std::string m_name;
+
         public :
             std::string readString (pn_data_t *) const override;
+
             std::any read (pn_data_t *) const override;
-            std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+
+            std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override;
+
+            const std::string & name() const override {
+                return m_name;
+            }
     };
 
     class BoolPropertyReader : public PropertyReader {
+        private :
+            static const std::string m_name;
+
         public :
             std::string readString (pn_data_t *) const override;
+
             std::any read (pn_data_t *) const override;
-            std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+
+            std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override;
+
+            const std::string & name() const override {
+                return m_name;
+            }
     };
 
     class LongPropertyReader : public PropertyReader {
+        private :
+            static const std::string m_name;
+
         public :
             std::string readString (pn_data_t *) const override;
+
             std::any read (pn_data_t *) const override;
-            std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+
+            std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override;
+
+            const std::string & name() const override {
+                return m_name;
+            }
     };
 
     class DoublePropertyReader : public PropertyReader {
+        private :
+            static const std::string m_name;
+
         public :
             std::string readString (pn_data_t *) const override;
+
             std::any read (pn_data_t *) const override;
-            std::string dump(pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+
+            std::unique_ptr<Pair> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &
+            ) const override;
+
+            const std::string & name() const override {
+                return m_name;
+            }
     };
 
 }

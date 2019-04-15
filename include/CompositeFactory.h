@@ -19,9 +19,9 @@ using StrPtrMap = std::map<std::string, std::shared_ptr<T>>;
 
 class CompositeFactory {
     private :
-        using SchemaPtr = std::unique_ptr<amqp::internal::schema::Schema>;
+        using SchemaPtr    = std::unique_ptr<amqp::internal::schema::Schema>;
         using CompositePtr = std::unique_ptr<amqp::internal::schema::Composite>;
-        using EnvelopePtr = std::unique_ptr<amqp::internal::schema::Envelope>;
+        using EnvelopePtr  = std::unique_ptr<amqp::internal::schema::Envelope>;
 
         /**
          *

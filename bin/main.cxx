@@ -65,7 +65,9 @@ data_and_stop(std::ifstream & f_, size_t sz) {
         {
             proton::auto_enter p (d);
 
-            reader->dump (d, envelope->schema());
+            std::cout << std::endl << "Dumping:" << std::endl;
+
+            reader->dump ("Parsed", d, envelope->schema());
         }
 
     }
