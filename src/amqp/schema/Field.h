@@ -1,11 +1,11 @@
 #pragma once
-
 /******************************************************************************/
 
 #include "amqp/AMQPDescribed.h"
 
 #include <list>
 #include <string>
+#include <iosfwd>
 
 /******************************************************************************/
 
@@ -35,8 +35,6 @@ namespace schema {
             bool                   m_mulitple;
 
         public :
-            Field() = default;
-
             Field (
                 const std::string & name_,
                 const std::string & type_,
@@ -53,6 +51,12 @@ namespace schema {
               , m_mandatory (mandatory_)
               , m_mulitple (multiple_)
             { }
+
+            friend std::ostream & operator << (std::ostream &, const Field &);
+
+            const std::string & name() const;
+            const std::string & type() const;
+            bool primitive() const;
     };
 
 }

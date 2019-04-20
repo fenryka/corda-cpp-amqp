@@ -3,6 +3,7 @@
 /******************************************************************************/
 
 #include <list>
+#include <vector>
 #include <iosfwd>
 #include <string>
 
@@ -28,6 +29,9 @@ namespace schema {
      * val fields: List<Field>
      */
     class Composite : public AMQPDescribed {
+        public :
+            friend std::ostream & operator << (std::ostream &, const Composite&);
+
         private :
             std::string m_name;
 
@@ -36,7 +40,7 @@ namespace schema {
             std::string m_label;
 
             // interfaces the class implements... again since we can't 
-            // use Karen (the carpenter) to dynamically construct a class
+            // use Karen to dynamically construct a class
             // we don't know about knowing the interfaces (java concept)
             // that this class mpleemnted isn't al that useful but we'll
             // at least preserve the list
@@ -44,19 +48,18 @@ namespace schema {
 
             std::unique_ptr<Descriptor> m_descriptor;
 
-            std::list<std::unique_ptr<Field>> m_fields;
+            /**
+             * The properties of the Class
+             */
+            std::vector<std::unique_ptr<Field>> m_fields;
 
         public :
-            Composite()
-                : m_descriptor (std::make_unique<Descriptor> (nullptr))
-            { }
-
             Composite (
                 const std::string & name_,
                 const std::string & label_,
                 const std::list<std::string> & provides_,
                 std::unique_ptr<Descriptor> & descriptor_,
-                std::list<std::unique_ptr<Field>> & fields_
+                std::vector<std::unique_ptr<Field>> & fields_
             ) : m_name (name_)
               , m_label (label_)
               , m_provides (provides_)
@@ -66,7 +69,11 @@ namespace schema {
 
             const std::string & name() const { return m_name; }
 
-            friend std::ostream & operator << (std::ostream &, const Composite&);
+            const std::vector<std::unique_ptr<Field>> & fields() const {
+                return m_fields;
+            }
+
+            const std::string & descriptor() const { return m_descriptor->name(); }
     };
 
 }

@@ -1,5 +1,7 @@
 #include "proton_wrapper.h"
 
+#include <sstream>
+#include <iomanip>
 #include <iostream>
 
 #include <proton/types.h>
@@ -10,7 +12,7 @@
 std::ostream&
 operator << (std::ostream& stream, pn_data_t * data_) {
     auto type = pn_data_type(data_);
-    stream << type << " " <<  pn_type_name (type);
+    stream << std::setw (2) << type << " " <<  pn_type_name (type);
 
     switch (type) {
         case PN_ULONG :
@@ -84,8 +86,11 @@ proton::is_described (pn_data_t * data_) {
 
 void
 proton::is_ulong (pn_data_t * data_) {
-    if (pn_data_type(data_) != PN_ULONG) {
-        throw std::runtime_error ("Expected an unsigned long");
+    auto t = pn_data_type(data_);
+    if (t != PN_ULONG) {
+        std::stringstream ss;
+        ss << "Expected an unsigned long but recieved " << pn_type_name (t);
+        throw std::runtime_error (ss.str());
     }
 }
 
@@ -95,6 +100,15 @@ inline void
 proton::is_symbol (pn_data_t * data_) {
     if (pn_data_type(data_) != PN_SYMBOL) {
         throw std::runtime_error ("Expected an unsigned long");
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::is_list (pn_data_t * data_) {
+    if (pn_data_type(data_) != PN_LIST) {
+        throw std::runtime_error ("Expected a list");
     }
 }
 
@@ -111,14 +125,6 @@ proton::is_string (pn_data_t * data_, bool allowNull) {
 
 /******************************************************************************/
 
-pn_bytes_t
-proton::get_symbol (pn_data_t * data_) {
-    is_symbol (data_);
-    return pn_data_get_symbol(data_);
-}
-
-/******************************************************************************/
-
 std::string
 proton::get_string (pn_data_t * data_, bool allowNull) {
     if (pn_data_type(data_) == PN_STRING) {
@@ -128,6 +134,23 @@ proton::get_string (pn_data_t * data_, bool allowNull) {
         return "";
     }
     throw std::runtime_error ("Expected a String");
+}
+
+/******************************************************************************/
+
+template<>
+std::string
+proton::get_symbol<std::string> (pn_data_t * data_) {
+        is_symbol (data_);
+        auto symbol = pn_data_get_symbol(data_);
+        return std::string (symbol.start, symbol.size);
+}
+
+template<>
+pn_bytes_t
+proton::get_symbol (pn_data_t * data_) {
+    is_symbol (data_);
+    return pn_data_get_symbol(data_);
 }
 
 /******************************************************************************/
@@ -208,6 +231,65 @@ size_t
 proton::
 auto_list_enter::elements() const {
     return m_elements;
+}
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+template<>
+int32_t
+proton::
+readAndNext<int32_t> (pn_data_t * data_) {
+    int rtn = pn_data_get_int (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+std::string
+proton::
+readAndNext<std::string> (pn_data_t * data_) {
+    auto bytes = pn_data_get_string (data_);
+    pn_data_next(data_);
+    return std::string (bytes.start, bytes.size);
+}
+
+/******************************************************************************/
+
+template<>
+bool
+proton::
+readAndNext<bool> (pn_data_t * data_) {
+    bool rtn = pn_data_get_bool (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+double
+proton::
+readAndNext<double> (pn_data_t * data_) {
+    double rtn = pn_data_get_double (data_);
+    pn_data_next(data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+long
+proton::
+readAndNext<long> (pn_data_t * data_) {
+    long rtn = pn_data_get_long (data_);
+    pn_data_next(data_);
+    return rtn;
 }
 
 /******************************************************************************/

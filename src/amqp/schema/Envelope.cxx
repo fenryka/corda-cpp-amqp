@@ -16,3 +16,10 @@ operator << (
 
 /******************************************************************************/
 
+const std::unique_ptr<amqp::internal::schema::Schema> &
+amqp::internal::schema::
+Envelope::schema() const {
+    return m_schema;
+}
+
+/******************************************************************************/

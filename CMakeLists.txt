@@ -32,7 +32,8 @@ endif()
 #
 include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/include)
 
-add_compile_options(-std=c++14)
+#add_compile_options(-std=c++14)
+add_compile_options(-std=c++17)
 
 ADD_SUBDIRECTORY (src)
 ADD_SUBDIRECTORY (bin)

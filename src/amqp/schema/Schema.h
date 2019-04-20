@@ -5,6 +5,7 @@
 #include <map>
 #include <iosfwd>
 
+#include "types.h"
 #include "Composite.h"
 #include "Descriptor.h"
 
@@ -26,16 +27,24 @@ namespace schema {
      * val fields: List<Field>
      */
     class Schema : public AMQPDescribed {
-        private :
-            std::map<std::string, std::unique_ptr<Composite>> m_types;
         public :
-
-            Schema (std::map<std::string, std::unique_ptr<Composite>> & types_)
-                : m_types (std::move (types_))
-            { }
-
-
             friend std::ostream & operator << (std::ostream &, const Schema &);
+
+        private :
+            upStrMap_t<Composite> m_types;
+            std::map<std::string, std::string> m_descriptorToType;
+
+        public :
+            Schema (std::map<std::string, std::unique_ptr<Composite>> & types_);
+
+            const std::map<std::string, std::unique_ptr<Composite>> & types() const;
+
+            decltype (m_types)::const_iterator fromType (const std::string &) const;
+            decltype (m_types)::const_iterator fromDescriptor (const std::string &) const;
+            decltype (m_types)::const_iterator end() const;
+            decltype (m_types)::const_iterator begin() const;
+
+            typedef  decltype (m_types)::const_iterator iterator;
     };
 
 }

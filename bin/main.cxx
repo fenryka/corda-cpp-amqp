@@ -14,6 +14,7 @@
 #include "amqp/descriptors/AMQPDescriptorRegistory.h"
 
 #include "amqp/schema/Envelope.h"
+#include "CompositeFactory.h"
 
 /******************************************************************************/
 
@@ -29,18 +30,46 @@ data_and_stop(std::ifstream & f_, size_t sz) {
     // about but I assume there is a case where it doesn't process the
     // entire file
     auto rtn = pn_data_decode (d, blob, sz);
+    assert (rtn == sz);
+
+    std::unique_ptr<amqp::internal::schema::Envelope> envelope{};
 
     if (pn_data_is_described(d)) {
         proton::auto_enter p (d);
 
         auto a = pn_data_get_ulong(d);
 
-        auto envelope = std::unique_ptr<amqp::internal::schema::Envelope> (
+        envelope.reset (
             static_cast<amqp::internal::schema::Envelope *> (
                 amqp::AMQPDescriptorRegistory[a]->build(d).release()));
 
-        std::cout << std::endl << "Types in schema: " << std::endl
-            << *envelope << std::endl;
+//        std::cout << std::endl << "Types in schema: " << std::endl
+//            << *envelope << std::endl;
+    }
+
+    CompositeFactory cf;
+
+    cf.process (envelope->schema());
+
+    auto reader = cf.byDescriptor (envelope->descriptor());
+    assert (reader);
+
+    {
+        // move to the actual blob entry in the tree - ideally we'd have
+        // saved this on the Envelope but that's not easily doable as we
+        // can't grab an actaul copy of our data pointer
+        proton::auto_enter p (d);
+        pn_data_next (d);
+        proton::is_list (d);
+        assert (pn_data_get_list (d) == 3);
+        {
+            proton::auto_enter p (d);
+
+            std::cout
+                << reader->dump ("{ Parsed", d, envelope->schema())->dump()
+                << "}" << std::endl;
+        }
+
     }
 }
 
@@ -48,7 +77,7 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
 int
 main (int argc, char **argv) {
-    std::cout << "Inspecting = " << argv[1] << std::endl;
+//    std::cout << "Inspecting = " << argv[1] << std::endl;
     struct stat results;
 
     if (stat(argv[1], &results) != 0) {

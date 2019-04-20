@@ -15,15 +15,28 @@ namespace internal {
 namespace schema {
 
     class Envelope : public AMQPDescribed {
+        public :
+            friend std::ostream & operator << (std::ostream &, const Envelope &);
+
         private :
             std::unique_ptr<Schema> m_schema;
+            std::string m_descriptor;
 
         public :
-            Envelope (std::unique_ptr<Schema> & schema_)
-                : m_schema (std::move (schema_))
+            Envelope() = default;
+
+            Envelope (
+                std::unique_ptr<Schema> & schema_,
+                std::string & descriptor_
+            ) : m_schema (std::move (schema_))
+              , m_descriptor (std::move (descriptor_))
             { }
 
-            friend std::ostream & operator << (std::ostream &, const Envelope &);
+            const std::unique_ptr<Schema> & schema() const;
+
+            const std::string & descriptor() const {
+                return m_descriptor;
+            }
     };
 
 }
