@@ -43,8 +43,8 @@ data_and_stop(std::ifstream & f_, size_t sz) {
             static_cast<amqp::internal::schema::Envelope *> (
                 amqp::AMQPDescriptorRegistory[a]->build(d).release()));
 
-        std::cout << std::endl << "Types in schema: " << std::endl
-            << *envelope << std::endl;
+//        std::cout << std::endl << "Types in schema: " << std::endl
+//            << *envelope << std::endl;
     }
 
     CompositeFactory cf;
@@ -66,8 +66,8 @@ data_and_stop(std::ifstream & f_, size_t sz) {
             proton::auto_enter p (d);
 
             std::cout
-                << reader->dump ("Parsed", d, envelope->schema())->dump()
-                << std::endl;
+                << reader->dump ("{ Parsed", d, envelope->schema())->dump()
+                << "}" << std::endl;
         }
 
     }
@@ -77,7 +77,7 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
 int
 main (int argc, char **argv) {
-    std::cout << "Inspecting = " << argv[1] << std::endl;
+//    std::cout << "Inspecting = " << argv[1] << std::endl;
     struct stat results;
 
     if (stat(argv[1], &results) != 0) {

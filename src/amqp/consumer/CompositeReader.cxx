@@ -44,7 +44,7 @@ CompositeReader::dump (
     const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     proton::is_described (data_);
-    proton::auto_enter ae (data_);
+    proton::auto_enter_and_next ae (data_);
 
     auto it = schema_->fromDescriptor(proton::get_symbol<std::string>(data_));
     auto & fields = it->second->fields();
@@ -54,7 +54,7 @@ CompositeReader::dump (
     pn_data_next (data_);
 
     std::vector<std::unique_ptr<amqp::Pair>> read;
-    read.reserve(fields.size());
+    read.reserve (fields.size());
 
     proton::is_list (data_);
     {

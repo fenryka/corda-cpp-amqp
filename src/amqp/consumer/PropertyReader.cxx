@@ -2,6 +2,7 @@
 
 #include <map>
 #include <string>
+#include <iostream>
 #include <functional>
 
 #include <proton/codec.h>
@@ -97,7 +98,7 @@ StringPropertyReader::dump (
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
-            proton::readAndNext<std::string> (data_));
+            "\"" + proton::readAndNext<std::string> (data_) + "\"");
 }
 
 /******************************************************************************
