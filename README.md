@@ -8,9 +8,9 @@ MacOS.
 
 If I've got time, this might get better!.
 
-## Deendencies
+## Dependencies
 
  * qpid-proton
- * C++14
+ * C++17
 
 
