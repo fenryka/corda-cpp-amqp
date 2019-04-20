@@ -3,17 +3,14 @@
 /******************************************************************************/
 
 #include <map>
+#include <set>
 
+#include "types.h"
 #include "amqp/schema/Schema.h"
 #include "amqp/schema/Envelope.h"
 #include "amqp/schema/Composite.h"
 #include "amqp/consumer/PropertyReader.h"
 #include "amqp/consumer/CompositeReader.h"
-
-/******************************************************************************/
-
-template<typename T>
-using StrPtrMap = std::map<std::string, std::shared_ptr<T>>;
 
 /******************************************************************************/
 
@@ -26,11 +23,9 @@ class CompositeFactory {
         /**
          *
          */
-        StrPtrMap<amqp::PropertyReader> m_propertyReaders;
-
-
-        StrPtrMap<amqp::CompositeReader> m_compositeReadersByType;
-        StrPtrMap<amqp::CompositeReader> m_compositeReadersByDescriptor;
+        spStrMap_t<amqp::PropertyReader> m_propertyReaders;
+        spStrMap_t<amqp::CompositeReader> m_compositeReadersByType;
+        spStrMap_t<amqp::CompositeReader> m_compositeReadersByDescriptor;
 
     public :
         CompositeFactory() = default;
@@ -41,7 +36,10 @@ class CompositeFactory {
         const std::shared_ptr<amqp::CompositeReader> byDescriptor (const std::string &);
 
     private :
-        std::shared_ptr<amqp::CompositeReader> process (const CompositePtr &);
+        std::shared_ptr<amqp::CompositeReader>
+        process__ (
+                upStrMap_t<amqp::internal::schema::Composite>::const_iterator,
+                std::set<std::string> &);
 };
 
 /******************************************************************************/

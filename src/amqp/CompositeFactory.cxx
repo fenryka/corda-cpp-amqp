@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <set>
 
 #include "consumer/PropertyReader.h"
 
@@ -10,19 +11,20 @@
 template <typename T>
 std::shared_ptr<T>
 computeIfAbsent (
-        StrPtrMap<T> & map_,
-        const std::unique_ptr<amqp::internal::schema::Field> & k_,
-        std::function<std::shared_ptr<T>(void)> f_
+    spStrMap_t<T> & map_,
+    const std::unique_ptr<amqp::internal::schema::Field> & k_,
+    std::function<std::shared_ptr<T>(void)> f_
 ) {
-   auto it = map_.find (k_->type());
+    auto it = map_.find (k_->type());
 
-   if (it == map_.end()) {
-       map_[k_->type()] = std::move (f_());
-       return map_[k_->type()];
-   }
-   else {
-      return it->second;
-   }
+    if (it == map_.end()) {
+        map_[k_->type()] = std::move (f_());
+
+        return map_[k_->type()];
+    }
+    else {
+        return it->second;
+    }
 }
 
 /******************************************************************************/
@@ -34,31 +36,41 @@ computeIfAbsent (
  *
  */
 void
-CompositeFactory::process (const SchemaPtr & schema) {
-    for (auto const & type : schema->types()) {
-        std::cout << "PROCESS: " << type.first << " " << type.second->descriptor() << std::endl;
+CompositeFactory::process (const SchemaPtr & schema_) {
+    // Deals with hitting a recursive loop in our type hierarchy, at the moment
+    // if we find a loop we'll die on our arse... later on we might want to do
+    // something a bit smarter than shitting the bed!.
+    std::set<std::string> l;
 
-        auto reader = process (type.second);
+    for (auto i = schema_->begin() ; i != schema_->end() ; ++i) {
+        l.clear();
 
+        if (m_compositeReadersByType.find (i->first) ==
+                m_compositeReadersByType.end()
+        ) {
+            m_compositeReadersByType[i->first] = process__(i, l);
+        }
 
-        m_compositeReadersByType[type.first] = reader;
-        m_compositeReadersByDescriptor[type.second->descriptor()] = reader;
+        m_compositeReadersByDescriptor[i->second->descriptor()] =
+            m_compositeReadersByType[i->first];
     }
 }
 
 /******************************************************************************/
 
 std::shared_ptr<amqp::CompositeReader>
-CompositeFactory::process (const CompositePtr & schema) {
-    std::vector<std::shared_ptr<amqp::Reader>> readers;
+CompositeFactory::process__ (
+    upStrMap_t<amqp::internal::schema::Composite>::const_iterator schema_,
+    std::set<std::string> & history_
+) {
+    history_.insert (schema_->first);
+    std::vector<std::weak_ptr<amqp::Reader>> readers;
 
-    auto & fields (schema->fields());
+    auto & fields = schema_->second->fields();
 
     readers.reserve(fields.size());
 
     for (const auto & field : fields) {
-        std::cout << "field: " << field->name() << " : " << field->type() << std::endl;
-
         if (field->primitive()) {
             auto reader = computeIfAbsent<amqp::PropertyReader> (
                 m_propertyReaders,
@@ -69,7 +81,19 @@ CompositeFactory::process (const CompositePtr & schema) {
 
             readers.emplace_back (reader);
         } else {
-            readers.emplace_back (m_compositeReadersByType[field->type()]);
+            auto reader = computeIfAbsent<amqp::CompositeReader> (
+                m_compositeReadersByType,
+                field,
+                [ &schema_, &history_, this ]() -> std::shared_ptr<amqp::CompositeReader> {
+                    auto rtn = process__ (++schema_, history_);
+
+                    m_compositeReadersByDescriptor[schema_->second->descriptor()] =
+                        m_compositeReadersByType[schema_->first];
+
+                    return rtn;
+                });
+
+            readers.emplace_back (reader);
         }
     }
 

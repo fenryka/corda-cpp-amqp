@@ -81,3 +81,10 @@ Schema::end() const {
 
 /******************************************************************************/
 
+decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::
+Schema::begin() const {
+    return m_types.begin();
+}
+
+/******************************************************************************/

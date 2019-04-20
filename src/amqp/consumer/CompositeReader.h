@@ -13,15 +13,14 @@ namespace amqp {
 
     class CompositeReader : public Reader {
         private :
-            std::vector<std::shared_ptr<amqp::Reader>> m_readers;
+            std::vector<std::weak_ptr<amqp::Reader>> m_readers;
 
             static const std::string m_name;
 
         public :
             CompositeReader (
-                std::vector<std::shared_ptr<amqp::Reader>> & readers_
-            ) : m_readers (std::move (readers_))
-            { }
+                std::vector<std::weak_ptr<amqp::Reader>> & readers_
+            ) : m_readers (std::move (readers_)) { }
 
             virtual ~CompositeReader() = default;
 

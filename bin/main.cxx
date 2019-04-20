@@ -30,6 +30,7 @@ data_and_stop(std::ifstream & f_, size_t sz) {
     // about but I assume there is a case where it doesn't process the
     // entire file
     auto rtn = pn_data_decode (d, blob, sz);
+    assert (rtn == sz);
 
     std::unique_ptr<amqp::internal::schema::Envelope> envelope{};
 
@@ -50,14 +51,13 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
     cf.process (envelope->schema());
 
-    std::cout << "Env.top = " << envelope->descriptor() << std::endl;
-
     auto reader = cf.byDescriptor (envelope->descriptor());
     assert (reader);
 
     {
         // move to the actual blob entry in the tree - ideally we'd have
-        // saved this on the Envelope but that's not available
+        // saved this on the Envelope but that's not easily doable as we
+        // can't grab an actaul copy of our data pointer
         proton::auto_enter p (d);
         pn_data_next (d);
         proton::is_list (d);
@@ -65,9 +65,9 @@ data_and_stop(std::ifstream & f_, size_t sz) {
         {
             proton::auto_enter p (d);
 
-            std::cout << std::endl << "Dumping:" << std::endl;
-
-            reader->dump ("Parsed", d, envelope->schema());
+            std::cout
+                << reader->dump ("Parsed", d, envelope->schema())->dump()
+                << std::endl;
         }
 
     }

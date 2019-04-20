@@ -10,6 +10,7 @@ set (amqp_sources
     schema/Envelope.cxx
     schema/Composite.cxx
     schema/Descriptor.cxx
+    consumer/Reader.cxx
     consumer/PropertyReader.cxx
     consumer/CompositeReader.cxx
     CompositeFactory.cxx
@@ -17,3 +18,4 @@ set (amqp_sources
 
 ADD_LIBRARY ( amqp ${amqp_sources} )
 
+ADD_SUBDIRECTORY (test)

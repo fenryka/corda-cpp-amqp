@@ -4,6 +4,7 @@
 
 #include <any>
 #include <string>
+#include <strstream>
 
 #include "amqp/schema/Schema.h"
 
@@ -16,7 +17,7 @@ struct pn_data_t;
 namespace amqp {
 
     class Pair {
-        private:
+        protected :
             std::string m_property;
 
         public:
@@ -25,27 +26,65 @@ namespace amqp {
             { }
 
             virtual ~Pair() { }
+
+            Pair (Pair && pair_)
+                : m_property (pair_.m_property)
+            { }
+
+            virtual std::string dump() const = 0;
+
     };
 
 
     template<typename T>
-        class TypedPair : public Pair {
-            private:
-                T m_value;
+    class TypedPair : public Pair {
+        private:
+            T m_value;
 
-            public:
-                TypedPair (const std::string & property_, const T & value_)
-                    : Pair (property_)
-                    , m_value (value_)
-                { }
+        public:
+            TypedPair (const std::string & property_, T & value_)
+                : Pair (property_)
+                , m_value (value_)
+            { }
 
-                TypedPair(TypedPair&&) = default;
-        };
+            TypedPair (const std::string & property_, T && value_)
+                : Pair (property_)
+                , m_value (std::move (value_))
+            { }
+
+            const T & value() const {
+                return m_value;
+            }
+
+            std::string dump() const override;
+    };
 
 }
 
-
 /******************************************************************************/
+
+template<typename T>
+inline std::string
+amqp::TypedPair<T>::dump() const {
+    return m_property + " : " + std::to_string (m_value);
+}
+
+template<>
+inline std::string
+amqp::TypedPair<std::string>::dump() const {
+    return m_property + " : " + m_value;
+}
+
+template<>
+std::string
+amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const;
+
+/******************************************************************************
+ *
+ *
+ *
+ *
+ ******************************************************************************/
 
 namespace amqp {
 

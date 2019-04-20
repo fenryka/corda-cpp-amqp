@@ -5,6 +5,7 @@
 #include <map>
 #include <iosfwd>
 
+#include "types.h"
 #include "Composite.h"
 #include "Descriptor.h"
 
@@ -30,7 +31,7 @@ namespace schema {
             friend std::ostream & operator << (std::ostream &, const Schema &);
 
         private :
-            std::map<std::string, std::unique_ptr<Composite>> m_types;
+            upStrMap_t<Composite> m_types;
             std::map<std::string, std::string> m_descriptorToType;
 
         public :
@@ -41,6 +42,9 @@ namespace schema {
             decltype (m_types)::const_iterator fromType (const std::string &) const;
             decltype (m_types)::const_iterator fromDescriptor (const std::string &) const;
             decltype (m_types)::const_iterator end() const;
+            decltype (m_types)::const_iterator begin() const;
+
+            typedef  decltype (m_types)::const_iterator iterator;
     };
 
 }
