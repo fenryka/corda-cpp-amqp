@@ -1,13 +1,15 @@
 #include "AMQPDescriptorRegistory.h"
 #include "AMQPDescriptors.h"
 
+#include <limits>
+
 /******************************************************************************/
 
 namespace amqp {
 namespace internal {
 
 
-    const long DESCRIPTOR_TOP_32BITS = 0xc562L << (32 + 16);
+    const uint64_t DESCRIPTOR_TOP_32BITS = 0xc562L << (32 + 16);
 
 }
 }
@@ -123,3 +125,36 @@ namespace amqp {
 
 /******************************************************************************/
 
+uint32_t
+amqp::stripCorda (uint64_t id) {
+    return static_cast<uint32_t>(id & (uint64_t)UINT_MAX);
+}
+
+/******************************************************************************/
+
+std::string
+amqp::describedToString(uint64_t val_) {
+      switch (val_) {
+          case (1L  | internal::DESCRIPTOR_TOP_32BITS) : return "ENVELOPE";
+          case (2L  | internal::DESCRIPTOR_TOP_32BITS) : return "SCHEMA";
+          case (3L  | internal::DESCRIPTOR_TOP_32BITS) : return "OBJECT_DESCRIPTOR";
+          case (4L  | internal::DESCRIPTOR_TOP_32BITS) : return "FIELD";
+          case (5L  | internal::DESCRIPTOR_TOP_32BITS) : return "COMPOSITE_TYPE";
+          case (6L  | internal::DESCRIPTOR_TOP_32BITS) : return "RESTRICTED_TYPE";
+          case (7L  | internal::DESCRIPTOR_TOP_32BITS) : return "CHOICE";
+          case (8L  | internal::DESCRIPTOR_TOP_32BITS) : return "REFERENCED_OBJECT";
+          case (9L  | internal::DESCRIPTOR_TOP_32BITS) : return "TRANSFORM_SCHEMA";
+          case (10L | internal::DESCRIPTOR_TOP_32BITS) : return "TRANSFORM_ELEMENT";
+          case (11L | internal::DESCRIPTOR_TOP_32BITS) : return "TRANSFORM_ELEMENT_KEY";
+          default : return "UNKNOWN";
+    };
+}
+
+/******************************************************************************/
+
+std::string
+amqp::describedToString(uint32_t val_) {
+    return describedToString(val_ | internal::DESCRIPTOR_TOP_32BITS);
+}
+
+/******************************************************************************/

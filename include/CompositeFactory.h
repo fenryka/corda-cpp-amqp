@@ -24,22 +24,32 @@ class CompositeFactory {
          *
          */
         spStrMap_t<amqp::PropertyReader> m_propertyReaders;
-        spStrMap_t<amqp::CompositeReader> m_compositeReadersByType;
-        spStrMap_t<amqp::CompositeReader> m_compositeReadersByDescriptor;
+        spStrMap_t<amqp::Reader> m_readersByType;
+        spStrMap_t<amqp::Reader> m_readersByDescriptor;
 
     public :
         CompositeFactory() = default;
 
         void process (const SchemaPtr &);
 
-        const std::shared_ptr<amqp::CompositeReader> byType (const std::string &);
-        const std::shared_ptr<amqp::CompositeReader> byDescriptor (const std::string &);
+        const std::shared_ptr<amqp::Reader> byType (const std::string &);
+        const std::shared_ptr<amqp::Reader> byDescriptor (const std::string &);
 
     private :
-        std::shared_ptr<amqp::CompositeReader>
-        process__ (
-                upStrMap_t<amqp::internal::schema::Composite>::const_iterator,
+        std::shared_ptr<amqp::Reader>
+        process (
+                upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
                 std::set<std::string> &);
+
+        std::shared_ptr<amqp::Reader>
+        processComposite (
+                upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
+                std::set<std::string> &);
+
+        std::shared_ptr<amqp::Reader>
+        processRestricted (
+            upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
+            std::set<std::string> &);
 };
 
 /******************************************************************************/

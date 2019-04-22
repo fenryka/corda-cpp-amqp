@@ -185,6 +185,25 @@ auto_enter::~auto_enter() {
 
 /******************************************************************************
  *
+ * proton::auto_next
+ *
+ ******************************************************************************/
+
+proton::
+auto_next::auto_next (
+    pn_data_t * data_
+) : m_data (data_) {
+}
+
+/******************************************************************************/
+
+proton::
+auto_next::~auto_next() {
+    pn_data_next (m_data);
+}
+
+/******************************************************************************
+ *
  * proton::auto_enter_and_next
  *
  ******************************************************************************/
@@ -242,7 +261,10 @@ auto_list_enter::elements() const {
 template<>
 int32_t
 proton::
-readAndNext<int32_t> (pn_data_t * data_) {
+readAndNext<int32_t> (
+    pn_data_t * data_,
+    bool tolerateDeviance_
+) {
     int rtn = pn_data_get_int (data_);
     pn_data_next(data_);
     return rtn;
@@ -253,10 +275,20 @@ readAndNext<int32_t> (pn_data_t * data_) {
 template<>
 std::string
 proton::
-readAndNext<std::string> (pn_data_t * data_) {
-    auto bytes = pn_data_get_string (data_);
-    pn_data_next(data_);
-    return std::string (bytes.start, bytes.size);
+readAndNext<std::string> (
+    pn_data_t * data_,
+    bool tolerateDeviance_
+) {
+    auto_next an (data_);
+
+
+    if (pn_data_type(data_) == PN_STRING) {
+        auto str = pn_data_get_string (data_);
+        return std::string (str.start, str.size);
+    } else  if (tolerateDeviance_ && pn_data_type(data_) == PN_NULL) {
+        return "";
+    }
+    throw std::runtime_error ("Expected a String");
 }
 
 /******************************************************************************/
@@ -264,7 +296,10 @@ readAndNext<std::string> (pn_data_t * data_) {
 template<>
 bool
 proton::
-readAndNext<bool> (pn_data_t * data_) {
+readAndNext<bool> (
+    pn_data_t * data_,
+    bool tolerateDeviance_
+) {
     bool rtn = pn_data_get_bool (data_);
     pn_data_next(data_);
     return rtn;
@@ -275,10 +310,12 @@ readAndNext<bool> (pn_data_t * data_) {
 template<>
 double
 proton::
-readAndNext<double> (pn_data_t * data_) {
-    double rtn = pn_data_get_double (data_);
-    pn_data_next(data_);
-    return rtn;
+readAndNext<double> (
+    pn_data_t * data_,
+    bool tolerateDeviance_
+) {
+    auto_next an (data_);
+    return pn_data_get_double (data_);
 }
 
 /******************************************************************************/
@@ -286,7 +323,10 @@ readAndNext<double> (pn_data_t * data_) {
 template<>
 long
 proton::
-readAndNext<long> (pn_data_t * data_) {
+readAndNext<long> (
+    pn_data_t * data_,
+    bool tolerateDeviance_
+) {
     long rtn = pn_data_get_long (data_);
     pn_data_next(data_);
     return rtn;

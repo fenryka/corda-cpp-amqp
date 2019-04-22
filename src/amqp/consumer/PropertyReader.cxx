@@ -50,11 +50,25 @@ namespace {
 
 /******************************************************************************/
 
-const std::string amqp::StringPropertyReader::m_name = "String Reader";
-const std::string amqp::IntPropertyReader::m_name    = "Int Reader";
-const std::string amqp::BoolPropertyReader::m_name   = "Bool Reader";
-const std::string amqp::LongPropertyReader::m_name   = "Long Reader";
-const std::string amqp::DoublePropertyReader::m_name = "Double Reader";
+const std::string amqp::StringPropertyReader::m_name { // NOLINT
+    "String Reader"
+};
+
+const std::string amqp::IntPropertyReader::m_name { // NOLINT
+    "Int Reader"
+};
+
+const std::string amqp::BoolPropertyReader::m_name { // NOLINT
+    "Bool Reader"
+};
+
+const std::string amqp::LongPropertyReader::m_name { // NOLINT
+    "Long Reader"
+};
+
+const std::string amqp::DoublePropertyReader::m_name { // NOLINT
+    "Double Reader"
+};
 
 /******************************************************************************/
 

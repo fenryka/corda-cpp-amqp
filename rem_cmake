@@ -8,6 +8,8 @@ function cmake_rem_func {
     rm -rf $1/CMakeFiles
 }
 
+rm -f BLOB-INSPECTOR.cbp
+
 cmake_rem_func .
 cmake_rem_func ./bin
 cmake_rem_func ./src

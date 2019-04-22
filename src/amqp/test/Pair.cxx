@@ -49,7 +49,7 @@ TEST (Pair, UP2) {
         std::make_unique<amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>> (
             "Vector", std::move (vec));
 
-    EXPECT_EQ("Vector : [ first : 1, second : 2 ] ", test->dump());
+    EXPECT_EQ("Vector : { first : 1, second : 2 }", test->dump());
 }
 
 /******************************************************************************/

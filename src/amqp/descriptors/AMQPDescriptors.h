@@ -229,8 +229,7 @@ namespace internal {
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class TransformElementKeyDescriptor : public AMQPDescriptor {
         public :
@@ -245,7 +244,6 @@ namespace internal {
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
-}
 }
 
 /******************************************************************************/

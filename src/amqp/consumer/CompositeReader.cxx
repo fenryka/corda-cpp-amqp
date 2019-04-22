@@ -9,7 +9,9 @@
 
 /******************************************************************************/
 
-const std::string amqp::CompositeReader::m_name = "Composite Reader";
+const std::string amqp::CompositeReader::m_name { // NOLINT
+    "Composite Reader"
+};
 
 /******************************************************************************/
 
@@ -47,7 +49,7 @@ CompositeReader::dump (
     proton::auto_enter_and_next ae (data_);
 
     auto it = schema_->fromDescriptor(proton::get_symbol<std::string>(data_));
-    auto & fields = it->second->fields();
+    auto & fields = dynamic_cast<internal::schema::Composite *>(it->second.get())->fields();
 
     assert (fields.size() == m_readers.size());
 

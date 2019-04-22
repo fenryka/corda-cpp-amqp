@@ -2,8 +2,7 @@
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class AMQPDescribed {
         public :
@@ -11,6 +10,6 @@ namespace internal {
     };
 
 }
-}
 
 /******************************************************************************/
+

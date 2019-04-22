@@ -9,26 +9,23 @@
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
-namespace schema {
+namespace amqp::internal::schema {
 
     class Descriptor : public AMQPDescribed {
+        public :
+            friend std::ostream & operator << (std::ostream &, const Descriptor&);
+
         private :
             std::string m_name;
 
         public :
             Descriptor() = default;
 
-            Descriptor (const std::string &);
+            explicit Descriptor (const std::string &);
 
             const std::string & name() const;
-
-            friend std::ostream & operator << (std::ostream &, const Descriptor&);
     };
 
-}
-}
 }
 
 /******************************************************************************/

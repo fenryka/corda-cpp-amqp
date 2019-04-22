@@ -10,8 +10,11 @@ set (amqp_sources
     schema/Envelope.cxx
     schema/Composite.cxx
     schema/Descriptor.cxx
+    schema/Restricted.cxx
+    schema/AMQPTypeNotation.cxx
     consumer/Reader.cxx
     consumer/PropertyReader.cxx
+    consumer/RestrictedReader.cxx
     consumer/CompositeReader.cxx
     CompositeFactory.cxx
 )

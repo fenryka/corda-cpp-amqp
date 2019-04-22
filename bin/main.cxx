@@ -40,11 +40,11 @@ data_and_stop(std::ifstream & f_, size_t sz) {
         auto a = pn_data_get_ulong(d);
 
         envelope.reset (
-            static_cast<amqp::internal::schema::Envelope *> (
+            dynamic_cast<amqp::internal::schema::Envelope *> (
                 amqp::AMQPDescriptorRegistory[a]->build(d).release()));
 
-//        std::cout << std::endl << "Types in schema: " << std::endl
-//            << *envelope << std::endl;
+        std::cout << std::endl << "Types in schema: " << std::endl
+            << *envelope << std::endl;
     }
 
     CompositeFactory cf;

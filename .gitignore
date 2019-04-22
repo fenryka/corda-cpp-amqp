@@ -7,3 +7,7 @@
 CMakeCache.txt
 CMakeFiles
 Makefile
+
+# CLion / JetBrains
+.idea
+BLOB-INSPECTOR.cbp

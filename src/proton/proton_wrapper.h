@@ -50,6 +50,17 @@ namespace proton {
             ~auto_enter();
     };
 
+    class auto_next {
+        private :
+            pn_data_t * m_data;
+
+        public :
+            auto_next (pn_data_t *);
+            auto_next (auto_enter&) = delete;
+
+            ~auto_next();
+    };
+
     class auto_enter_and_next {
         private :
             pn_data_t * m_data;
@@ -79,7 +90,7 @@ namespace proton {
 
     template<typename T>
     T
-    readAndNext (pn_data_t * data_) {
+    readAndNext (pn_data_t * data_, bool tolerateDeviance_ = false) {
         return T{};
     }
 

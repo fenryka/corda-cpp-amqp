@@ -18,7 +18,7 @@ namespace amqp {
             static const std::string m_name;
 
         public :
-            CompositeReader (
+            explicit CompositeReader (
                 std::vector<std::weak_ptr<amqp::Reader>> & readers_
             ) : m_readers (std::move (readers_)) { }
 

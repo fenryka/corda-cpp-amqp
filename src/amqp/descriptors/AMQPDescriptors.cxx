@@ -1,4 +1,5 @@
 #include "AMQPDescriptors.h"
+#include "AMQPDescriptorRegistory.h"
 
 #include <string>
 #include <iostream>
@@ -9,6 +10,7 @@
 #include "Schema.h"
 #include "Envelope.h"
 #include "Composite.h"
+#include "Restricted.h"
 
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
@@ -38,7 +40,6 @@ namespace {
 
         return std::unique_ptr<T> (
               static_cast<T *>(amqp::AMQPDescriptorRegistory[id]->build(data_).release()));
-
     }
 
 }
@@ -52,8 +53,10 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
         throw std::runtime_error ("Bad type for a descriptor");
     }
 
-    if (pn_data_get_ulong(data_) != (m_val | amqp::internal::DESCRIPTOR_TOP_32BITS)) {
-        throw std::runtime_error ("Invalud Type");
+    if (   (m_val == -1)
+        || (pn_data_get_ulong(data_) != (static_cast<uint32_t>(m_val) | amqp::internal::DESCRIPTOR_TOP_32BITS)))
+    {
+        throw std::runtime_error ("Invalid Type");
     }
 
     pn_data_next(data_);
@@ -98,11 +101,10 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
 
     pn_data_next (data_);
 
-
     /*
      * The scehama
      */
-    auto schema_ = dispatchDescribed<schema::Schema> (data_);
+    auto schema = dispatchDescribed<schema::Schema> (data_);
 
     pn_data_next(data_);
 
@@ -112,7 +114,7 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
     // Skip for now
     // dispatchDescribed (data_);
 
-    return std::make_unique<schema::Envelope> (schema::Envelope (schema_, outerType));
+    return std::make_unique<schema::Envelope> (schema::Envelope (schema, outerType));
 }
 
 /******************************************************************************/
@@ -122,16 +124,16 @@ amqp::internal::
 SchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::map<std::string, std::unique_ptr<schema::Composite>> types;
+    std::map<std::string, std::unique_ptr<schema::AMQPTypeNotation>> types;
 
     /*
-     * The Schema is stored as a list of listf of described objects
+     * The Schema is stored as a list of lists of described objects
      */
     {
-        proton::auto_list_enter p (data_);
+        proton::auto_list_enter ale (data_);
 
         while (pn_data_next(data_)) {
-            proton::auto_list_enter p (data_);
+            proton::auto_list_enter ale2 (data_);
             while (pn_data_next(data_)) {
                 auto type = dispatchDescribed<schema::Composite>(data_);
                 types[type->name()] = std::move(type);
@@ -174,7 +176,7 @@ amqp::internal::
 FieldDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    proton::auto_enter p (data_);
+    proton::auto_enter ae (data_);
 
     /* name: String */
     auto name = proton::get_string(data_);
@@ -189,7 +191,7 @@ FieldDescriptor::build(pn_data_t * data_) const {
     /* requires: List<String> */
     std::list<std::string> requires;
     {
-        proton::auto_list_enter p (data_);
+        proton::auto_list_enter ale (data_);
         while (pn_data_next(data_)) {
             requires.push_back (proton::get_string(data_));
         }
@@ -246,7 +248,7 @@ CompositeDescriptor::build(pn_data_t * data_) const {
     /* provides: List<String> */
     std::list<std::string> provides;
     {
-        proton::auto_list_enter p (data_);
+        proton::auto_list_enter p2 (data_);
         while (pn_data_next(data_)) {
             provides.push_back (proton::get_string (data_));
         }
@@ -263,7 +265,7 @@ CompositeDescriptor::build(pn_data_t * data_) const {
     std::vector<std::unique_ptr<schema::Field>> fields;
     fields.reserve (pn_data_get_list (data_));
     {
-        proton::auto_list_enter p (data_);
+        proton::auto_list_enter p2 (data_);
         while (pn_data_next(data_)) {
             fields.emplace_back (dispatchDescribed<schema::Field>(data_));
         }
@@ -273,19 +275,57 @@ CompositeDescriptor::build(pn_data_t * data_) const {
         schema::Composite (name, label, provides, descriptor, fields));
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Restricted types represent lists and maps
+ *
+ * NOTE: The Corda serialization scheme doesn't support all container classes
+ * as it has the requiremnt that iteration order be deterministic for purposes
+ * of signing over data.
+ *
+ *      name : String
+ *      label : String?
+ *      provides : List<String>
+ *      source : String
+ *      descriptor : Descriptor
+ *      choices : List<Choice>
+ *
+ ******************************************************************************/
 
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 RestrictedDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "RESTRICTED " << data_ << std::endl;
+    proton::auto_enter ae (data_);
 
-    return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
+    auto name  = proton::readAndNext<std::string>(data_);
+    auto label = proton::readAndNext<std::string>(data_, true);
+
+    std::vector<std::string> provides;
+    {
+        proton::auto_list_enter ae2 (data_);
+        while (pn_data_next(data_)) {
+            provides.push_back (proton::get_string (data_));
+        }
+    }
+
+    pn_data_next (data_);
+
+    auto source = proton::readAndNext<std::string>(data_);
+    auto descriptor = dispatchDescribed<schema::Descriptor>(data_);
+
+    // SKIP the choices section **FOR NOW**
+
+    return std::make_unique<schema::Restricted> (descriptor, name,
+            label, provides, source);
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Essentially, an enum.
+ *
+ ******************************************************************************/
 
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::

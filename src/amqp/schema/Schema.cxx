@@ -13,7 +13,7 @@ namespace {
 
     using CompositeMap = std::map<
         std::string,
-        std::unique_ptr<amqp::internal::schema::Composite>>;
+        std::unique_ptr<amqp::internal::schema::AMQPTypeNotation>>;
 
 }
 
@@ -22,9 +22,11 @@ namespace {
 std::ostream &
 amqp::internal::schema::
 operator << (std::ostream & stream_, const Schema & schema_) {
+    uint32_t count { 0 };
     for (auto const & type : schema_.m_types) {
-        stream_ << type.first << std::endl;
-        stream_ << *type.second << std::endl;
+        stream_ << count++ << "/" << schema_.m_types.size() << ") "
+                <<  type.first << std::endl
+                << *type.second << std::endl << std::endl;
     }
 
     return stream_;
@@ -36,11 +38,19 @@ operator << (std::ostream & stream_, const Schema & schema_) {
  *
  ******************************************************************************/
 
+/**
+ * Constructor
+ *
+ * @param types_ the restricted and composite types contined within the
+ *               schema.
+ */
 amqp::internal::schema::
-Schema::Schema (std::map<std::string, std::unique_ptr<Composite>> & types_)
-    : m_types (std::move (types_))
-{
+Schema::Schema (
+    std::map<std::string, std::unique_ptr<AMQPTypeNotation>> & types_
+) : m_types (std::move (types_)) {
     for (auto & t : m_types) {
+        std::cout << t.second->name() << std::endl;
+        std::cout << "\"" << t.second->descriptor() << "\"" << std::endl;
         m_descriptorToType[t.second->descriptor()] = t.first;
     }
 }
@@ -76,7 +86,7 @@ Schema::fromDescriptor (const std::string & descriptor_) const {
 decltype (amqp::internal::schema::Schema::m_types)::const_iterator
 amqp::internal::schema::
 Schema::end() const {
-    return std::end (m_types);
+    return m_types.cend();
 }
 
 /******************************************************************************/
@@ -84,7 +94,7 @@ Schema::end() const {
 decltype (amqp::internal::schema::Schema::m_types)::const_iterator
 amqp::internal::schema::
 Schema::begin() const {
-    return m_types.begin();
+    return m_types.cbegin();
 }
 
 /******************************************************************************/

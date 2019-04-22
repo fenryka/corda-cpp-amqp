@@ -10,9 +10,7 @@
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
-namespace schema {
+namespace amqp::internal::schema {
 
     class Envelope : public AMQPDescribed {
         public :
@@ -39,8 +37,6 @@ namespace schema {
             }
     };
 
-}
-}
 }
 
 /******************************************************************************/
