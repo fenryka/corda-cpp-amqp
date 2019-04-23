@@ -22,11 +22,15 @@ namespace {
 std::ostream &
 amqp::internal::schema::
 operator << (std::ostream & stream_, const Schema & schema_) {
-    uint32_t count { 0 };
+    uint32_t count { 1 };
+    bool first { true };
+
     for (auto const & type : schema_.m_types) {
+        if (!first) stream_ << std::endl << std::endl; else first = false;
         stream_ << count++ << "/" << schema_.m_types.size() << ") "
                 <<  type.first << std::endl
-                << *type.second << std::endl << std::endl;
+                << *type.second;
+
     }
 
     return stream_;
@@ -49,8 +53,6 @@ Schema::Schema (
     std::map<std::string, std::unique_ptr<AMQPTypeNotation>> & types_
 ) : m_types (std::move (types_)) {
     for (auto & t : m_types) {
-        std::cout << t.second->name() << std::endl;
-        std::cout << "\"" << t.second->descriptor() << "\"" << std::endl;
         m_descriptorToType[t.second->descriptor()] = t.first;
     }
 }

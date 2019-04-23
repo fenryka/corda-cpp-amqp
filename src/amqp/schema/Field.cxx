@@ -54,9 +54,6 @@ Field::Field (
     } else {
         m_type = std::make_pair(type_, FieldType::CompositeProperty);
     }
-
-    std::cout << "M_TYPE : " << m_type.first << std::endl;
-
 }
 
 /******************************************************************************/

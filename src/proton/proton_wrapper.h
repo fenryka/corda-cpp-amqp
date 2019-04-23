@@ -72,7 +72,7 @@ namespace proton {
 
     class auto_list_enter {
         private :
-            size_t m_elements;
+            size_t      m_elements;
             pn_data_t * m_data;
 
         public :

@@ -15,6 +15,14 @@
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
 
+/******************************************************************************/
+
+#if 0
+    #define DBG(X) std::cout << X
+#else
+    #define DBG(X)
+#endif
+
 /******************************************************************************
  *
  *
@@ -87,6 +95,8 @@ namespace {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 EnvelopeDescriptor::build(pn_data_t * data_) const {
+    DBG ("ENVELOPE" << std::endl); // NOLINT
+
     validateAndNext(data_);
 
     proton::auto_enter p (data_);
@@ -122,6 +132,8 @@ EnvelopeDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 SchemaDescriptor::build(pn_data_t * data_) const {
+    DBG ("SCHEMA" << std::endl); // NOLINT
+
     validateAndNext(data_);
 
     std::map<std::string, std::unique_ptr<schema::AMQPTypeNotation>> types;
@@ -132,7 +144,8 @@ SchemaDescriptor::build(pn_data_t * data_) const {
     {
         proton::auto_list_enter ale (data_);
 
-        while (pn_data_next(data_)) {
+        for (int i { 1 } ; pn_data_next(data_) ; ++i) {
+            DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
             while (pn_data_next(data_)) {
                 auto type = dispatchDescribed<schema::Composite>(data_);
@@ -156,6 +169,8 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 ObjectDescriptor::build(pn_data_t * data_) const {
+    DBG ("DESCRIPTOR" << std::endl); // NOLINT
+
     validateAndNext(data_);
 
     proton::auto_enter p (data_);
@@ -174,6 +189,8 @@ ObjectDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 FieldDescriptor::build(pn_data_t * data_) const {
+    DBG ("FIELD" << std::endl); // NOLINT
+
     validateAndNext(data_);
 
     proton::auto_enter ae (data_);
@@ -231,6 +248,8 @@ FieldDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 CompositeDescriptor::build(pn_data_t * data_) const {
+    DBG ("COMPOSITE" << std::endl); // NOLINT
+
     validateAndNext(data_);
 
     proton::auto_enter p (data_);
@@ -295,6 +314,7 @@ CompositeDescriptor::build(pn_data_t * data_) const {
 std::unique_ptr<amqp::internal::AMQPDescribed>
 amqp::internal::
 RestrictedDescriptor::build(pn_data_t * data_) const {
+    DBG ("RESTRICTED" << std::endl); // NOLINT
     validateAndNext(data_);
 
     proton::auto_enter ae (data_);

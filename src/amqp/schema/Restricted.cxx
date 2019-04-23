@@ -37,7 +37,9 @@ Restricted::Restricted (
   , m_label (label_)
   , m_provides (provides_)
   , m_source (source_)
-{ }
+{
+
+}
 
 /******************************************************************************/
 

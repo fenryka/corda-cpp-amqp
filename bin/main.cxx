@@ -47,6 +47,9 @@ data_and_stop(std::ifstream & f_, size_t sz) {
             << *envelope << std::endl;
     }
 
+    std::cout << "Skipping blob data dump..." << std::endl;
+    return;
+
     CompositeFactory cf;
 
     cf.process (envelope->schema());
@@ -57,7 +60,7 @@ data_and_stop(std::ifstream & f_, size_t sz) {
     {
         // move to the actual blob entry in the tree - ideally we'd have
         // saved this on the Envelope but that's not easily doable as we
-        // can't grab an actaul copy of our data pointer
+        // can't grab an actual copy of our data pointer
         proton::auto_enter p (d);
         pn_data_next (d);
         proton::is_list (d);
@@ -77,15 +80,14 @@ data_and_stop(std::ifstream & f_, size_t sz) {
 
 int
 main (int argc, char **argv) {
-//    std::cout << "Inspecting = " << argv[1] << std::endl;
-    struct stat results;
+    struct stat results { };
 
     if (stat(argv[1], &results) != 0) {
         return EXIT_FAILURE;
     }
 
     std::ifstream f (argv[1], std::ios::in | std::ios::binary);
-    std::array<char, 7> header;
+    std::array<char, 7> header { };
     f.read(header.data(), 7);
 
     if (header != amqp::AMQP_HEADER) {

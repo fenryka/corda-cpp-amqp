@@ -6,8 +6,6 @@
 #include <string>
 #include <iostream>
 
-/******************************************************************************/
-
 #include "amqp/AMQPDescribed.h"
 #include "amqp/AMQPDescriptor.h"
 #include "amqp/schema/Descriptor.h"
@@ -18,8 +16,7 @@ struct pn_data_t;
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp:: internal {
 
     class EnvelopeDescriptor : public AMQPDescriptor {
         public :
@@ -29,19 +26,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~EnvelopeDescriptor() { }
+            ~EnvelopeDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
-
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class SchemaDescriptor : public AMQPDescriptor {
         public :
@@ -51,18 +45,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~SchemaDescriptor() { }
+            ~SchemaDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class ObjectDescriptor : public AMQPDescriptor {
         public :
@@ -72,18 +64,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~ObjectDescriptor() { }
+            ~ObjectDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class FieldDescriptor : public AMQPDescriptor {
         public :
@@ -93,18 +83,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~FieldDescriptor() { }
+            ~FieldDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class CompositeDescriptor : public AMQPDescriptor {
         public :
@@ -114,18 +102,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~CompositeDescriptor() { }
+            ~CompositeDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class RestrictedDescriptor : public AMQPDescriptor {
         public :
@@ -135,18 +121,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~RestrictedDescriptor() { }
+            ~RestrictedDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class ChoiceDescriptor : public AMQPDescriptor {
         public :
@@ -156,18 +140,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~ChoiceDescriptor() { }
+            ~ChoiceDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class ReferencedObjectDescriptor : public AMQPDescriptor {
         public :
@@ -177,18 +159,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~ReferencedObjectDescriptor() { }
+            ~ReferencedObjectDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class TransformSchemaDescriptor : public AMQPDescriptor {
         public :
@@ -198,18 +178,16 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~TransformSchemaDescriptor() { }
+            ~TransformSchemaDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     class TransformElementDescriptor : public AMQPDescriptor {
         public :
@@ -219,12 +197,11 @@ namespace internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~TransformElementDescriptor() { }
+            ~TransformElementDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
 
-}
 }
 
 /******************************************************************************/
@@ -239,7 +216,7 @@ namespace amqp::internal {
                 : AMQPDescriptor(symbol_, val_)
             { }
 
-            virtual ~TransformElementKeyDescriptor() { }
+            ~TransformElementKeyDescriptor() final = default;
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
     };
