@@ -112,7 +112,7 @@ StringPropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 StringPropertyReader::dump (
     const std::string & name_,
@@ -146,7 +146,7 @@ IntPropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 IntPropertyReader::dump (
     const std::string & name_,
@@ -180,7 +180,7 @@ BoolPropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 BoolPropertyReader::dump (
     const std::string & name_,
@@ -214,7 +214,7 @@ LongPropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 LongPropertyReader::dump (
     const std::string & name_,
@@ -248,7 +248,7 @@ DoublePropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 DoublePropertyReader::dump (
     const std::string & name_,

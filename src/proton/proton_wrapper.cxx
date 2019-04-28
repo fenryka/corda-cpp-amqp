@@ -170,10 +170,11 @@ proton::get_boolean (pn_data_t * data_) {
  ******************************************************************************/
 
 proton::
-auto_enter::auto_enter (pn_data_t * data_)
+auto_enter::auto_enter (pn_data_t * data_, bool next_)
     : m_data (data_)
 {
     proton::pn_data_enter(m_data);
+    if (next_) pn_data_next(m_data);
 }
 
 /******************************************************************************/
@@ -204,37 +205,19 @@ auto_next::~auto_next() {
 
 /******************************************************************************
  *
- * proton::auto_enter_and_next
- *
- ******************************************************************************/
-
-proton::
-auto_enter_and_next::auto_enter_and_next (pn_data_t * data_)
-    : m_data (data_)
-{
-    proton::pn_data_enter(m_data);
-}
-
-/******************************************************************************/
-
-proton::
-auto_enter_and_next::~auto_enter_and_next() {
-    pn_data_exit(m_data);
-    pn_data_next(m_data);
-}
-
-/******************************************************************************
- *
  * proton::auto_list_enter
  *
  ******************************************************************************/
 
 proton::
-auto_list_enter::auto_list_enter (pn_data_t * data_)
+auto_list_enter::auto_list_enter (pn_data_t * data_, bool next_)
     : m_elements (pn_data_get_list (data_))
     , m_data (data_)
 {
    ::pn_data_enter(m_data);
+   if (next_) {
+       pn_data_next (m_data);
+   }
 }
 
 /******************************************************************************/
@@ -281,10 +264,12 @@ readAndNext<std::string> (
 ) {
     auto_next an (data_);
 
-
     if (pn_data_type(data_) == PN_STRING) {
-        auto str = pn_data_get_string (data_);
-        return std::string (str.start, str.size);
+        auto str = pn_data_get_string(data_);
+        return std::string(str.start, str.size);
+    } else if (pn_data_type(data_) == PN_SYMBOL) {
+        auto symbol = pn_data_get_symbol(data_);
+        return std::string(symbol.start, symbol.size);
     } else  if (tolerateDeviance_ && pn_data_type(data_) == PN_NULL) {
         return "";
     }

@@ -135,7 +135,6 @@ CompositeFactory::processRestricted(
                     });
 
             return std::make_shared<amqp::ListReader> (reader);
-
         } else {
             auto reader = computeIfAbsent<amqp::Reader> (
                     m_readersByType,
@@ -148,7 +147,7 @@ CompositeFactory::processRestricted(
         }
     }
 
-    return std::make_shared<amqp::RestrictedReader>();
+    return nullptr;
 }
 
 /******************************************************************************/

@@ -16,22 +16,57 @@ struct pn_data_t;
 
 namespace amqp {
 
-    class Pair {
+    class Value {
+        public :
+            virtual std::string dump() const = 0;
+
+            virtual ~Value() = default;
+    };
+
+    class Single : public Value {
+        public :
+            std::string dump() const override = 0;
+    };
+
+    template<typename T>
+    class TypedSingle : public Single {
+        private:
+            T m_value;
+
+        public:
+            explicit TypedSingle (T & value_)
+                : Single()
+                , m_value (value_)
+            { }
+
+            explicit TypedSingle (T && value_)
+                : Single()
+                , m_value (std::move (value_))
+            { }
+
+            const T & value() const {
+                return m_value;
+            }
+
+            std::string dump() const override;
+    };
+
+    class Pair : public Value {
         protected :
             std::string m_property;
 
         public:
-            Pair(const std::string & property_)
+            explicit Pair(const std::string & property_)
                 : m_property (property_)
             { }
 
-            virtual ~Pair() { }
+            virtual ~Pair() = default;
 
-            Pair (Pair && pair_)
-                : m_property (pair_.m_property)
+            Pair (amqp::Pair && pair_) noexcept
+                : m_property (std::move (pair_.m_property))
             { }
 
-            virtual std::string dump() const = 0;
+            std::string dump() const override = 0;
 
     };
 
@@ -52,6 +87,11 @@ namespace amqp {
                 , m_value (std::move (value_))
             { }
 
+            TypedPair (TypedPair && pair_)
+                : Pair (std::move (pair_.m_property))
+                , m_value (std::move (pair_.m_value))
+            { }
+
             const T & value() const {
                 return m_value;
             }
@@ -61,7 +101,27 @@ namespace amqp {
 
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::TypeSingle
+ *
+ ******************************************************************************/
+
+template<typename T>
+inline std::string
+amqp::TypedSingle<T>::dump() const {
+    return std::to_string (m_value);
+}
+
+template<>
+std::string
+amqp::TypedSingle<std::list<std::unique_ptr<amqp::Value>>>::dump() const;
+
+/******************************************************************************
+ *
+ * amqp::TypedPair
+ *
+ ******************************************************************************/
 
 template<typename T>
 inline std::string
@@ -77,7 +137,7 @@ amqp::TypedPair<std::string>::dump() const {
 
 template<>
 std::string
-amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const;
+amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>::dump() const;
 
 /******************************************************************************
  *
@@ -93,7 +153,7 @@ namespace amqp {
             virtual ~Reader() = default;
             virtual std::any read(pn_data_t *) const = 0;
             virtual std::string readString(pn_data_t *) const = 0;
-            virtual std::unique_ptr<Pair> dump(
+            virtual std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &) const = 0;

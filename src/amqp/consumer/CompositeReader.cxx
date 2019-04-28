@@ -38,7 +38,7 @@ CompositeReader::readString (pn_data_t * data_) const {
 /**
  *
  */
-std::unique_ptr<amqp::Pair>
+std::unique_ptr<amqp::Value>
 amqp::
 CompositeReader::dump (
     const std::string & name_,
@@ -46,7 +46,7 @@ CompositeReader::dump (
     const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     proton::is_described (data_);
-    proton::auto_enter_and_next ae (data_);
+    proton::auto_enter ae (data_);
 
     auto it = schema_->fromDescriptor(proton::get_symbol<std::string>(data_));
     auto & fields = dynamic_cast<internal::schema::Composite *>(it->second.get())->fields();
@@ -55,7 +55,7 @@ CompositeReader::dump (
 
     pn_data_next (data_);
 
-    std::vector<std::unique_ptr<amqp::Pair>> read;
+    std::vector<std::unique_ptr<amqp::Value>> read;
     read.reserve (fields.size());
 
     proton::is_list (data_);
@@ -71,7 +71,7 @@ CompositeReader::dump (
         }
     }
 
-    return std::make_unique<amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>> (
+    return std::make_unique<amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>> (
             name_,
             std::move (read));
 }

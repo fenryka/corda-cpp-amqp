@@ -30,10 +30,10 @@ namespace amqp {
 
             std::string readString(pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
-                const std::unique_ptr<internal::schema::Schema> &) const override;
+                const std::unique_ptr<internal::schema::Schema> &) const override = 0;
 
             const std::string & name() const override;
     };
@@ -59,6 +59,11 @@ namespace amqp {
             ~ListReader() final = default;
 
             internal::schema::Restricted::RestrictedTypes type() const;
+
+            std::unique_ptr<Value> dump(
+                const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &) const override;
 
     };
 

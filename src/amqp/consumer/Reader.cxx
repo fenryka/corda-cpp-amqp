@@ -1,8 +1,10 @@
 #include "Reader.h"
 
+/******************************************************************************/
+
 template<>
 std::string
-amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const {
+amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>::dump() const {
     std::strstream rtn;
     rtn << m_property + " : { ";
 
@@ -14,3 +16,18 @@ amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const {
 
     return rtn.str();
 }
+
+/******************************************************************************/
+
+template<>
+std::string
+amqp::TypedSingle<std::list<std::unique_ptr<amqp::Value>>>::dump() const {
+    std::strstream rtn;
+
+    rtn << "[ ";
+    rtn << "] ";
+
+    return rtn.str();
+}
+
+/******************************************************************************/

@@ -46,7 +46,7 @@ namespace proton {
             pn_data_t * m_data;
 
         public :
-            auto_enter (pn_data_t *);
+            auto_enter (pn_data_t *, bool next_ = false);
             ~auto_enter();
     };
 
@@ -56,18 +56,9 @@ namespace proton {
 
         public :
             auto_next (pn_data_t *);
-            auto_next (auto_enter&) = delete;
+            auto_next (const auto_next &) = delete;
 
             ~auto_next();
-    };
-
-    class auto_enter_and_next {
-        private :
-            pn_data_t * m_data;
-
-        public :
-            auto_enter_and_next (pn_data_t *);
-            ~auto_enter_and_next();
     };
 
     class auto_list_enter {
@@ -76,7 +67,7 @@ namespace proton {
             pn_data_t * m_data;
 
         public :
-            auto_list_enter (pn_data_t *);
+            auto_list_enter (pn_data_t *, bool next_ = false);
             ~auto_list_enter();
 
             size_t elements() const;

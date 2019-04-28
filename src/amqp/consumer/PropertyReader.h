@@ -28,7 +28,7 @@ namespace amqp {
 
             virtual std::any read (pn_data_t *) const override = 0;
 
-            virtual std::unique_ptr<Pair> dump(
+            virtual std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
@@ -47,7 +47,7 @@ namespace amqp {
 
             std::any read (pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
@@ -67,7 +67,7 @@ namespace amqp {
 
             std::any read (pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
@@ -87,7 +87,7 @@ namespace amqp {
 
             std::any read (pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
@@ -107,7 +107,7 @@ namespace amqp {
 
             std::any read (pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
@@ -127,7 +127,7 @@ namespace amqp {
 
             std::any read (pn_data_t *) const override;
 
-            std::unique_ptr<Pair> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
