@@ -47,9 +47,6 @@ data_and_stop(std::ifstream & f_, size_t sz) {
             << *envelope << std::endl;
     }
 
-    std::cout << "Skipping blob data dump..." << std::endl;
-    return;
-
     CompositeFactory cf;
 
     cf.process (envelope->schema());

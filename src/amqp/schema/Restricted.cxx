@@ -15,7 +15,30 @@ operator << (
     stream_
         << "name       : " << clazz_.name() << std::endl
         << "label      : " << clazz_.m_label << std::endl
-        << "descriptor : " << clazz_.descriptor();
+        << "descriptor : " << clazz_.descriptor() << std::endl
+        << "source     : " << clazz_.m_source;
+
+    return stream_;
+}
+
+/******************************************************************************/
+
+std::ostream &
+amqp::internal::schema::
+operator << (
+    std::ostream & stream_,
+    const amqp::internal::schema::Restricted::RestrictedTypes & type_)
+{
+    switch (type_) {
+        case Restricted::RestrictedTypes::List : {
+            stream_ << "list";
+            break;
+        }
+        case Restricted::RestrictedTypes::Map : {
+            stream_ << "map";
+            break;
+        }
+    }
 
     return stream_;
 }
@@ -36,9 +59,11 @@ Restricted::Restricted (
 ) : AMQPTypeNotation (name_, descriptor_)
   , m_label (label_)
   , m_provides (provides_)
-  , m_source (source_)
+  , m_sourceStr(source_)
 {
-
+    if (m_sourceStr == "list") {
+        m_source = List;
+    }
 }
 
 /******************************************************************************/
@@ -51,4 +76,10 @@ Restricted::type() const {
 
 /******************************************************************************/
 
+amqp::internal::schema::Restricted::RestrictedTypes
+amqp::internal::schema::
+Restricted::restrictedType() const {
+    return m_source;
+}
 
+/******************************************************************************/

@@ -7,6 +7,8 @@
 #include <any>
 #include <vector>
 
+#include "Restricted.h"
+
 /******************************************************************************/
 
 struct pn_data_t;
@@ -22,7 +24,7 @@ namespace amqp {
         public :
             RestrictedReader () = default;
 
-            ~RestrictedReader() final = default;
+            ~RestrictedReader() = default;
 
             std::any read(pn_data_t *) const override ;
 
@@ -34,6 +36,30 @@ namespace amqp {
                 const std::unique_ptr<internal::schema::Schema> &) const override;
 
             const std::string & name() const override;
+    };
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
+    class ListReader : public RestrictedReader {
+        private :
+            static const std::string m_name;
+
+            // How to read the underlying types
+            std::weak_ptr<amqp::Reader> m_reader;
+
+        public :
+            ListReader (std::weak_ptr<amqp::Reader> reader_)
+                : m_reader (reader_)
+            { }
+
+            ~ListReader() final = default;
+
+            internal::schema::Restricted::RestrictedTypes type() const;
+
     };
 
 }

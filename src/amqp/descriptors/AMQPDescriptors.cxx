@@ -6,6 +6,7 @@
 #include <proton/types.h>
 #include <proton/codec.h>
 
+#include "debug.h"
 #include "Field.h"
 #include "Schema.h"
 #include "Envelope.h"
@@ -14,14 +15,6 @@
 
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
-
-/******************************************************************************/
-
-#if 0
-    #define DBG(X) std::cout << X
-#else
-    #define DBG(X)
-#endif
 
 /******************************************************************************
  *

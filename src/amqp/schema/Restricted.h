@@ -28,6 +28,9 @@ namespace amqp::internal::schema {
         public :
             friend std::ostream & operator << (std::ostream &, const Restricted&);
 
+            enum RestrictedTypes { List, Map };
+
+
         private :
             // could be null in the stream... not sure that information is
             // worth preserving beyond an empty string here.
@@ -35,7 +38,9 @@ namespace amqp::internal::schema {
 
             std::vector<std::string> m_provides;
 
-            std::string m_source;
+            std::string m_sourceStr;
+
+            RestrictedTypes m_source;
         public :
             Restricted (
                 std::unique_ptr<Descriptor> & descriptor_,
@@ -47,9 +52,14 @@ namespace amqp::internal::schema {
             Restricted(Restricted&) = delete;
 
             Type type() const override;
+
+            RestrictedTypes restrictedType() const;
     };
 
+
+    std::ostream & operator << (std::ostream &, const Restricted::RestrictedTypes &);
 }
+
 
 /******************************************************************************/
 

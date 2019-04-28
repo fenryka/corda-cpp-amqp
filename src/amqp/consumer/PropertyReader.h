@@ -17,9 +17,10 @@ namespace amqp {
 
         public :
             /**
-             * Static Faactory method for creating apropriate derived types
+             * Static Factory method for creating apropriate derived types
              */
             static std::shared_ptr<PropertyReader> make (const FieldPtr &);
+            static std::shared_ptr<PropertyReader> make (const std::string &);
 
             virtual ~PropertyReader() = default;
 

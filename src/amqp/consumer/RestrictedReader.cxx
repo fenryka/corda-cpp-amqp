@@ -100,4 +100,17 @@ RestrictedReader::name() const {
     return m_name;
 }
 
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+amqp::internal::schema::Restricted::RestrictedTypes
+amqp::
+ListReader::type() const {
+    return internal::schema::Restricted::RestrictedTypes::List;
+}
+
 /******************************************************************************/
+

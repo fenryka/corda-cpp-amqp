@@ -24,6 +24,7 @@ class CompositeFactory {
          *
          */
         spStrMap_t<amqp::PropertyReader> m_propertyReaders;
+
         spStrMap_t<amqp::Reader> m_readersByType;
         spStrMap_t<amqp::Reader> m_readersByDescriptor;
 

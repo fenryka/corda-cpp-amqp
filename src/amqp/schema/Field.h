@@ -14,7 +14,6 @@ namespace amqp::internal::schema {
 
     enum FieldType { PrimitiveProperty, CompositeProperty, RestrictedProperty };
 
-
     /**
      *
      * A Corda AMQP Scehma Field type has:
@@ -29,6 +28,8 @@ namespace amqp::internal::schema {
     class Field : public AMQPDescribed {
         public :
             friend std::ostream & operator << (std::ostream &, const Field &);
+
+            static bool typeIsPrimitive(const std::string &);
 
         private :
             std::string                       m_name;
@@ -48,9 +49,10 @@ namespace amqp::internal::schema {
                    bool                           mandatory_,
                    bool                           multiple_);
 
-            const std::string & name() const;
-            const std::string & type() const;
-            FieldType           fieldType() const;
+            const std::string            & name() const;
+            const std::string            & type() const;
+            FieldType                      fieldType() const;
+            const std::list<std::string> & requires() const;
     };
 
 }

@@ -81,6 +81,15 @@ PropertyReader::make (const FieldPtr & field_) {
     return propertyMap[field_->type()]();
 }
 
+/******************************************************************************/
+
+std::shared_ptr<amqp::PropertyReader>
+amqp::
+PropertyReader::make (const std::string & type_) {
+    return propertyMap[type_]();
+}
+
+
 /******************************************************************************
  *
  * StringPropertyReader
