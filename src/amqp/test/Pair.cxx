@@ -39,7 +39,7 @@ TEST (Pair, UP2) {
         }
     };
 
-    std::vector<std::unique_ptr<amqp::Pair>> vec;
+    std::vector<std::unique_ptr<amqp::Value>> vec;
     vec.reserve(2);
 
     vec.emplace_back (builder::build ("first",  1));

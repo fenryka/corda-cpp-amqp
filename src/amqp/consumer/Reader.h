@@ -3,10 +3,12 @@
 /******************************************************************************/
 
 #include <any>
+#include <list>
 #include <string>
-#include <strstream>
+#include <vector>
+#include <memory>
 
-#include "amqp/schema/Schema.h"
+#include "Schema.h"
 
 /******************************************************************************/
 
@@ -92,7 +94,7 @@ namespace amqp {
                 , m_value (std::move (value_))
             { }
 
-            TypedPair (const TypedPair && pair_)
+            TypedPair (TypedPair && pair_)
                 : Pair (std::move (pair_.m_property))
                 , m_value (std::move (pair_.m_value))
             { }
@@ -132,6 +134,14 @@ template<>
 std::string
 amqp::TypedSingle<std::list<std::unique_ptr<amqp::Value>>>::dump() const;
 
+template<>
+std::string
+amqp::TypedSingle<std::vector<std::unique_ptr<amqp::Single>>>::dump() const;
+
+template<>
+std::string
+amqp::TypedSingle<std::list<std::unique_ptr<amqp::Single>>>::dump() const;
+
 /******************************************************************************
  *
  * amqp::TypedPair
@@ -162,6 +172,10 @@ amqp::TypedPair<std::list<std::unique_ptr<amqp::Value>>>::dump() const;
 template<>
 std::string
 amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const;
+
+template<>
+std::string
+amqp::TypedPair<std::list<std::unique_ptr<amqp::Pair>>>::dump() const;
 
 /******************************************************************************
  *

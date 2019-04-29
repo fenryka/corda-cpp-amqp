@@ -5,8 +5,9 @@
 
 /******************************************************************************/
 
+namespace amqp::internal::schema {
+
 std::ostream &
-amqp::internal::schema::
 operator << (std::ostream & stream_, const Composite & clazz_) {
     stream_
         << "name       : " << clazz_.name() << std::endl
@@ -18,6 +19,8 @@ operator << (std::ostream & stream_, const Composite & clazz_) {
     stream_ << std::setw(0);
 
     return stream_;
+}
+
 }
 
 /******************************************************************************

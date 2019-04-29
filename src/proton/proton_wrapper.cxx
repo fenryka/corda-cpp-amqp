@@ -47,7 +47,7 @@ operator << (std::ostream& stream, pn_data_t * data_) {
                 stream << " " << pn_data_get_symbol (data_).size;
                 stream << std::endl << "   -> ";
                 auto v = pn_data_get_symbol (data_);
-                for (int i (0) ; i < v.size ; ++i) {
+                for (size_t i (0) ; i < v.size ; ++i) {
                     stream << *(v.start + i) << " ";
                 }
                 break;

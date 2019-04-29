@@ -45,7 +45,7 @@ ListReader::dump_(
         {
             proton::auto_list_enter ale (data_, true);
 
-            for (int i { 0 } ; i < ale.elements() ; ++i) {
+            for (size_t i { 0 } ; i < ale.elements() ; ++i) {
                 read.emplace_back (m_reader.lock()->dump(data_, schema_));
             }
         }

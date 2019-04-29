@@ -20,8 +20,9 @@ namespace {
 
 /******************************************************************************/
 
+namespace amqp::internal::schema {
+
 std::ostream &
-amqp::internal::schema::
 operator << (std::ostream & stream_, const Schema & schema_) {
     uint32_t count { 1 };
     bool first { true };
@@ -35,6 +36,8 @@ operator << (std::ostream & stream_, const Schema & schema_) {
     }
 
     return stream_;
+}
+
 }
 
 /******************************************************************************

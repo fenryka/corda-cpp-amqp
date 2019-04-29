@@ -6,8 +6,9 @@
 
 /******************************************************************************/
 
+namespace amqp::internal::schema {
+
 std::ostream &
-amqp::internal::schema::
 operator << (
     std::ostream & stream_,
     const amqp::internal::schema::Restricted & clazz_)
@@ -21,10 +22,13 @@ operator << (
     return stream_;
 }
 
+}
+
 /******************************************************************************/
 
+namespace amqp::internal::schema {
+
 std::ostream &
-amqp::internal::schema::
 operator << (
     std::ostream & stream_,
     const amqp::internal::schema::Restricted::RestrictedTypes & type_)
@@ -41,6 +45,8 @@ operator << (
     }
 
     return stream_;
+}
+
 }
 
 /******************************************************************************

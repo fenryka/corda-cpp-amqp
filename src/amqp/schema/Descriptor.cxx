@@ -2,6 +2,22 @@
 
 /******************************************************************************/
 
+namespace amqp::internal::schema {
+
+std::ostream &
+operator << (std::ostream & stream_, const Descriptor & desc_) {
+    stream_ << desc_.m_name;
+    return stream_;
+}
+
+}
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
 amqp::internal::schema::
 Descriptor::Descriptor (const std::string & name_)
     : m_name (name_)
@@ -17,11 +33,3 @@ Descriptor::name() const {
 
 /******************************************************************************/
 
-std::ostream &
-amqp::internal::schema::
-operator << (std::ostream & stream_, const Descriptor & desc_) {
-    stream_ << desc_.m_name;
-    return stream_;
-}
-
-/******************************************************************************/

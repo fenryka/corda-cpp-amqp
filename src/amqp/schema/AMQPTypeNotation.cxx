@@ -9,8 +9,9 @@
  *
  ******************************************************************************/
 
+namespace amqp::internal::schema {
+
 std::ostream &
-amqp::internal::schema::
 operator << (std::ostream & stream_, const AMQPTypeNotation & clazz_) {
     switch (clazz_.type()) {
         case AMQPTypeNotation::Type::Composite : {
@@ -23,6 +24,8 @@ operator << (std::ostream & stream_, const AMQPTypeNotation & clazz_) {
         }
     }
     return stream_;
+}
+
 }
 
 /******************************************************************************

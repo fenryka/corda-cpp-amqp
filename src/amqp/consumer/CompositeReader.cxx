@@ -60,7 +60,7 @@ CompositeReader::_dump (
     {
         proton::auto_enter ae (data_);
 
-        for (int i (0) ; i < m_readers.size() ; ++i) {
+        for (size_t i (0) ; i < m_readers.size() ; ++i) {
             read.emplace_back (
                     m_readers[i].lock()->dump (
                             fields[i]->name(),
