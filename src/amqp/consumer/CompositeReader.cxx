@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include <proton/codec.h>
-
+#include "debug.h"
 #include "proton/proton_wrapper.h"
 
 /******************************************************************************/
@@ -43,6 +43,7 @@ CompositeReader::_dump (
         pn_data_t * data_,
         const std::unique_ptr<amqp::internal::schema::Schema> & schema_
 ) const {
+    DBG ("Read Composite" << std::endl);
     proton::is_described (data_);
     proton::auto_enter ae (data_);
 
@@ -60,14 +61,11 @@ CompositeReader::_dump (
     {
         proton::auto_enter ae (data_);
 
-        for (size_t i (0) ; i < m_readers.size() ; ++i) {
-            read.emplace_back (
-                    m_readers[i].lock()->dump (
-                            fields[i]->name(),
-                            data_,
-                            schema_
+        for (int i (0) ; i < m_readers.size() ; ++i) {
+            auto l =  m_readers[i].lock();
+            DBG (fields[i]->name() << " " << (l ? "true" : "false") << std::endl);
 
-                    ));
+            read.emplace_back (l->dump (fields[i]->name(), data_, schema_));
         }
     }
 

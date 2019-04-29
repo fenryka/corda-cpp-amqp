@@ -101,7 +101,6 @@ CompositeFactory::process(
                         return processRestricted(schema_, history_);
                     }
                 }
-                return nullptr;
             });
 }
 
@@ -127,6 +126,7 @@ CompositeFactory::processRestricted(
             << std::endl);
 
         if (amqp::internal::schema::Field::typeIsPrimitive(split.second)) {
+            DBG ("  List of Prism" << std::endl);
             auto reader = computeIfAbsent<amqp::PropertyReader> (
                     m_propertyReaders,
                     split.second,
@@ -136,6 +136,7 @@ CompositeFactory::processRestricted(
 
             return std::make_shared<amqp::ListReader> (reader);
         } else {
+            DBG ("  List of Composite" << std::endl);
             auto reader = computeIfAbsent<amqp::Reader> (
                     m_readersByType,
                     split.second,
