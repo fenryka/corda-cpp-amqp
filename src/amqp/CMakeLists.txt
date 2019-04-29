@@ -1,6 +1,7 @@
 include_directories (descriptors)
 include_directories (schema)
 include_directories (consumer)
+include_directories (.)
 
 set (amqp_sources
     descriptors/AMQPDescriptors.cxx

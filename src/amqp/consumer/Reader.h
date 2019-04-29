@@ -8,7 +8,7 @@
 #include <vector>
 #include <memory>
 
-#include "Schema.h"
+#include "schema/Schema.h"
 
 /******************************************************************************/
 

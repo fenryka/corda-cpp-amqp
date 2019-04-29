@@ -100,6 +100,7 @@ main (int argc, char **argv) {
     if (encoding == amqp::DATA_AND_STOP) {
         data_and_stop(f, results.st_size - 8);
     } else {
+        std::cerr << "BAD ENCODING" << std::endl;
         return EXIT_FAILURE;
     }
 
