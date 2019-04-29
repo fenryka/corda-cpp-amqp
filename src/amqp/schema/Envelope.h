@@ -21,20 +21,15 @@ namespace amqp::internal::schema {
             std::string m_descriptor;
 
         public :
-            Envelope() = default;
+            Envelope() = delete;
 
             Envelope (
                 std::unique_ptr<Schema> & schema_,
-                std::string & descriptor_
-            ) : m_schema (std::move (schema_))
-              , m_descriptor (std::move (descriptor_))
-            { }
+                std::string & descriptor_);
 
             const std::unique_ptr<Schema> & schema() const;
 
-            const std::string & descriptor() const {
-                return m_descriptor;
-            }
+            const std::string & descriptor() const;
     };
 
 }

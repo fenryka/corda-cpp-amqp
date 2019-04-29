@@ -25,7 +25,11 @@ operator << (std::ostream & stream_, const AMQPTypeNotation & clazz_) {
     return stream_;
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * amqp::internal::schema::AMQPTypeNotation
+ *
+ ******************************************************************************/
 
 const std::string &
 amqp::internal::schema::

@@ -51,6 +51,10 @@ namespace amqp {
             // How to read the underlying types
             std::weak_ptr<amqp::Reader> m_reader;
 
+            std::list<std::unique_ptr<amqp::Value>> dump_(
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &) const;
+
         public :
             ListReader (std::weak_ptr<amqp::Reader> reader_)
                 : m_reader (reader_)
@@ -65,6 +69,9 @@ namespace amqp {
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &) const override;
 
+            std::unique_ptr<Value> dump(
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &) const override;
     };
 
 }

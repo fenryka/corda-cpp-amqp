@@ -1,6 +1,6 @@
-#include <iostream>
-#include <amqp/descriptors/AMQPDescriptorRegistory.h>
 #include "RestrictedReader.h"
+
+#include <iostream>
 
 #include "proton/proton_wrapper.h"
 
@@ -28,39 +28,60 @@ RestrictedReader::readString(pn_data_t * data_) const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::Value>
+std::list<std::unique_ptr<amqp::Value>>
 amqp::
-ListReader::dump (
-    const std::string &,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_
+ListReader::dump_(
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_
 ) const {
-    std::cout << "List Dump" << std::endl;
     proton::is_described (data_);
-    std::cout << data_ << std::endl;
 
     std::list<std::unique_ptr<amqp::Value>> read;
 
     {
         proton::auto_enter ae (data_);
         auto it = schema_->fromDescriptor(proton::readAndNext<std::string>(data_));
-        std::cout << (*it).first << std::endl;
 
         {
             proton::auto_list_enter ale (data_, true);
 
             for (int i { 0 } ; i < ale.elements() ; ++i) {
-                auto a = m_reader.lock()->dump("a", data_, schema_);
-//                read.emplace_back(a);
+                read.emplace_back (m_reader.lock()->dump(data_, schema_));
             }
-
-            std::cout << "done" << std::endl;
         }
     }
 
-    std::cout << data_ << std::endl;
-    pn_data_next(data_);
-    return nullptr;
+    return read;
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+ListReader::dump (
+    const std::string & name_,
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_
+) const {
+    proton::auto_next an (data_);
+
+    return std::make_unique<amqp::TypedPair<std::list<std::unique_ptr<amqp::Value>>>>(
+            name_,
+            dump_ (data_, schema_));
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+ListReader::dump(
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_
+) const {
+    proton::auto_next an (data_);
+
+    return std::make_unique<amqp::TypedSingle<std::list<std::unique_ptr<amqp::Value>>>>(
+            dump_ (data_, schema_));
 }
 
 /******************************************************************************/

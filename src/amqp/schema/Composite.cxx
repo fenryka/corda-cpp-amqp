@@ -22,7 +22,7 @@ operator << (std::ostream & stream_, const Composite & clazz_) {
 
 /******************************************************************************
  *
- *
+ * amqp::internal::schema::Composite
  *
  ******************************************************************************/
 
@@ -34,9 +34,9 @@ Composite::Composite (
         std::unique_ptr<Descriptor> & descriptor_,
         std::vector<std::unique_ptr<Field>> & fields_
 ) : AMQPTypeNotation (name_, descriptor_)
-        , m_label (label_)
-        , m_provides (provides_)
-        , m_fields (std::move (fields_))
+  , m_label (label_)
+  , m_provides (provides_)
+  , m_fields (std::move (fields_))
 { }
 
 /******************************************************************************/

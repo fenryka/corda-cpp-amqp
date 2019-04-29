@@ -34,14 +34,19 @@ namespace amqp {
             T m_value;
 
         public:
-            explicit TypedSingle (T & value_)
+            explicit TypedSingle (const T & value_)
                 : Single()
                 , m_value (value_)
             { }
 
             explicit TypedSingle (T && value_)
+                    : Single()
+                    , m_value { std::move (value_) }
+            { }
+
+            TypedSingle (const TypedSingle && value_) noexcept
                 : Single()
-                , m_value (std::move (value_))
+                , m_value { std::move (value_.m_value) }
             { }
 
             const T & value() const {
@@ -87,7 +92,7 @@ namespace amqp {
                 , m_value (std::move (value_))
             { }
 
-            TypedPair (TypedPair && pair_)
+            TypedPair (const TypedPair && pair_)
                 : Pair (std::move (pair_.m_property))
                 , m_value (std::move (pair_.m_value))
             { }
@@ -110,8 +115,18 @@ namespace amqp {
 template<typename T>
 inline std::string
 amqp::TypedSingle<T>::dump() const {
-    return std::to_string (m_value);
+    return std::to_string(m_value);
 }
+
+template<>
+inline std::string
+amqp::TypedSingle<std::string>::dump() const {
+    return m_value;
+}
+
+template<>
+std::string
+amqp::TypedSingle<std::vector<std::unique_ptr<amqp::Value>>>::dump() const;
 
 template<>
 std::string
@@ -139,6 +154,15 @@ template<>
 std::string
 amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>::dump() const;
 
+template<>
+std::string
+amqp::TypedPair<std::list<std::unique_ptr<amqp::Value>>>::dump() const;
+
+
+template<>
+std::string
+amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const;
+
 /******************************************************************************
  *
  *
@@ -155,6 +179,9 @@ namespace amqp {
             virtual std::string readString(pn_data_t *) const = 0;
             virtual std::unique_ptr<Value> dump(
                 const std::string &,
+                pn_data_t *,
+                const std::unique_ptr<internal::schema::Schema> &) const = 0;
+            virtual std::unique_ptr<Value> dump(
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &) const = 0;
             virtual const std::string & name() const = 0;

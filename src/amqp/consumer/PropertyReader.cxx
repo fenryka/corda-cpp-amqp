@@ -115,12 +115,24 @@ StringPropertyReader::readString (pn_data_t * data_) const {
 std::unique_ptr<amqp::Value>
 amqp::
 StringPropertyReader::dump (
-    const std::string & name_,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_) const
+        const std::string & name_,
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
+            "\"" + proton::readAndNext<std::string> (data_) + "\"");
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+StringPropertyReader::dump (
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_) const
+{
+    return std::make_unique<TypedSingle<std::string>> (
             "\"" + proton::readAndNext<std::string> (data_) + "\"");
 }
 
@@ -149,12 +161,24 @@ IntPropertyReader::readString (pn_data_t * data_) const {
 std::unique_ptr<amqp::Value>
 amqp::
 IntPropertyReader::dump (
-    const std::string & name_,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_) const
+        const std::string & name_,
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
+            std::to_string (proton::readAndNext<int> (data_)));
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+IntPropertyReader::dump (
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_) const
+{
+    return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<int> (data_)));
 }
 
@@ -183,12 +207,24 @@ BoolPropertyReader::readString (pn_data_t * data_) const {
 std::unique_ptr<amqp::Value>
 amqp::
 BoolPropertyReader::dump (
-    const std::string & name_,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_) const
+        const std::string & name_,
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
+            std::to_string (proton::readAndNext<bool> (data_)));
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+BoolPropertyReader::dump (
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_) const
+{
+    return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<bool> (data_)));
 }
 
@@ -217,12 +253,24 @@ LongPropertyReader::readString (pn_data_t * data_) const {
 std::unique_ptr<amqp::Value>
 amqp::
 LongPropertyReader::dump (
-    const std::string & name_,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_) const
+        const std::string & name_,
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
+            std::to_string (proton::readAndNext<long> (data_)));
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+LongPropertyReader::dump (
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_) const
+{
+    return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<long> (data_)));
 }
 
@@ -251,12 +299,24 @@ DoublePropertyReader::readString (pn_data_t * data_) const {
 std::unique_ptr<amqp::Value>
 amqp::
 DoublePropertyReader::dump (
-    const std::string & name_,
-    pn_data_t * data_,
-    const std::unique_ptr<internal::schema::Schema> & schema_) const
+        const std::string & name_,
+        pn_data_t * data_,
+        const std::unique_ptr<internal::schema::Schema> & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
+            std::to_string (proton::readAndNext<double> (data_)));
+}
+
+/******************************************************************************/
+
+std::unique_ptr<amqp::Value>
+amqp::
+DoublePropertyReader::dump (
+    pn_data_t * data_,
+    const std::unique_ptr<internal::schema::Schema> & schema_) const
+{
+    return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<double> (data_)));
 }
 
