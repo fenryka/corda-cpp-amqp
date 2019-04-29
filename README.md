@@ -23,6 +23,6 @@ An implementation of a "blob inspector" that can take a serialised blob and deco
 
 ### Linux
 
-sudo apt-get install cmake
-sudo apt-get install libqpid-proton8-dev
-sudi apt-get install libgtest-dev
+ * sudo apt-get install cmake
+ * sudo apt-get install libqpid-proton8-dev
+ * sudi apt-get install libgtest-dev
