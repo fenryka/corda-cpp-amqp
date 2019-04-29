@@ -46,7 +46,7 @@ TEST (Pair, UP2) {
     vec.emplace_back (builder::build ("second", 2));
 
     std::unique_ptr<amqp::Pair> test =
-        std::make_unique<amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>> (
+        std::make_unique<amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>> (
             "Vector", std::move (vec));
 
     EXPECT_EQ("Vector : { first : 1, second : 2 }", test->dump());

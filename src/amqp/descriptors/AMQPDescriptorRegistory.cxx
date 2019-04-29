@@ -2,6 +2,7 @@
 #include "AMQPDescriptors.h"
 
 #include <limits>
+#include <climits>
 
 /******************************************************************************/
 

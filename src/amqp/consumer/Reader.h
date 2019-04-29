@@ -139,6 +139,12 @@ template<>
 std::string
 amqp::TypedPair<std::vector<std::unique_ptr<amqp::Value>>>::dump() const;
 
+/*
+template<>
+std::string
+amqp::TypedPair<std::vector<std::unique_ptr<amqp::Pair>>>::dump() const;
+*/
+
 /******************************************************************************
  *
  *

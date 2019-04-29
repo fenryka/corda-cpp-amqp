@@ -3,6 +3,8 @@
 #include <fstream>
 #include <cstddef>
 
+#include <assert.h>
+#include <string.h>
 #include <proton/types.h>
 #include <proton/codec.h>
 #include <sys/stat.h>
@@ -19,7 +21,7 @@
 /******************************************************************************/
 
 void
-data_and_stop(std::ifstream & f_, size_t sz) {
+data_and_stop(std::ifstream & f_, ssize_t sz) {
     char * blob = new char[sz];
     memset (blob, 0, sz);
     f_.read(blob, sz);
