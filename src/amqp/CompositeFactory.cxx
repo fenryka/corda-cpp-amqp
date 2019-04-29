@@ -5,6 +5,8 @@
 #include <iostream>
 #include <functional>
 
+#include <assert.h>
+
 #include "debug.h"
 
 #include "consumer/PropertyReader.h"
@@ -28,6 +30,7 @@ computeIfAbsent (
     if (it == map_.end()) {
         DBG ("ComputeIfAbsent \"" << k_ << "\" - missing" << std::endl);
         map_[k_] = std::move (f_());
+        DBG ("                \"" << k_ << "\" - ADDED" << std::endl);
 
         return map_[k_];
     }
@@ -89,6 +92,8 @@ CompositeFactory::process(
     upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator schema_,
     std::set<std::string> & history_)
 {
+    DBG ("Process: " << schema_->first << std::endl);
+
     return computeIfAbsent<amqp::Reader> (
             m_readersByType,
             schema_->first,
@@ -119,7 +124,7 @@ CompositeFactory::processRestricted(
     {
         auto split = listType(restricted->name());
 
-        DBG ("  Processing List - "
+        DBG ("Processing List - "
             << split.first
             << " :: "
             << split.second
@@ -136,7 +141,7 @@ CompositeFactory::processRestricted(
 
             return std::make_shared<amqp::ListReader> (reader);
         } else {
-            DBG ("  List of Composite" << std::endl);
+            DBG ("  List of Composite - " << split.second << std::endl);
             auto reader = computeIfAbsent<amqp::Reader> (
                     m_readersByType,
                     split.second,
@@ -169,6 +174,8 @@ CompositeFactory::processComposite (
     readers.reserve(fields.size());
 
     for (const auto & field : fields) {
+        DBG ("  Field: " << field->name() << ": " << field->type() << std::endl);
+
         switch (field->fieldType()) {
             case amqp::internal::schema::FieldType::PrimitiveProperty : {
                 auto reader = computeIfAbsent<amqp::PropertyReader>(
@@ -186,7 +193,7 @@ CompositeFactory::processComposite (
                         m_readersByType,
                         field->type(),
                         [&schema_, &history_, this]() -> std::shared_ptr<amqp::Reader> {
-                            return process(++schema_, history_);
+                            return process (++schema_, history_);
                         });
 
                 readers.emplace_back(reader);
