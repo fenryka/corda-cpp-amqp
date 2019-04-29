@@ -3,7 +3,7 @@
 #include <set>
 #include <vector>
 #include <iostream>
-#include <amqp/schema/Restricted.h>
+#include <functional>
 
 #include "debug.h"
 

@@ -1,6 +1,6 @@
 PROJECT (BLOB-INSPECTOR)
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.10)
 
 SET (${PROJECT_NAME}_MAJOR_VERSION 0)
 SET (${PROJECT_NAME}_MINOR_VERSION 0)

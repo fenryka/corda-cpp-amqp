@@ -4,6 +4,7 @@
 
 #include <map>
 #include <string>
+#include <memory>
 #include <iostream>
 
 #include "amqp/AMQPDescribed.h"
