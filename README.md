@@ -21,6 +21,21 @@ An implementation of a "blob inspector" that can take a serialised blob and deco
 
 ## Setup
 
+### MacOS
+
+ * brew install cmake
+ * brew install qpid-proton
+
+Google Test
+
+ * git clone https://github.com/google/googletest
+ * cd googletest
+ * mkdir build
+ * cd build
+ * cmake ..
+ * make
+ * make install
+
 ### Linux
 
  * sudo apt-get install cmake
