@@ -16,8 +16,7 @@ namespace {
     std::map<std::string, std::shared_ptr<amqp::PropertyReader>(*)() > propertyMap = {
         {
             "int", []() -> std::shared_ptr<amqp::PropertyReader> {
-                return std::make_shared<amqp::IntPropertyReader> (
-                        amqp::IntPropertyReader());
+                return std::make_shared<amqp::IntPropertyReader> ();
             }
         },
         {
@@ -54,20 +53,40 @@ const std::string amqp::StringPropertyReader::m_name { // NOLINT
     "String Reader"
 };
 
+const std::string amqp::StringPropertyReader::m_type { // NOLINT
+        "string"
+};
+
 const std::string amqp::IntPropertyReader::m_name { // NOLINT
     "Int Reader"
+};
+
+const std::string amqp::IntPropertyReader::m_type { // NOLINT
+        "int"
 };
 
 const std::string amqp::BoolPropertyReader::m_name { // NOLINT
     "Bool Reader"
 };
 
+const std::string amqp::BoolPropertyReader::m_type { // NOLINT
+        "bool"
+};
+
 const std::string amqp::LongPropertyReader::m_name { // NOLINT
     "Long Reader"
 };
 
+const std::string amqp::LongPropertyReader::m_type { // NOLINT
+        "long"
+};
+
 const std::string amqp::DoublePropertyReader::m_name { // NOLINT
     "Double Reader"
+};
+
+const std::string amqp::DoublePropertyReader::m_type { // NOLINT
+        "double"
 };
 
 /******************************************************************************/

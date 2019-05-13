@@ -2,6 +2,7 @@
 
 /******************************************************************************/
 
+#include <iostream>
 #include "Reader.h"
 
 #include "amqp/schema/Field.h"
@@ -40,12 +41,15 @@ namespace amqp {
             ) const override = 0;
 
             virtual const std::string & name() const override = 0;
+
+            virtual const std::string & type() const override = 0;
     };
 
 
     class StringPropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
+            static const std::string m_type;
 
         public :
             std::string readString (pn_data_t *) const override;
@@ -65,14 +69,22 @@ namespace amqp {
 
             const std::string & name() const override {
                 return m_name;
+            }
+
+            const std::string & type() const override {
+                return m_type;
             }
     };
 
     class IntPropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
+            static const std::string m_type;
 
         public :
+            ~IntPropertyReader() {
+                std::cout << "Destroying: " << m_name << std::endl;
+            }
             std::string readString (pn_data_t *) const override;
 
             std::any read (pn_data_t *) const override;
@@ -90,12 +102,17 @@ namespace amqp {
 
             const std::string & name() const override {
                 return m_name;
+            }
+
+            const std::string & type() const override {
+                return m_type;
             }
     };
 
     class BoolPropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
+            static const std::string m_type;
 
         public :
             std::string readString (pn_data_t *) const override;
@@ -115,12 +132,17 @@ namespace amqp {
 
             const std::string & name() const override {
                 return m_name;
+            }
+
+            const std::string & type() const override {
+                return m_type;
             }
     };
 
     class LongPropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
+            static const std::string m_type;
 
         public :
             std::string readString (pn_data_t *) const override;
@@ -141,11 +163,16 @@ namespace amqp {
             const std::string & name() const override {
                 return m_name;
             }
+
+            const std::string & type() const override {
+                return m_type;
+            }
     };
 
     class DoublePropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
+            static const std::string m_type;
 
         public :
             std::string readString (pn_data_t *) const override;
@@ -165,6 +192,10 @@ namespace amqp {
 
             const std::string & name() const override {
                 return m_name;
+            }
+
+            const std::string & type() const override {
+                return m_type;
             }
     };
 

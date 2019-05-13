@@ -30,7 +30,6 @@ namespace amqp::internal::schema {
 
             enum RestrictedTypes { List, Map };
 
-
         private :
             // could be null in the stream... not sure that information is
             // worth preserving beyond an empty string here.

@@ -3,12 +3,14 @@
 #include <set>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include <functional>
 
 #include <assert.h>
 
 #include "debug.h"
 
+#include "consumer/Reader.h"
 #include "consumer/PropertyReader.h"
 #include "consumer/CompositeReader.h"
 #include "consumer/RestrictedReader.h"
@@ -19,7 +21,7 @@
  *
  */
 template <typename T>
-std::shared_ptr<T>
+std::shared_ptr<T> &
 computeIfAbsent (
     spStrMap_t<T> & map_,
     const std::string & k_,
@@ -30,12 +32,18 @@ computeIfAbsent (
     if (it == map_.end()) {
         DBG ("ComputeIfAbsent \"" << k_ << "\" - missing" << std::endl);
         map_[k_] = std::move (f_());
-        DBG ("                \"" << k_ << "\" - ADDED" << std::endl);
+        DBG ("                \"" << k_ << "\" - RTN: " << map_[k_]->name() << " : " << map_[k_]->type() << std::endl);
+        assert (map_[k_]);
+        assert (map_[k_] != nullptr);
+        assert (k_ == map_[k_]->type());
 
         return map_[k_];
     }
     else {
         DBG ("ComputeIfAbsent \"" << k_ << "\" - found it" << std::endl);
+        DBG ("                \"" << k_ << "\" - RTN: " << map_[k_]->name() << std::endl);
+
+        assert (it->second != nullptr);
 
         return it->second;
     }
@@ -79,45 +87,44 @@ CompositeFactory::process (const SchemaPtr & schema_) {
 
         process(i, l);
 
-        m_readersByDescriptor[i->second->descriptor()] =
-                m_readersByType[i->first];
+        m_readersByDescriptor[(*i)->descriptor()] = m_readersByType[(*i)->name()];
     }
-
 }
 
 /******************************************************************************/
 
 std::shared_ptr<amqp::Reader>
 CompositeFactory::process(
-    upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator schema_,
+    amqp::internal::schema::Schema::const_iterator schema_,
     std::set<std::string> & history_)
 {
-    DBG ("Process: " << schema_->first << std::endl);
+    DBG ("\nProcess: " << (*schema_)->name() << std::endl);
 
     return computeIfAbsent<amqp::Reader> (
-            m_readersByType,
-            schema_->first,
-            [&schema_, this, &history_] () -> std::shared_ptr<amqp::Reader> {
-                switch (schema_->second->type()) {
-                    case amqp::internal::schema::AMQPTypeNotation::Composite : {
-                        return processComposite(schema_, history_);
-                    }
-                    case amqp::internal::schema::AMQPTypeNotation::Restricted : {
-                        return processRestricted(schema_, history_);
-                    }
+        m_readersByType,
+        (*schema_)->name(),
+        [&schema_, this, &history_] () -> std::shared_ptr<amqp::Reader> {
+            switch ((*schema_)->type()) {
+                case amqp::internal::schema::AMQPTypeNotation::Composite : {
+                    return processComposite(schema_, history_);
                 }
-            });
+                case amqp::internal::schema::AMQPTypeNotation::Restricted : {
+                    return processRestricted(schema_, history_);
+                }
+            }
+        });
 }
 
 /******************************************************************************/
 
 std::shared_ptr<amqp::Reader>
 CompositeFactory::processRestricted(
-    upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator schema_,
+    amqp::internal::schema::Schema::const_iterator schema_,
     std::set<std::string> & history_)
 {
+    DBG ("processRestricted - " << (*schema_)->name() << std::endl);
     auto * restricted = dynamic_cast<amqp::internal::schema::Restricted *> (
-            schema_->second.get());
+            schema_->get());
 
     if (restricted->restrictedType() ==
             amqp::internal::schema::Restricted::RestrictedTypes::List)
@@ -131,15 +138,15 @@ CompositeFactory::processRestricted(
             << std::endl);
 
         if (amqp::internal::schema::Field::typeIsPrimitive(split.second)) {
-            DBG ("  List of Prism" << std::endl);
-            auto reader = computeIfAbsent<amqp::PropertyReader> (
-                    m_propertyReaders,
+            DBG ("  List of Primitives" << std::endl);
+            auto reader = computeIfAbsent<amqp::Reader> (
+                    m_readersByType,
                     split.second,
                     [&split] () -> std::shared_ptr<amqp::PropertyReader> {
                         return amqp::PropertyReader::make (split.second);
                     });
 
-            return std::make_shared<amqp::ListReader> (reader);
+            return std::make_shared<amqp::ListReader> ((*schema_)->name(), reader);
         } else {
             DBG ("  List of Composite - " << split.second << std::endl);
             auto reader = computeIfAbsent<amqp::Reader> (
@@ -149,10 +156,11 @@ CompositeFactory::processRestricted(
                         return process (++schema_, history_);
                     });
 
-            return std::make_shared<amqp::ListReader> (reader);
+            return std::make_shared<amqp::ListReader> ((*schema_)->name(), reader);
         }
     }
 
+    DBG ("  ProcessRestricted: Returning nullptr");
     return nullptr;
 }
 
@@ -160,16 +168,16 @@ CompositeFactory::processRestricted(
 
 std::shared_ptr<amqp::Reader>
 CompositeFactory::processComposite (
-    upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator schema_,
+    amqp::internal::schema::Schema::const_iterator schema_,
     std::set<std::string> & history_
 ) {
-    DBG ("processComposite  - " << (*(schema_)).first << std::endl);
+    DBG ("processComposite  - " << (*schema_)->name() << std::endl);
 
-    history_.insert (schema_->first);
+    history_.insert ((*schema_)->name());
     std::vector<std::weak_ptr<amqp::Reader>> readers;
 
     auto & fields = dynamic_cast<amqp::internal::schema::Composite *> (
-            schema_->second.get())->fields();
+            schema_->get())->fields();
 
     readers.reserve(fields.size());
 
@@ -178,14 +186,16 @@ CompositeFactory::processComposite (
 
         switch (field->fieldType()) {
             case amqp::internal::schema::FieldType::PrimitiveProperty : {
-                auto reader = computeIfAbsent<amqp::PropertyReader>(
-                        m_propertyReaders,
+                auto reader = computeIfAbsent<amqp::Reader>(
+                        m_readersByType,
                         field->type(),
                         [&field]() -> std::shared_ptr<amqp::PropertyReader> {
                             return amqp::PropertyReader::make(field);
                         });
 
+                assert (reader);
                 readers.emplace_back(reader);
+                assert (readers.back().lock());
                 break;
             }
             case amqp::internal::schema::FieldType::CompositeProperty : {
@@ -196,7 +206,9 @@ CompositeFactory::processComposite (
                             return process (++schema_, history_);
                         });
 
+                assert (reader);
                 readers.emplace_back(reader);
+                assert (readers.back().lock());
                 break;
             }
 
@@ -208,13 +220,17 @@ CompositeFactory::processComposite (
                             return process (++schema_, history_);
                         });
 
+                assert (reader);
                 readers.emplace_back (reader);
+                assert (readers.back().lock());
                 break;
             }
         }
+
+        assert (readers.back().lock());
     }
 
-    return std::make_shared<amqp::CompositeReader> (readers);
+    return std::make_shared<amqp::CompositeReader> ((*schema_)->name(), readers);
 }
 
 /******************************************************************************/

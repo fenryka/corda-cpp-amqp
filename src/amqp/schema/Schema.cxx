@@ -10,16 +10,6 @@
  *
  ******************************************************************************/
 
-namespace {
-
-    using CompositeMap = std::map<
-        std::string,
-        std::unique_ptr<amqp::internal::schema::AMQPTypeNotation>>;
-
-}
-
-/******************************************************************************/
-
 namespace amqp::internal::schema {
 
 std::ostream &
@@ -30,9 +20,8 @@ operator << (std::ostream & stream_, const Schema & schema_) {
     for (auto const & type : schema_.m_types) {
         if (!first) stream_ << std::endl << std::endl; else first = false;
         stream_ << count++ << "/" << schema_.m_types.size() << ") "
-                <<  type.first << std::endl
-                << *type.second;
-
+                <<  type->name() << std::endl
+                << *type;
     }
 
     return stream_;
@@ -46,24 +35,31 @@ operator << (std::ostream & stream_, const Schema & schema_) {
  *
  ******************************************************************************/
 
-/**
- * Constructor
- *
- * @param types_ the restricted and composite types contined within the
- *               schema.
- */
+const amqp::internal::schema::SetSort compFunctor =
+    [](const uPtr<amqp::internal::schema::AMQPTypeNotation> & elem1,
+    const uPtr<amqp::internal::schema::AMQPTypeNotation> & elem2
+) {
+    return true;
+};
+
 amqp::internal::schema::
 Schema::Schema (
-    std::map<std::string, std::unique_ptr<AMQPTypeNotation>> & types_
+    std::set<uPtr<AMQPTypeNotation>, amqp::internal::schema::SetSort > types_
 ) : m_types (std::move (types_)) {
-    for (auto & t : m_types) {
-        m_descriptorToType[t.second->descriptor()] = t.first;
+    /*
+    std::transform (m_types.begin(), m_types.end(), std::inserter( m_descriptorToType, m_descriptorToType.begin() ),
+            []( uPtr<AMQPTypeNotation> ){ return std::pair<const char, int>( c, 0 ); } );
+            */
+
+    for (const auto & t : m_types) {
+        m_descriptorToType.emplace(t->descriptor(), std::ref (t));
+        m_typeToDescriptor.emplace(t->name(), std::ref (t));
     }
 }
 
 /******************************************************************************/
 
-const CompositeMap &
+const amqp::internal::schema::Schema::SchemaSet &
 amqp::internal::schema::
 Schema::types() const {
     return m_types;
@@ -74,7 +70,9 @@ Schema::types() const {
 decltype (amqp::internal::schema::Schema::m_types)::const_iterator
 amqp::internal::schema::
 Schema::fromType (const std::string & type_) const {
-    return m_types.find (type_);
+//    return m
+//    return m_types.find (type_);
+    return std::end (m_types);
 }
 
 /******************************************************************************/
@@ -84,7 +82,8 @@ amqp::internal::schema::
 Schema::fromDescriptor (const std::string & descriptor_) const {
     const auto type = m_descriptorToType.find (descriptor_);
 
-    return (type == m_descriptorToType.end()) ? m_types.end() : fromType (type->second);
+    return std::end (m_types);
+//    return (type == m_descriptorToType.end()) ? m_types.end() : fromType (type->second);
 }
 
 /******************************************************************************/

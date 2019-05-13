@@ -12,6 +12,7 @@
 #include "Envelope.h"
 #include "Composite.h"
 #include "Restricted.h"
+#include "AMQPDescribed.h"
 
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
@@ -129,7 +130,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 
     validateAndNext(data_);
 
-    std::map<std::string, std::unique_ptr<schema::AMQPTypeNotation>> types;
+    schema::Schema::SchemaSet foo;
 
     /*
      * The Schema is stored as a list of lists of described objects
@@ -141,13 +142,12 @@ SchemaDescriptor::build(pn_data_t * data_) const {
             DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
             while (pn_data_next(data_)) {
-                auto type = dispatchDescribed<schema::Composite>(data_);
-                types[type->name()] = std::move(type);
+                foo.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
             }
         }
     }
 
-    return std::make_unique<schema::Schema> (schema::Schema (types));
+    return std::make_unique<schema::Schema> (std::move (foo));
 }
 
 /******************************************************************************
