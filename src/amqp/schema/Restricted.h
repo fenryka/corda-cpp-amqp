@@ -13,17 +13,22 @@
 
 #include "amqp/AMQPDescribed.h"
 
+/******************************************************************************
+ *
+ * Forward class declarations
+ *
+ ******************************************************************************/
+
+namespace amqp::internal::schema {
+
+    class Composite;
+
+}
+
 /******************************************************************************/
 
 namespace amqp::internal::schema {
 
-    /*
-     * A Corda AMQP Scehma Composite type has:
-     *
-     * val name: String,
-     * val label: String?,
-     * val provides: List<String>,
-     */
     class Restricted : public AMQPTypeNotation {
         public :
             friend std::ostream & operator << (std::ostream &, const Restricted&);
@@ -53,6 +58,13 @@ namespace amqp::internal::schema {
             Type type() const override;
 
             RestrictedTypes restrictedType() const;
+
+            bool lt (const uPtr<AMQPTypeNotation> &) const override;
+            bool gte (const Restricted *) const override;
+            bool gte (const class Composite *) const override;
+
+            decltype(m_provides)::const_iterator begin() const { return m_provides.begin(); }
+            decltype(m_provides)::const_iterator end() const { return m_provides.end(); }
     };
 
 

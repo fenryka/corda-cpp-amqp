@@ -35,12 +35,15 @@ operator << (std::ostream & stream_, const Schema & schema_) {
  *
  ******************************************************************************/
 
-const amqp::internal::schema::SetSort compFunctor =
-    [](const uPtr<amqp::internal::schema::AMQPTypeNotation> & elem1,
-    const uPtr<amqp::internal::schema::AMQPTypeNotation> & elem2
-) {
-    return true;
-};
+amqp::internal::schema::SetSort
+amqp::internal::schema::Schema::setSorter =
+        [](const uPtr<amqp::internal::schema::AMQPTypeNotation> &lhs,
+           const uPtr<amqp::internal::schema::AMQPTypeNotation> &rhs
+        ) {
+            return lhs->lt(rhs);
+        };
+
+/******************************************************************************/
 
 amqp::internal::schema::
 Schema::Schema (

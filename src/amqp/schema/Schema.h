@@ -24,6 +24,13 @@ namespace amqp::internal::schema {
 
 namespace amqp::internal::schema {
 
+
+}
+
+/******************************************************************************/
+
+namespace amqp::internal::schema {
+
     /*
      */
     class Schema : public AMQPDescribed {
@@ -31,6 +38,8 @@ namespace amqp::internal::schema {
             friend std::ostream & operator << (std::ostream &, const Schema &);
 
             typedef std::set<uPtr<AMQPTypeNotation>, SetSort> SchemaSet;
+
+            static amqp::internal::schema::SetSort setSorter;
 
         private :
             SchemaSet m_types;

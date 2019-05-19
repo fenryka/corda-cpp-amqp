@@ -89,3 +89,30 @@ Restricted::restrictedType() const {
 }
 
 /******************************************************************************/
+
+bool
+amqp::internal::schema::
+Restricted::lt (const uPtr<AMQPTypeNotation> & rhs_) const {
+    return rhs_->gte(this);
+}
+
+/*********************************************************o*********************/
+
+bool
+amqp::internal::schema::
+Restricted::gte (const amqp::internal::schema::Restricted * lhs_) const {
+    std::cout << "restricted gte rest" << std::endl;
+    return true;
+}
+
+/*********************************************************o*********************/
+
+bool
+amqp::internal::schema::
+Restricted::gte (const amqp::internal::schema::Composite * lhs_) const {
+    std::cout << "restricted gte composite" << std::endl;
+    return true;
+
+}
+
+/*********************************************************o*********************/

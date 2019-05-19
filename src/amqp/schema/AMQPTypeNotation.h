@@ -3,15 +3,32 @@
 /******************************************************************************/
 
 #include <memory>
+#include <types.h>
 
 /******************************************************************************/
 
 #include "Descriptor.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Forward class declarations
+ *
+ ******************************************************************************/
 
 namespace amqp::internal::schema {
 
+    class Restricted;
+    class Composite;
+
+}
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+namespace amqp::internal::schema {
 
     class AMQPTypeNotation : public AMQPDescribed {
         public :
@@ -36,6 +53,14 @@ namespace amqp::internal::schema {
             const std::string & name() const;
 
             virtual Type type() const = 0;
+
+            /**
+             * The following essentially add a visitor style pattern to
+             * calculate the lt operator
+             */
+            virtual bool lt  (const uPtr<AMQPTypeNotation> &) const = 0;
+            virtual bool gte (const class Restricted *) const = 0;
+            virtual bool gte (const class Composite *) const = 0;
     };
 
 }

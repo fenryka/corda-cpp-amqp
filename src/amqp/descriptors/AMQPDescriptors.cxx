@@ -130,7 +130,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 
     validateAndNext(data_);
 
-    schema::Schema::SchemaSet foo;
+    schema::Schema::SchemaSet schemas (schema::Schema::setSorter);
 
     /*
      * The Schema is stored as a list of lists of described objects
@@ -142,12 +142,12 @@ SchemaDescriptor::build(pn_data_t * data_) const {
             DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
             while (pn_data_next(data_)) {
-                foo.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
+                schemas.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
             }
         }
     }
 
-    return std::make_unique<schema::Schema> (std::move (foo));
+    return std::make_unique<schema::Schema> (std::move (schemas));
 }
 
 /******************************************************************************
@@ -170,7 +170,7 @@ ObjectDescriptor::build(pn_data_t * data_) const {
 
     auto symbol = proton::get_symbol<std::string> (data_);
 
-    return std::make_unique<schema::Descriptor> (schema::Descriptor (symbol));
+    return std::make_unique<schema::Descriptor> (symbol);
 }
 
 /******************************************************************************
