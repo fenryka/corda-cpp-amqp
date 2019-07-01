@@ -67,7 +67,7 @@ CompositeReader::_dump (
     proton::auto_enter ae (data_);
 
     const auto & it = schema_->fromDescriptor(proton::get_symbol<std::string>(data_));
-    auto & fields = dynamic_cast<amqp::internal::schema::Composite *>(it->get())->fields();
+    auto & fields = dynamic_cast<amqp::internal::schema::Composite &>(*(it->second.get())).fields();
 
     assert (fields.size() == m_readers.size());
 

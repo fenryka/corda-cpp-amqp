@@ -38,25 +38,24 @@ namespace amqp::internal::schema {
             friend std::ostream & operator << (std::ostream &, const Schema &);
 
             typedef std::set<uPtr<AMQPTypeNotation>, SetSort> SchemaSet;
+            typedef std::map<std::string, const std::reference_wrapper<const uPtr<AMQPTypeNotation>>> SchemaMap;
 
             static amqp::internal::schema::SetSort setSorter;
 
         private :
             SchemaSet m_types;
-            std::map<std::string, const std::reference_wrapper<const uPtr<AMQPTypeNotation>>> m_descriptorToType;
-            std::map<std::string, const std::reference_wrapper<const uPtr<AMQPTypeNotation>>> m_typeToDescriptor;
+            SchemaMap m_descriptorToType;
+            SchemaMap m_typeToDescriptor;
 
         public :
             Schema (SchemaSet types_);
 
             const SchemaSet & types() const;
 
-            typedef decltype (m_types)::const_iterator const_iterator;
-
-            const_iterator fromType (const std::string &) const;
-            const_iterator fromDescriptor (const std::string &) const;
-            const_iterator end() const;
-            const_iterator begin() const;
+            SchemaMap::const_iterator fromType (const std::string &) const;
+            SchemaMap::const_iterator fromDescriptor (const std::string &) const;
+            SchemaSet::const_iterator end() const;
+            SchemaSet::const_iterator begin() const;
     };
 
 }

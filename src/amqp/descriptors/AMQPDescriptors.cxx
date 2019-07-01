@@ -11,7 +11,7 @@
 #include "Schema.h"
 #include "Envelope.h"
 #include "Composite.h"
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 #include "AMQPDescribed.h"
 
 #include "proton/proton_wrapper.h"
@@ -330,7 +330,7 @@ RestrictedDescriptor::build(pn_data_t * data_) const {
 
     // SKIP the choices section **FOR NOW**
 
-    return std::make_unique<schema::Restricted> (descriptor, name,
+    return schema::Restricted::make (descriptor, name,
             label, provides, source);
 }
 

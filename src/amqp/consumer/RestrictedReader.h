@@ -7,7 +7,7 @@
 #include <any>
 #include <vector>
 
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 
 /******************************************************************************/
 

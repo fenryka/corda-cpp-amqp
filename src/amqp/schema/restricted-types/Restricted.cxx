@@ -1,4 +1,5 @@
 #include "Restricted.h"
+#include "List.h"
 
 #include <string>
 #include <vector>
@@ -17,7 +18,13 @@ operator << (
         << "name       : " << clazz_.name() << std::endl
         << "label      : " << clazz_.m_label << std::endl
         << "descriptor : " << clazz_.descriptor() << std::endl
-        << "source     : " << clazz_.m_source;
+        << "source     : " << clazz_.m_source << std::endl
+        << "provides   : [" << std::endl;
+
+    for (auto & provides : clazz_.m_provides) {
+        stream_ << "              " << provides << std::endl;
+    }
+    stream_<< "             ]" << std::endl;
 
     return stream_;
 }
@@ -55,21 +62,45 @@ operator << (
  *
  ******************************************************************************/
 
+/**
+ * Named constructor
+ *
+ * @param descriptor_
+ * @param name_
+ * @param label_
+ * @param provides_
+ * @param source_
+ * @return
+ */
+std::unique_ptr<amqp::internal::schema::Restricted>
+amqp::internal::schema::
+Restricted::make(
+        uPtr<Descriptor> & descriptor_,
+        const std::string & name_,
+        const std::string & label_,
+        const std::vector<std::string> & provides_,
+        const std::string & source_)
+{
+    if (source_ == "list") {
+        return std::make_unique<amqp::internal::schema::List> (
+                descriptor_, name_, label_, provides_, source_);
+    }
+}
+
+/******************************************************************************/
+
 amqp::internal::schema::
 Restricted::Restricted (
-    std::unique_ptr<Descriptor> & descriptor_,
+    uPtr<Descriptor> & descriptor_,
     const std::string & name_,
     const std::string & label_,
     const std::vector<std::string> & provides_,
-    const std::string & source_
+    const amqp::internal::schema::Restricted::RestrictedTypes & source_
 ) : AMQPTypeNotation (name_, descriptor_)
   , m_label (label_)
   , m_provides (provides_)
-  , m_sourceStr(source_)
+  , m_source (source_)
 {
-    if (m_sourceStr == "list") {
-        m_source = List;
-    }
 }
 
 /******************************************************************************/
@@ -93,15 +124,16 @@ Restricted::restrictedType() const {
 bool
 amqp::internal::schema::
 Restricted::lt (const uPtr<AMQPTypeNotation> & rhs_) const {
-    return rhs_->gte(this);
+    return rhs_->gte(*this);
 }
 
 /*********************************************************o*********************/
 
 bool
 amqp::internal::schema::
-Restricted::gte (const amqp::internal::schema::Restricted * lhs_) const {
+Restricted::gte (const amqp::internal::schema::Restricted & lhs_) const {
     std::cout << "restricted gte rest" << std::endl;
+
     return true;
 }
 
@@ -109,10 +141,11 @@ Restricted::gte (const amqp::internal::schema::Restricted * lhs_) const {
 
 bool
 amqp::internal::schema::
-Restricted::gte (const amqp::internal::schema::Composite * lhs_) const {
+Restricted::gte (const amqp::internal::schema::Composite & lhs_) const {
     std::cout << "restricted gte composite" << std::endl;
     return true;
 
 }
 
 /*********************************************************o*********************/
+

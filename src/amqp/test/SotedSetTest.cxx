@@ -5,7 +5,7 @@
 #include "amqp/schema/Field.h"
 #include "amqp/schema/Schema.h"
 #include "amqp/schema/Composite.h"
-#include "amqp/schema/Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 #include "amqp/schema/Descriptor.h"
 #include "amqp/schema/AMQPTypeNotation.h"
 
@@ -106,7 +106,7 @@ makeRestrictedList (
     std::stringstream ss;
     ss << "java.util.List<" + type_->name() + ">";
 
-    return std::make_unique<amqp::internal::schema::Restricted>(
+    return amqp::internal::schema::Restricted::make(
             descriptor,
             ss.str(),
             label,

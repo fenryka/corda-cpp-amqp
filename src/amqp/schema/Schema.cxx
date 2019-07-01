@@ -49,11 +49,6 @@ amqp::internal::schema::
 Schema::Schema (
     std::set<uPtr<AMQPTypeNotation>, amqp::internal::schema::SetSort > types_
 ) : m_types (std::move (types_)) {
-    /*
-    std::transform (m_types.begin(), m_types.end(), std::inserter( m_descriptorToType, m_descriptorToType.begin() ),
-            []( uPtr<AMQPTypeNotation> ){ return std::pair<const char, int>( c, 0 ); } );
-            */
-
     for (const auto & t : m_types) {
         m_descriptorToType.emplace(t->descriptor(), std::ref (t));
         m_typeToDescriptor.emplace(t->name(), std::ref (t));
@@ -70,28 +65,23 @@ Schema::types() const {
 
 /******************************************************************************/
 
-decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::Schema::SchemaMap::const_iterator
 amqp::internal::schema::
 Schema::fromType (const std::string & type_) const {
-//    return m
-//    return m_types.find (type_);
-    return std::end (m_types);
+    return m_typeToDescriptor.find(type_);
 }
 
 /******************************************************************************/
 
-decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::Schema::SchemaMap::const_iterator
 amqp::internal::schema::
 Schema::fromDescriptor (const std::string & descriptor_) const {
-    const auto type = m_descriptorToType.find (descriptor_);
-
-    return std::end (m_types);
-//    return (type == m_descriptorToType.end()) ? m_types.end() : fromType (type->second);
+    return m_descriptorToType.find (descriptor_);
 }
 
 /******************************************************************************/
 
-decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::Schema::SchemaSet::const_iterator
 amqp::internal::schema::
 Schema::end() const {
     return m_types.cend();
@@ -99,7 +89,7 @@ Schema::end() const {
 
 /******************************************************************************/
 
-decltype (amqp::internal::schema::Schema::m_types)::const_iterator
+amqp::internal::schema::Schema::SchemaSet::const_iterator
 amqp::internal::schema::
 Schema::begin() const {
     return m_types.cbegin();

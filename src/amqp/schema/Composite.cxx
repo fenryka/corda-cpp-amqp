@@ -1,5 +1,5 @@
 #include "Composite.h"
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 
 #include <iomanip>
 #include <iostream>
@@ -64,7 +64,7 @@ Composite::type() const {
 /**
  * Use a visitor style pattern to work out weather two types, composite or
  * restricted, are "less than" one or not. In this case we define being
- * "less than" not havine a type that the other depends on. This will
+ * "less than" not having a type that the other depends on. This will
  * eventually give us a set ordered in such a way we can simply create
  * each element in turn
  *
@@ -74,20 +74,20 @@ Composite::type() const {
 bool
 amqp::internal::schema::
 Composite::lt (const uPtr<AMQPTypeNotation> & rhs) const {
-    return rhs->gte(this);
+    return rhs->gte(*this);
 }
 
 /******************************************************************************/
 
 bool
 amqp::internal::schema::
-Composite::gte (const amqp::internal::schema::Restricted * lhs_) const {
+Composite::gte (const amqp::internal::schema::Restricted & lhs_) const {
     std::cout << "composite gte rest" << std::endl;
 
     std::cout << "===" << std::endl;
     for (auto const & i : m_fields) std::cout << (*i).name() << std::endl;
     std::cout << "--" << std::endl;
-    for (auto const & i : *lhs_) std::cout << i << std::endl;
+    for (auto const & i : lhs_) std::cout << i << std::endl;
     std::cout << "===" << std::endl;
 
     return true;
@@ -95,13 +95,11 @@ Composite::gte (const amqp::internal::schema::Restricted * lhs_) const {
 
 /*********************************************************o*********************/
 
-
 bool
 amqp::internal::schema::
-Composite::gte (const amqp::internal::schema::Composite * lhs_) const {
-    std::cout << name() << " >= composite comp " << lhs_->name() << std::endl;
+Composite::gte (const amqp::internal::schema::Composite & lhs_) const {
 
-    for (auto const & field : *lhs_) {
+    for (auto const & field : lhs_) {
         if (field->type()  == name()) return false;
     }
 

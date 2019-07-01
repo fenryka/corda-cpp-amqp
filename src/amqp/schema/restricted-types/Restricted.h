@@ -42,29 +42,54 @@ namespace amqp::internal::schema {
 
             std::vector<std::string> m_provides;
 
-            std::string m_sourceStr;
-
+            /**
+             * Is it a map or list
+             */
             RestrictedTypes m_source;
-        public :
+
+        protected :
+            /**
+             * keep main constructor private to force use of the named constructor
+             */
             Restricted (
                 std::unique_ptr<Descriptor> & descriptor_,
                 const std::string &,
                 const std::string &,
                 const std::vector<std::string> &,
-                const std::string &);
+                const RestrictedTypes &);
 
-            Restricted(Restricted&) = delete;
+        public :
+            static std::unique_ptr<Restricted> make(
+                    std::unique_ptr<Descriptor> & descriptor_,
+                    const std::string &,
+                    const std::string &,
+                    const std::vector<std::string> &,
+                    const std::string &);
+
+            Restricted (Restricted&) = delete;
 
             Type type() const override;
 
             RestrictedTypes restrictedType() const;
 
-            bool lt (const uPtr<AMQPTypeNotation> &) const override;
-            bool gte (const Restricted *) const override;
-            bool gte (const class Composite *) const override;
+            /**
+             * @return an itertor over the types the restricted class represents.
+             * In the case of a list, the element this is a list of, in the
+             * case of a map the key and value types etc.
+             */
+            virtual std::vector<std::string>::const_iterator containedTypes() const = 0;
 
-            decltype(m_provides)::const_iterator begin() const { return m_provides.begin(); }
-            decltype(m_provides)::const_iterator end() const { return m_provides.end(); }
+            bool lt (const uPtr<AMQPTypeNotation> &) const override;
+            bool gte (const Restricted &) const override;
+            bool gte (const class Composite &) const override;
+
+            decltype(m_provides)::const_iterator begin() const {
+                return m_provides.begin();
+            }
+
+            decltype(m_provides)::const_iterator end() const {
+                return m_provides.end();
+            }
     };
 
 
