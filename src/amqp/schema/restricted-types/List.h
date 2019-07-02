@@ -2,6 +2,8 @@
 
 #include "Restricted.h"
 
+/******************************************************************************/
+
 namespace amqp::internal::schema {
 
     class List : public Restricted {
@@ -19,6 +21,11 @@ namespace amqp::internal::schema {
             std::vector<std::string>::const_iterator containedTypes() const override;
 
             const std::string & listOf() const;
+
+            bool gte (const Restricted &) const override;
+            bool gte (const class Composite &) const override;
     };
 
 }
+
+/******************************************************************************/

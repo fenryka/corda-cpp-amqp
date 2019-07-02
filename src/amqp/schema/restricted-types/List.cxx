@@ -1,4 +1,7 @@
+#include <iostream>
 #include "List.h"
+
+#include "schema/Composite.h"
 
 /******************************************************************************/
 
@@ -52,3 +55,36 @@ List::listOf() const {
 }
 
 /******************************************************************************/
+
+bool
+amqp::internal::schema::
+List::gte (const amqp::internal::schema::Restricted & lhs_) const {
+    std::cout << "Restricted::List gte rest" << std::endl;
+
+    return true;
+}
+
+/*********************************************************o*********************/
+
+bool
+amqp::internal::schema::
+List::gte (const amqp::internal::schema::Composite & lhs_) const {
+    std::cout << "Restricted::List gte composite " << m_listOf << std::endl;
+
+    /* if this is an explicit list of the type, then this list must be
+       processed after the type it's a list of */
+    if (m_listOf == lhs_.name()) {
+        return true;
+    }
+
+    /* otherwise, lets make sure any of the constituent elements of the
+       class are a list of this type */
+    for (auto & i : lhs_) {
+        std::cout << "  " << (*i).name() << std::endl;
+    }
+
+    return true;
+
+}
+
+/*********************************************************o*********************/
