@@ -35,7 +35,7 @@ Field::Field (
   , m_default (default_)
   , m_label (label_)
   , m_mandatory (mandatory_)
-  , m_mulitple (multiple_)
+  , m_multiple (multiple_)
 {
     if (typeIsPrimitive(type_)) {
         m_type = std::make_pair(type_, FieldType::PrimitiveProperty);
@@ -89,3 +89,13 @@ amqp::internal::schema::
 Field::requires() const {
     return m_requires;
 }
+
+/******************************************************************************/
+
+bool
+amqp::internal::schema::
+Field::primitive() const {
+    return m_type.second == PrimitiveProperty;
+}
+
+/******************************************************************************/

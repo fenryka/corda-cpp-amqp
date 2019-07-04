@@ -82,13 +82,19 @@ Composite::lt (const uPtr<AMQPTypeNotation> & rhs) const {
 bool
 amqp::internal::schema::
 Composite::gte (const amqp::internal::schema::Restricted & lhs_) const {
-    std::cout << "composite gte rest" << std::endl;
+    std::cout << "composite " << name() << " gte rest " << lhs_.name() << std::endl;
 
-    std::cout << "===" << std::endl;
-    for (auto const & i : m_fields) std::cout << (*i).name() << std::endl;
-    std::cout << "--" << std::endl;
-    for (auto const & i : lhs_) std::cout << i << std::endl;
-    std::cout << "===" << std::endl;
+    for (auto const & i : m_fields) {
+        if (!(*i).primitive()) {
+            if ((*i).type() == "*") {
+                std::cout << "REQUIRE :" <<  (*i).requires().front() << std::endl;
+                if ((*i).requires().front() == lhs_.name()) {
+                    std::cout << (*i).requires().front()  << " == " << lhs_.name() << std::endl;
+                    return false;
+                }
+            }
+        }
+    }
 
     return true;
 }
@@ -98,6 +104,7 @@ Composite::gte (const amqp::internal::schema::Restricted & lhs_) const {
 bool
 amqp::internal::schema::
 Composite::gte (const amqp::internal::schema::Composite & lhs_) const {
+    std::cout << "composite " << name() << " gte " << lhs_.name() << std::endl;
 
     for (auto const & field : lhs_) {
         if (field->type()  == name()) return false;

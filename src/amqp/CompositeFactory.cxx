@@ -131,7 +131,7 @@ CompositeFactory::processRestricted(
 
             return std::make_shared<amqp::ListReader> ((*schema_)->name(), reader);
         } else {
-            DBG ("  List of Composite - " << split.second << std::endl);
+            DBG ("  List of Composite - " << list->listOf() << std::endl);
             auto reader = computeIfAbsent<amqp::Reader> (
                     m_readersByType,
                     list->listOf(),

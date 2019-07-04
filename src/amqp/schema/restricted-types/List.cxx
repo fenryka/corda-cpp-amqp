@@ -74,13 +74,14 @@ List::gte (const amqp::internal::schema::Composite & lhs_) const {
     /* if this is an explicit list of the type, then this list must be
        processed after the type it's a list of */
     if (m_listOf == lhs_.name()) {
+        std::cout << "  list: " << m_listOf << " == " << lhs_.name() << std::endl;
         return true;
     }
 
     /* otherwise, lets make sure any of the constituent elements of the
        class are a list of this type */
     for (auto & i : lhs_) {
-        std::cout << "  " << (*i).name() << std::endl;
+        std::cout << "  " << (*i).name() << " - " << (*i).type() << std::endl;
     }
 
     return true;
