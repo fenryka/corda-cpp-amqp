@@ -1,6 +1,8 @@
 #include <iostream>
 #include "List.h"
 
+#include "colours.h"
+
 #include "schema/Composite.h"
 
 /******************************************************************************/
@@ -33,7 +35,7 @@ List::List (
         label_,
         provides_,
         amqp::internal::schema::Restricted::RestrictedTypes::List),
-    m_listOf (listType(name_).second)
+    m_listOf { listType(name_).second }
 {
 
 }
@@ -42,8 +44,16 @@ List::List (
 
 std::vector<std::string>::const_iterator
 amqp::internal::schema::
-List::containedTypes() const {
+List::begin() const {
+    return m_listOf.begin();
+}
 
+/******************************************************************************/
+
+std::vector<std::string>::const_iterator
+amqp::internal::schema::
+List::end() const {
+    return m_listOf.end();
 }
 
 /******************************************************************************/
@@ -51,41 +61,43 @@ List::containedTypes() const {
 const std::string &
 amqp::internal::schema::
 List::listOf() const {
-    return m_listOf;
+    return m_listOf[0];
 }
 
 /******************************************************************************/
 
 bool
 amqp::internal::schema::
-List::gte (const amqp::internal::schema::Restricted & lhs_) const {
+List::dependsOn (const amqp::internal::schema::Restricted & lhs_) const {
     std::cout << "Restricted::List gte rest" << std::endl;
 
-    return true;
+    // For example, if *this* is a list of lists and lhs_ is the list type
+    // we are a list of, then we depend on lhs_
+    for (auto i { lhs_.begin() } ; i != lhs_.end() ; ++i) {
+        std::cout << "  " << *i << " " << listOf() << std::endl;
+        if (listOf() == *i) return true;
+    }
+
+    return false;
 }
 
 /*********************************************************o*********************/
 
 bool
 amqp::internal::schema::
-List::gte (const amqp::internal::schema::Composite & lhs_) const {
-    std::cout << "Restricted::List gte composite " << m_listOf << std::endl;
+List::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
 
-    /* if this is an explicit list of the type, then this list must be
-       processed after the type it's a list of */
-    if (m_listOf == lhs_.name()) {
-        std::cout << "  list: " << m_listOf << " == " << lhs_.name() << std::endl;
-        return true;
+    for (const auto & f : lhs_.fields()) {
+        if (f->type() == "*") {
+            if (f->requires().front() == name()) {
+                return true;
+            }
+        } else if (f->type() == name()) {
+            return true;
+        }
     }
 
-    /* otherwise, lets make sure any of the constituent elements of the
-       class are a list of this type */
-    for (auto & i : lhs_) {
-        std::cout << "  " << (*i).name() << " - " << (*i).type() << std::endl;
-    }
-
-    return true;
-
+    return false;
 }
 
 /*********************************************************o*********************/

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <proton/types.h>
 #include <proton/codec.h>
+#include "colours.h"
 
 #include "debug.h"
 #include "Field.h"
@@ -12,6 +13,7 @@
 #include "Envelope.h"
 #include "Composite.h"
 #include "amqp/schema/restricted-types/Restricted.h"
+#include "amqp/schema/OrderedTypeNotations.h"
 #include "AMQPDescribed.h"
 
 #include "proton/proton_wrapper.h"
@@ -130,7 +132,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 
     validateAndNext(data_);
 
-    schema::Schema::SchemaSet schemas (schema::Schema::setSorter);
+    schema::OrderedTypeNotations schemas;
 
     /*
      * The Schema is stored as a list of lists of described objects
@@ -141,8 +143,13 @@ SchemaDescriptor::build(pn_data_t * data_) const {
         for (int i { 1 } ; pn_data_next(data_) ; ++i) {
             DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
+#if defined AMQP_DEBUG && AMQP_DEBUG >= 1
+            int j { 0 };
+#endif
             while (pn_data_next(data_)) {
-                schemas.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
+//                DBG(std::endl << "    " << "Insert next " << ++j << "/" << ale2.elements() << std::endl);
+                schemas.insert (std::move (dispatchDescribed<schema::AMQPTypeNotation>(data_)));
+                std::cout << schemas << std::endl;
             }
         }
     }

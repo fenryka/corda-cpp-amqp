@@ -40,6 +40,9 @@ namespace amqp::internal::schema {
             std::string                 m_name;
             std::unique_ptr<Descriptor> m_descriptor;
 
+        protected :
+            bool gteDefault(const AMQPTypeNotation &) const;
+
         public :
             AMQPTypeNotation (
                 const std::string & name_,
@@ -54,9 +57,9 @@ namespace amqp::internal::schema {
 
             virtual Type type() const = 0;
 
-            virtual bool lt  (const uPtr<AMQPTypeNotation> &) const = 0;
-            virtual bool gte (const class Restricted &) const = 0;
-            virtual bool gte (const class Composite &) const = 0;
+            virtual bool dependsOn  (const uPtr<AMQPTypeNotation> &) const = 0;
+            virtual bool dependsOn (const class Restricted &) const = 0;
+            virtual bool dependsOn (const class Composite &) const = 0;
     };
 
 }

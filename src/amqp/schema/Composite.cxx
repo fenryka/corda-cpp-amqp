@@ -1,4 +1,7 @@
 #include "Composite.h"
+
+#include "colours.h"
+
 #include "amqp/schema/restricted-types/Restricted.h"
 
 #include <iomanip>
@@ -68,50 +71,56 @@ Composite::type() const {
  * eventually give us a set ordered in such a way we can simply create
  * each element in turn
  *
+ * "...This object determines the order of the elements in the container: it is
+ * a function pointer or a function object that takes two arguments of the same
+ * type as the container elements, and returns true if the first argument is
+ * considered to go before the second in the strict weak ordering it defines,
+ * and false otherwise. ..."
+
+ *
  * @param rhs
  * @return
  */
 bool
 amqp::internal::schema::
-Composite::lt (const uPtr<AMQPTypeNotation> & rhs) const {
-    return rhs->gte(*this);
+Composite::dependsOn (const uPtr<AMQPTypeNotation> & rhs) const {
+    return rhs->dependsOn(*this);
 }
 
 /******************************************************************************/
 
+/*
+ * lhs is, I think, the element being inserted
+ */
 bool
 amqp::internal::schema::
-Composite::gte (const amqp::internal::schema::Restricted & lhs_) const {
-    std::cout << "composite " << name() << " gte rest " << lhs_.name() << std::endl;
+Composite::dependsOn (const amqp::internal::schema::Restricted & lhs_) const {
+    std::cout << "composite " << BLUE << name() << RESET << " depended on by " << RED << lhs_.name() << RESET << std::endl;
 
-    for (auto const & i : m_fields) {
-        if (!(*i).primitive()) {
-            if ((*i).type() == "*") {
-                std::cout << "REQUIRE :" <<  (*i).requires().front() << std::endl;
-                if ((*i).requires().front() == lhs_.name()) {
-                    std::cout << (*i).requires().front()  << " == " << lhs_.name() << std::endl;
-                    return false;
-                }
-            }
+
+    for (auto i { lhs_.begin() } ; i != lhs_.end() ; ++i) {
+        std::cout << "   " << *i << " == " << name() << std::endl;
+        if (*i == name()) {
+            std::cout << " TRUE " << std::endl;
+            return true;
         }
     }
 
-    return true;
+    return false;
 }
 
 /*********************************************************o*********************/
 
 bool
 amqp::internal::schema::
-Composite::gte (const amqp::internal::schema::Composite & lhs_) const {
+Composite::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
     std::cout << "composite " << name() << " gte " << lhs_.name() << std::endl;
 
     for (auto const & field : lhs_) {
         if (field->type()  == name()) return false;
     }
 
-
-    return true;
+    return false;
 }
 
 /******************************************************************************/

@@ -8,7 +8,7 @@ namespace amqp::internal::schema {
 
     class List : public Restricted {
         private :
-            std::string m_listOf;
+            std::vector<std::string> m_listOf;
 
         public :
             List (
@@ -18,12 +18,13 @@ namespace amqp::internal::schema {
                 const std::vector<std::string> &,
                 const std::string &);
 
-            std::vector<std::string>::const_iterator containedTypes() const override;
+            std::vector<std::string>::const_iterator begin() const override;
+            std::vector<std::string>::const_iterator end() const override;
 
             const std::string & listOf() const;
 
-            bool gte (const Restricted &) const override;
-            bool gte (const class Composite &) const override;
+            bool dependsOn (const Restricted &) const override;
+            bool dependsOn (const class Composite &) const override;
     };
 
 }

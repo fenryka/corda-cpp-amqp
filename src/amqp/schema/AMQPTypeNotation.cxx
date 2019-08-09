@@ -1,4 +1,7 @@
+#include <iostream>
 #include "AMQPTypeNotation.h"
+
+#include "colours.h"
 
 #include "Composite.h"
 #include "amqp/schema/restricted-types/Restricted.h"
@@ -54,6 +57,23 @@ const std::string &
 amqp::internal::schema::
 AMQPTypeNotation::name() const {
     return m_name;
+}
+
+/******************************************************************************/
+
+bool
+amqp::internal::schema::
+AMQPTypeNotation::gteDefault (
+    const amqp::internal::schema::AMQPTypeNotation & lhs_
+) const {
+    if (name() == lhs_.name()) {
+        std::cout << RED << "SAME OBJECT: " << name() << RESET << std::endl;
+        return true;
+    } else {
+//        return name() >= lhs_.name();
+        std::cout << RED << "DIFFERENT OBJECT: " << lhs_.name() << RESET << std::endl;
+        return true;
+    }
 }
 
 /******************************************************************************/

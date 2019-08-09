@@ -82,19 +82,12 @@ namespace amqp::internal::schema {
              * In the case of a list, the element this is a list of, in the
              * case of a map the key and value types etc.
              */
-            virtual std::vector<std::string>::const_iterator containedTypes() const = 0;
+            virtual std::vector<std::string>::const_iterator begin() const = 0;
+            virtual std::vector<std::string>::const_iterator end() const = 0;
 
-            bool lt (const uPtr<AMQPTypeNotation> &) const override;
-            virtual bool gte (const Restricted &) const override = 0;
-            virtual bool gte (const class Composite &) const override = 0;
-
-            decltype(m_provides)::const_iterator begin() const {
-                return m_provides.begin();
-            }
-
-            decltype(m_provides)::const_iterator end() const {
-                return m_provides.end();
-            }
+            bool dependsOn (const uPtr<AMQPTypeNotation> &) const override;
+            virtual bool dependsOn (const Restricted &) const override = 0;
+            virtual bool dependsOn (const class Composite &) const override = 0;
     };
 
 

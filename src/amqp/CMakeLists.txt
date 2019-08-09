@@ -14,6 +14,7 @@ set (amqp_sources
     schema/restricted-types/Restricted.cxx
     schema/restricted-types/List.cxx
     schema/AMQPTypeNotation.cxx
+    schema/OrderedTypeNotations.cxx
     consumer/Reader.cxx
     consumer/PropertyReader.cxx
     consumer/RestrictedReader.cxx

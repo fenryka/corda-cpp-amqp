@@ -69,6 +69,7 @@ CompositeFactory::process (const SchemaPtr & schema_) {
     // something a bit smarter than shitting the bed!.
     std::set<std::string> l;
 
+    /*
     for (auto i = schema_->begin() ; i != schema_->end() ; ++i) {
         l.clear();
 
@@ -76,10 +77,12 @@ CompositeFactory::process (const SchemaPtr & schema_) {
 
         m_readersByDescriptor[(*i)->descriptor()] = m_readersByType[(*i)->name()];
     }
+     */
 }
 
 /******************************************************************************/
 
+/*
 std::shared_ptr<amqp::Reader>
 CompositeFactory::process(
     amqp::internal::schema::Schema::SchemaSet::const_iterator schema_,
@@ -101,9 +104,9 @@ CompositeFactory::process(
             }
         });
 }
-
+*/
 /******************************************************************************/
-
+/*
 std::shared_ptr<amqp::Reader>
 CompositeFactory::processRestricted(
     amqp::internal::schema::Schema::SchemaSet::const_iterator schema_,
@@ -146,9 +149,10 @@ CompositeFactory::processRestricted(
     DBG ("  ProcessRestricted: Returning nullptr");
     return nullptr;
 }
+ */
 
 /******************************************************************************/
-
+/*
 std::shared_ptr<amqp::Reader>
 CompositeFactory::processComposite (
     amqp::internal::schema::Schema::SchemaSet::const_iterator schema_,
@@ -215,7 +219,7 @@ CompositeFactory::processComposite (
 
     return std::make_shared<amqp::CompositeReader> ((*schema_)->name(), readers);
 }
-
+*/
 /******************************************************************************/
 
 const std::shared_ptr<amqp::Reader>

@@ -35,9 +35,10 @@ class CompositeFactory {
         const std::shared_ptr<amqp::Reader> byDescriptor (const std::string &);
 
     private :
+    /*
         std::shared_ptr<amqp::Reader>
         process (
-            amqp::internal::schema::Schema::SchemaSet::const_iterator,
+            amqp::internal::schema::OrderedTypeNotations::const_iterator,
             std::set<std::string> &);
 
         std::shared_ptr<amqp::Reader>
@@ -49,6 +50,7 @@ class CompositeFactory {
         processRestricted (
             amqp::internal::schema::Schema::SchemaSet::const_iterator,
             std::set<std::string> &);
+            */
 };
 
 /******************************************************************************/
