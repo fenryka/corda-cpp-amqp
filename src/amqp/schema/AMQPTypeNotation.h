@@ -8,6 +8,7 @@
 /******************************************************************************/
 
 #include "Descriptor.h"
+#include "OrderedTypeNotations.h"
 
 /******************************************************************************
  *
@@ -30,7 +31,7 @@ namespace amqp::internal::schema {
 
 namespace amqp::internal::schema {
 
-    class AMQPTypeNotation : public AMQPDescribed {
+    class AMQPTypeNotation : public AMQPDescribed, public OrderedTypeNotation {
         public :
             friend std::ostream & operator << (std::ostream &, const AMQPTypeNotation &);
 
@@ -57,7 +58,7 @@ namespace amqp::internal::schema {
 
             virtual Type type() const = 0;
 
-            virtual bool dependsOn  (const uPtr<AMQPTypeNotation> &) const = 0;
+            bool dependsOn (const OrderedTypeNotation &) const override = 0;
             virtual bool dependsOn (const class Restricted &) const = 0;
             virtual bool dependsOn (const class Composite &) const = 0;
     };

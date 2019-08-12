@@ -72,7 +72,7 @@ namespace amqp::internal::schema {
 
             Type type() const override;
 
-            bool dependsOn (const uPtr<AMQPTypeNotation> &) const override;
+            bool dependsOn (const OrderedTypeNotation &) const override;
             bool dependsOn (const class Restricted &) const override;
             bool dependsOn (const Composite &) const override;
 

@@ -22,6 +22,7 @@
 namespace amqp::internal::schema {
 
     class Composite;
+    class OrderedTypeNotation;
 
 }
 
@@ -85,9 +86,9 @@ namespace amqp::internal::schema {
             virtual std::vector<std::string>::const_iterator begin() const = 0;
             virtual std::vector<std::string>::const_iterator end() const = 0;
 
-            bool dependsOn (const uPtr<AMQPTypeNotation> &) const override;
-            virtual bool dependsOn (const Restricted &) const override = 0;
-            virtual bool dependsOn (const class Composite &) const override = 0;
+            bool dependsOn (const OrderedTypeNotation &) const override;
+            bool dependsOn (const Restricted &) const override = 0;
+            bool dependsOn (const class Composite &) const override = 0;
     };
 
 

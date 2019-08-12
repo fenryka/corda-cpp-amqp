@@ -123,8 +123,8 @@ Restricted::restrictedType() const {
 
 bool
 amqp::internal::schema::
-Restricted::dependsOn (const uPtr<AMQPTypeNotation> & rhs_) const {
-    return rhs_->dependsOn(*this);
+Restricted::dependsOn (const OrderedTypeNotation & rhs_) const {
+    return rhs_.dependsOn(*this);
 }
 
 /*********************************************************o*********************/

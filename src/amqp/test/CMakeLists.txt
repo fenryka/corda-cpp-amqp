@@ -1,10 +1,10 @@
 set (EXE "amqp-test")
 
 set (amqp-test-sources
-    main.cxx
-    Pair.cxx
-    Single.cxx
-    SotedSetTest.cxx
+        main.cxx
+        Pair.cxx
+        Single.cxx
+        OrderedTypeNotationTest.cxx
 )
 
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/src/amqp)

@@ -39,7 +39,7 @@ operator << (std::ostream & stream_, const Schema & schema_) {
 
 amqp::internal::schema::
 Schema::Schema (
-        OrderedTypeNotations types_
+        OrderedTypeNotations<AMQPTypeNotation> types_
 ) : m_types (std::move (types_)) {
     /*
     for (const auto & t : m_types) {
@@ -51,7 +51,7 @@ Schema::Schema (
 
 /******************************************************************************/
 
-const amqp::internal::schema::OrderedTypeNotations &
+const amqp::internal::schema::OrderedTypeNotations<amqp::internal::schema::AMQPTypeNotation> &
 amqp::internal::schema::
 Schema::types() const {
     return m_types;

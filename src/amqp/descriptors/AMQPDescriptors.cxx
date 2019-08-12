@@ -132,7 +132,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 
     validateAndNext(data_);
 
-    schema::OrderedTypeNotations schemas;
+    schema::OrderedTypeNotations<schema::AMQPTypeNotation> schemas;
 
     /*
      * The Schema is stored as a list of lists of described objects
@@ -148,7 +148,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 #endif
             while (pn_data_next(data_)) {
 //                DBG(std::endl << "    " << "Insert next " << ++j << "/" << ale2.elements() << std::endl);
-                schemas.insert (std::move (dispatchDescribed<schema::AMQPTypeNotation>(data_)));
+                schemas.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
                 std::cout << schemas << std::endl;
             }
         }

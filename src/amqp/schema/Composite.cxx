@@ -83,8 +83,8 @@ Composite::type() const {
  */
 bool
 amqp::internal::schema::
-Composite::dependsOn (const uPtr<AMQPTypeNotation> & rhs) const {
-    return rhs->dependsOn(*this);
+Composite::dependsOn (const OrderedTypeNotation & rhs) const {
+    return rhs.dependsOn(*this);
 }
 
 /******************************************************************************/
