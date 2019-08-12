@@ -93,11 +93,11 @@ amqp::internal::schema::
 Restricted::Restricted (
     uPtr<Descriptor> & descriptor_,
     const std::string & name_,
-    const std::string & label_,
+    std::string label_,
     const std::vector<std::string> & provides_,
     const amqp::internal::schema::Restricted::RestrictedTypes & source_
 ) : AMQPTypeNotation (name_, descriptor_)
-  , m_label (label_)
+  , m_label (std::move (label_))
   , m_provides (provides_)
   , m_source (source_)
 {
@@ -124,7 +124,7 @@ Restricted::restrictedType() const {
 bool
 amqp::internal::schema::
 Restricted::dependsOn (const OrderedTypeNotation & rhs_) const {
-    return rhs_.dependsOn(*this);
+    return dynamic_cast<const AMQPTypeNotation &>(rhs_).dependsOn(*this);
 }
 
 /*********************************************************o*********************/

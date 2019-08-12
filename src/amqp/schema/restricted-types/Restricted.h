@@ -60,7 +60,7 @@ namespace amqp::internal::schema {
             Restricted (
                 std::unique_ptr<Descriptor> & descriptor_,
                 const std::string &,
-                const std::string &,
+                std::string,
                 const std::vector<std::string> &,
                 const RestrictedTypes &);
 

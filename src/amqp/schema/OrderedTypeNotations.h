@@ -42,14 +42,18 @@ namespace amqp::internal::schema {
 
     template<class T>
     class OrderedTypeNotations {
+
         private:
             std::list<std::list<uPtr<T>>> m_schemas;
 
-            void insert(
-                    uPtr<T> && ptr,
-                    decltype(m_schemas.begin()));
+        public :
+            typedef decltype(m_schemas.begin()) iterator;
 
-            void insertNewList (uPtr<T> && ptr);
+        private:
+
+            void insert(uPtr<T> &&, iterator);
+
+            void insertNewList (uPtr<T> &&);
 
         public :
             void insert(uPtr<T> && ptr);
@@ -57,6 +61,14 @@ namespace amqp::internal::schema {
             friend std::ostream & ::operator << <> (
                     std::ostream &,
                     const amqp::internal::schema::OrderedTypeNotations<T> &);
+
+            decltype (m_schemas.crbegin()) begin() const {
+                return m_schemas.crbegin();
+            }
+
+            decltype (m_schemas.crend()) end() const {
+                return m_schemas.crend();
+            }
     };
 
 }
@@ -65,7 +77,7 @@ namespace amqp::internal::schema {
 
 template<class T>
 std::ostream &
-operator<<(
+operator << (
         std::ostream &stream_,
         const amqp::internal::schema::OrderedTypeNotations<T> &otn_
 ) {
@@ -108,7 +120,7 @@ void
 amqp::internal::schema::
 OrderedTypeNotations<T>::insert (
         uPtr<T> && ptr,
-        decltype(m_schemas.begin()) l_
+        amqp::internal::schema::OrderedTypeNotations<T>::iterator l_
 ) {
     std::cout << RED << "insert: " << BLUE << " " << ptr->name() << RESET << std::endl;
 
@@ -117,6 +129,7 @@ OrderedTypeNotations<T>::insert (
         for (auto j = i->begin() ; j != i->end() ; ) {
             std::cout << "* compare " << (*j)->name() << " to " << ptr->name() << std::endl;
             if ((*j)->dependsOn (*ptr)) {
+                std::cout << "  * " << (*j)->name() << " depends on " << ptr->name() << std::endl;
                 okToInsert = false;
                 ++j;
             } else if (ptr->dependsOn(**j)) {

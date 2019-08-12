@@ -63,7 +63,7 @@ namespace amqp::internal::schema {
         public :
             Composite (
                 const std::string & name_,
-                const std::string & label_,
+                std::string label_,
                 const std::list<std::string> & provides_,
                 std::unique_ptr<Descriptor> & descriptor_,
                 std::vector<std::unique_ptr<Field>> & fields_);

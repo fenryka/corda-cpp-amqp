@@ -19,8 +19,8 @@ operator << (std::ostream & stream_, const Descriptor & desc_) {
  ******************************************************************************/
 
 amqp::internal::schema::
-Descriptor::Descriptor (const std::string & name_)
-    : m_name (name_)
+Descriptor::Descriptor (std::string name_)
+    : m_name (std::move (name_))
 { }
 
 /******************************************************************************/

@@ -21,7 +21,7 @@ namespace amqp::internal::schema {
         public :
             Descriptor() = default;
 
-            explicit Descriptor (const std::string &);
+            explicit Descriptor (std::string);
 
             const std::string & name() const;
     };

@@ -36,12 +36,12 @@ namespace amqp::internal::schema {
 amqp::internal::schema::
 Composite::Composite (
         const std::string & name_,
-        const std::string & label_,
+        std::string label_,
         const std::list<std::string> & provides_,
         std::unique_ptr<Descriptor> & descriptor_,
         std::vector<std::unique_ptr<Field>> & fields_
 ) : AMQPTypeNotation (name_, descriptor_)
-  , m_label (label_)
+  , m_label (std::move (label_))
   , m_provides (provides_)
   , m_fields (std::move (fields_))
 { }
@@ -84,19 +84,16 @@ Composite::type() const {
 bool
 amqp::internal::schema::
 Composite::dependsOn (const OrderedTypeNotation & rhs) const {
-    return rhs.dependsOn(*this);
+    std::cout << "composite " << BLUE << name() << RESET << " depended on RHS" << std::endl;
+    return dynamic_cast<const AMQPTypeNotation &>(rhs).dependsOn(*this);
 }
 
 /******************************************************************************/
 
-/*
- * lhs is, I think, the element being inserted
- */
 bool
 amqp::internal::schema::
 Composite::dependsOn (const amqp::internal::schema::Restricted & lhs_) const {
     std::cout << "composite " << BLUE << name() << RESET << " depended on by " << RED << lhs_.name() << RESET << std::endl;
-
 
     for (auto i { lhs_.begin() } ; i != lhs_.end() ; ++i) {
         std::cout << "   " << *i << " == " << name() << std::endl;
@@ -114,10 +111,11 @@ Composite::dependsOn (const amqp::internal::schema::Restricted & lhs_) const {
 bool
 amqp::internal::schema::
 Composite::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
-    std::cout << "composite " << name() << " gte " << lhs_.name() << std::endl;
+//    std::cout << "composite " << name() << " depends on composite " << lhs_.name() << std::endl;
 
     for (auto const & field : lhs_) {
-        if (field->type()  == name()) return false;
+//        std::cout << "  " << field->type() << " " << field->name() << std::endl;
+        if (field->type() == name()) return true;
     }
 
     return false;
