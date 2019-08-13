@@ -6,7 +6,7 @@
 
 /******************************************************************************/
 
-TEST (Pair, string) {
+TEST (Pair, string) { // NOLINT
     amqp::TypedPair<std::string> str_test ("Left", "Hello");
 
     EXPECT_EQ("Left : Hello", str_test.dump());
@@ -14,7 +14,7 @@ TEST (Pair, string) {
 
 /******************************************************************************/
 
-TEST (Pair, int) {
+TEST (Pair, int) { // NOLINT
     amqp::TypedPair<int> int_test ("Left", 101);
 
     EXPECT_EQ("Left : 101", int_test.dump());
@@ -22,7 +22,7 @@ TEST (Pair, int) {
 
 /******************************************************************************/
 
-TEST (Pair, UP1) {
+TEST (Pair, UP1) { // NOLINT
     std::unique_ptr<amqp::TypedPair<double>> test =
         std::make_unique<amqp::TypedPair<double>> ("property", 10.0);
 
@@ -31,7 +31,7 @@ TEST (Pair, UP1) {
 
 /******************************************************************************/
 
-TEST (Pair, UP2) {
+TEST (Pair, UP2) { // NOLINT
     struct builder {
         static std::unique_ptr<amqp::Pair>
         build (const std::string & prop_, int val_) {

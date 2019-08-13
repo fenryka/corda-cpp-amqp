@@ -3,17 +3,35 @@
 /******************************************************************************/
 
 #include <memory>
+#include <types.h>
 
 /******************************************************************************/
 
 #include "Descriptor.h"
+#include "OrderedTypeNotations.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Forward class declarations
+ *
+ ******************************************************************************/
 
 namespace amqp::internal::schema {
 
+    class Restricted;
+    class Composite;
 
-    class AMQPTypeNotation : public AMQPDescribed {
+}
+
+/******************************************************************************
+ *
+ *
+ *
+ ******************************************************************************/
+
+namespace amqp::internal::schema {
+
+    class AMQPTypeNotation : public AMQPDescribed, public OrderedTypeNotation {
         public :
             friend std::ostream & operator << (std::ostream &, const AMQPTypeNotation &);
 
@@ -22,6 +40,9 @@ namespace amqp::internal::schema {
         private :
             std::string                 m_name;
             std::unique_ptr<Descriptor> m_descriptor;
+
+        protected :
+            bool gteDefault(const AMQPTypeNotation &) const;
 
         public :
             AMQPTypeNotation (
@@ -36,6 +57,10 @@ namespace amqp::internal::schema {
             const std::string & name() const;
 
             virtual Type type() const = 0;
+
+            int dependsOn (const OrderedTypeNotation &) const override = 0;
+            virtual int dependsOn (const class Restricted &) const = 0;
+            virtual int dependsOn (const class Composite &) const = 0;
     };
 
 }

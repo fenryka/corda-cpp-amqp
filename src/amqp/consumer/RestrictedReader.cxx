@@ -92,6 +92,14 @@ RestrictedReader::name() const {
     return m_name;
 }
 
+/******************************************************************************/
+
+const std::string &
+amqp::
+RestrictedReader::type() const {
+    return m_type;
+}
+
 /******************************************************************************
  *
  *
@@ -100,7 +108,7 @@ RestrictedReader::name() const {
 
 amqp::internal::schema::Restricted::RestrictedTypes
 amqp::
-ListReader::type() const {
+ListReader::restrictedType() const {
     return internal::schema::Restricted::RestrictedTypes::List;
 }
 

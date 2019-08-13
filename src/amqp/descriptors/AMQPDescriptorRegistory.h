@@ -19,18 +19,15 @@
  * Repeated here for brevity:
  *   50530 - R3 - Mike Hearn - mike&r3.com
  */
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     extern const uint64_t DESCRIPTOR_TOP_32BITS;
 
 }
-}
 
 /******************************************************************************/
 
-namespace amqp {
-namespace internal {
+namespace amqp::internal {
 
     extern const int ENVELOPE;
     extern const int SCHEMA;
@@ -45,8 +42,6 @@ namespace internal {
     extern const int TRANSFORM_ELEMENT_KEY;
 
 }
-}
-
 
 /******************************************************************************/
 

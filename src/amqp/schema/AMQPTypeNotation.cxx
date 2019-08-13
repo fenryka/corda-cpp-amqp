@@ -1,7 +1,10 @@
+#include <iostream>
 #include "AMQPTypeNotation.h"
 
+#include "colours.h"
+
 #include "Composite.h"
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 
 /******************************************************************************
  *
@@ -11,6 +14,14 @@
 
 namespace amqp::internal::schema {
 
+/**
+ * Provide nice mechanism by which Composite and Restricted types, both
+ * derived types of [AMQPTypeNotation], can be printed
+ *
+ * @param stream_ where the output should go
+ * @param clazz_ what we want to print
+ * @return the stream to allow proper io chaining
+ */
 std::ostream &
 operator << (std::ostream & stream_, const AMQPTypeNotation & clazz_) {
     switch (clazz_.type()) {
@@ -46,6 +57,23 @@ const std::string &
 amqp::internal::schema::
 AMQPTypeNotation::name() const {
     return m_name;
+}
+
+/******************************************************************************/
+
+bool
+amqp::internal::schema::
+AMQPTypeNotation::gteDefault (
+    const amqp::internal::schema::AMQPTypeNotation & lhs_
+) const {
+    if (name() == lhs_.name()) {
+        std::cout << RED << "SAME OBJECT: " << name() << RESET << std::endl;
+        return true;
+    } else {
+//        return name() >= lhs_.name();
+        std::cout << RED << "DIFFERENT OBJECT: " << lhs_.name() << RESET << std::endl;
+        return true;
+    }
 }
 
 /******************************************************************************/

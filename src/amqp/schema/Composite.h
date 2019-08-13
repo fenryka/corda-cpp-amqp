@@ -6,12 +6,25 @@
 #include <vector>
 #include <iosfwd>
 #include <string>
+#include <types.h>
 
 #include "Field.h"
 #include "Descriptor.h"
 #include "AMQPTypeNotation.h"
 
 #include "amqp/AMQPDescribed.h"
+
+/******************************************************************************
+ *
+ * Forward class declarations
+ *
+ ******************************************************************************/
+
+namespace amqp::internal::schema {
+
+    class Restricted;
+
+}
 
 /******************************************************************************/
 
@@ -50,7 +63,7 @@ namespace amqp::internal::schema {
         public :
             Composite (
                 const std::string & name_,
-                const std::string & label_,
+                std::string label_,
                 const std::list<std::string> & provides_,
                 std::unique_ptr<Descriptor> & descriptor_,
                 std::vector<std::unique_ptr<Field>> & fields_);
@@ -58,6 +71,13 @@ namespace amqp::internal::schema {
             const std::vector<std::unique_ptr<Field>> & fields() const;
 
             Type type() const override;
+
+            int dependsOn (const OrderedTypeNotation &) const override;
+            int dependsOn (const class Restricted &) const override;
+            int dependsOn (const Composite &) const override;
+
+            decltype(m_fields)::const_iterator begin() const { return m_fields.cbegin();}
+            decltype(m_fields)::const_iterator end() const { return m_fields.cend(); }
     };
 
 }

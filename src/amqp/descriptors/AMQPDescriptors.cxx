@@ -5,13 +5,16 @@
 #include <iostream>
 #include <proton/types.h>
 #include <proton/codec.h>
+#include "colours.h"
 
 #include "debug.h"
 #include "Field.h"
 #include "Schema.h"
 #include "Envelope.h"
 #include "Composite.h"
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
+#include "amqp/schema/OrderedTypeNotations.h"
+#include "AMQPDescribed.h"
 
 #include "proton/proton_wrapper.h"
 #include "AMQPDescriptorRegistory.h"
@@ -129,7 +132,7 @@ SchemaDescriptor::build(pn_data_t * data_) const {
 
     validateAndNext(data_);
 
-    std::map<std::string, std::unique_ptr<schema::AMQPTypeNotation>> types;
+    schema::OrderedTypeNotations<schema::AMQPTypeNotation> schemas;
 
     /*
      * The Schema is stored as a list of lists of described objects
@@ -140,14 +143,18 @@ SchemaDescriptor::build(pn_data_t * data_) const {
         for (int i { 1 } ; pn_data_next(data_) ; ++i) {
             DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
+#if defined AMQP_DEBUG && AMQP_DEBUG >= 1
+            int j { 0 };
+#endif
             while (pn_data_next(data_)) {
-                auto type = dispatchDescribed<schema::Composite>(data_);
-                types[type->name()] = std::move(type);
+//                DBG(std::endl << "    " << "Insert next " << ++j << "/" << ale2.elements() << std::endl);
+                schemas.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
+                std::cout << schemas << std::endl;
             }
         }
     }
 
-    return std::make_unique<schema::Schema> (schema::Schema (types));
+    return std::make_unique<schema::Schema> (std::move (schemas));
 }
 
 /******************************************************************************
@@ -170,7 +177,7 @@ ObjectDescriptor::build(pn_data_t * data_) const {
 
     auto symbol = proton::get_symbol<std::string> (data_);
 
-    return std::make_unique<schema::Descriptor> (schema::Descriptor (symbol));
+    return std::make_unique<schema::Descriptor> (symbol);
 }
 
 /******************************************************************************
@@ -330,7 +337,7 @@ RestrictedDescriptor::build(pn_data_t * data_) const {
 
     // SKIP the choices section **FOR NOW**
 
-    return std::make_unique<schema::Restricted> (descriptor, name,
+    return schema::Restricted::make (descriptor, name,
             label, provides, source);
 }
 

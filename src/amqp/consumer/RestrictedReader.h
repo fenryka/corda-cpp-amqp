@@ -7,7 +7,7 @@
 #include <any>
 #include <vector>
 
-#include "Restricted.h"
+#include "amqp/schema/restricted-types/Restricted.h"
 
 /******************************************************************************/
 
@@ -20,9 +20,12 @@ namespace amqp {
     class RestrictedReader : public Reader {
         private :
             static const std::string m_name;
+            const std::string m_type;
 
         public :
-            RestrictedReader () = default;
+            RestrictedReader (const std::string & type_)
+                : m_type (type_)
+            { }
 
             ~RestrictedReader() = default;
 
@@ -36,6 +39,7 @@ namespace amqp {
                 const std::unique_ptr<internal::schema::Schema> &) const override = 0;
 
             const std::string & name() const override;
+            const std::string & type() const override;
     };
 
 }
@@ -46,8 +50,6 @@ namespace amqp {
 
     class ListReader : public RestrictedReader {
         private :
-            static const std::string m_name;
-
             // How to read the underlying types
             std::weak_ptr<amqp::Reader> m_reader;
 
@@ -56,13 +58,16 @@ namespace amqp {
                 const std::unique_ptr<internal::schema::Schema> &) const;
 
         public :
-            ListReader (std::weak_ptr<amqp::Reader> reader_)
-                : m_reader (reader_)
+            ListReader (
+                const std::string & type_,
+                std::weak_ptr<amqp::Reader> reader_
+            ) : RestrictedReader (type_)
+              , m_reader (reader_)
             { }
 
             ~ListReader() final = default;
 
-            internal::schema::Restricted::RestrictedTypes type() const;
+            internal::schema::Restricted::RestrictedTypes restrictedType() const;
 
             std::unique_ptr<Value> dump(
                 const std::string &,

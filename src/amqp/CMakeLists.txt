@@ -11,7 +11,8 @@ set (amqp_sources
     schema/Envelope.cxx
     schema/Composite.cxx
     schema/Descriptor.cxx
-    schema/Restricted.cxx
+    schema/restricted-types/Restricted.cxx
+    schema/restricted-types/List.cxx
     schema/AMQPTypeNotation.cxx
     consumer/Reader.cxx
     consumer/PropertyReader.cxx

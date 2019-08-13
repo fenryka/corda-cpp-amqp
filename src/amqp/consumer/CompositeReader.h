@@ -6,6 +6,7 @@
 
 #include <any>
 #include <vector>
+#include <iostream>
 
 /******************************************************************************/
 
@@ -17,16 +18,19 @@ namespace amqp {
 
             static const std::string m_name;
 
+            std::string m_type;
+
             std::vector<std::unique_ptr<amqp::Value>> _dump (
                     pn_data_t * data_,
                     const std::unique_ptr<amqp::internal::schema::Schema> & schema_) const;
 
         public :
-            explicit CompositeReader (
+            CompositeReader (
+                std::string type_,
                 std::vector<std::weak_ptr<amqp::Reader>> & readers_
-            ) : m_readers (std::move (readers_)) { }
+            );
 
-            ~CompositeReader() override = default;
+            ~CompositeReader() = default;
 
             std::any read (pn_data_t *) const override;
 
@@ -41,9 +45,8 @@ namespace amqp {
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &) const override;
 
-            const std::string & name() const override {
-                return m_name;
-            }
+            const std::string & name() const override;
+            const std::string & type() const override;
     };
 
 }

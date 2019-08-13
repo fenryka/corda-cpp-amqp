@@ -16,15 +16,13 @@
 
 class CompositeFactory {
     private :
-        using SchemaPtr    = std::unique_ptr<amqp::internal::schema::Schema>;
-        using CompositePtr = std::unique_ptr<amqp::internal::schema::Composite>;
-        using EnvelopePtr  = std::unique_ptr<amqp::internal::schema::Envelope>;
+        using SchemaPtr    = uPtr<amqp::internal::schema::Schema>;
+        using CompositePtr = uPtr<amqp::internal::schema::Composite>;
+        using EnvelopePtr  = uPtr<amqp::internal::schema::Envelope>;
 
         /**
          *
          */
-        spStrMap_t<amqp::PropertyReader> m_propertyReaders;
-
         spStrMap_t<amqp::Reader> m_readersByType;
         spStrMap_t<amqp::Reader> m_readersByDescriptor;
 
@@ -37,20 +35,30 @@ class CompositeFactory {
         const std::shared_ptr<amqp::Reader> byDescriptor (const std::string &);
 
     private :
+        std::shared_ptr<amqp::Reader> process(const amqp::internal::schema::AMQPTypeNotation &);
+
+        std::shared_ptr<amqp::Reader>
+        processComposite (const amqp::internal::schema::AMQPTypeNotation &);
+
+        std::shared_ptr<amqp::Reader>
+        processRestricted (const amqp::internal::schema::AMQPTypeNotation &);
+
+    /*
         std::shared_ptr<amqp::Reader>
         process (
-                upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
-                std::set<std::string> &);
+            amqp::internal::schema::OrderedTypeNotations::const_iterator,
+            std::set<std::string> &);
 
         std::shared_ptr<amqp::Reader>
         processComposite (
-                upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
-                std::set<std::string> &);
+            amqp::internal::schema::Schema::SchemaSet::const_iterator,
+            std::set<std::string> &);
 
         std::shared_ptr<amqp::Reader>
         processRestricted (
-            upStrMap_t<amqp::internal::schema::AMQPTypeNotation>::const_iterator,
+            amqp::internal::schema::Schema::SchemaSet::const_iterator,
             std::set<std::string> &);
+            */
 };
 
 /******************************************************************************/

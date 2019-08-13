@@ -23,19 +23,19 @@ operator << (std::ostream & stream_, const Field & field_) {
 
 amqp::internal::schema::
 Field::Field (
-        const std::string & name_,
-        const std::string & type_,
-        const std::list<std::string> & requires_,
-        const std::string & default_,
-        const std::string & label_,
-        bool mandatory_,
-        bool multiple_
+    const std::string & name_,
+    const std::string & type_,
+    const std::list<std::string> & requires_,
+    const std::string & default_,
+    const std::string & label_,
+    bool mandatory_,
+    bool multiple_
 ) : m_name (name_)
-        , m_requires (requires_)
-        , m_default (default_)
-        , m_label (label_)
-        , m_mandatory (mandatory_)
-        , m_mulitple (multiple_)
+  , m_requires (requires_)
+  , m_default (default_)
+  , m_label (label_)
+  , m_mandatory (mandatory_)
+  , m_multiple (multiple_)
 {
     if (typeIsPrimitive(type_)) {
         m_type = std::make_pair(type_, FieldType::PrimitiveProperty);
@@ -76,6 +76,14 @@ Field::type() const {
 
 /******************************************************************************/
 
+const std::string &
+amqp::internal::schema::
+Field::resolvedType() const {
+    return (type() == "*") ? requires().front() : type();
+}
+
+/******************************************************************************/
+
 amqp::internal::schema::FieldType
 amqp::internal::schema::
 Field::fieldType() const {
@@ -89,3 +97,13 @@ amqp::internal::schema::
 Field::requires() const {
     return m_requires;
 }
+
+/******************************************************************************/
+
+bool
+amqp::internal::schema::
+Field::primitive() const {
+    return m_type.second == PrimitiveProperty;
+}
+
+/******************************************************************************/

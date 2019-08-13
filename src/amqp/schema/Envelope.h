@@ -25,7 +25,7 @@ namespace amqp::internal::schema {
 
             Envelope (
                 std::unique_ptr<Schema> & schema_,
-                std::string & descriptor_);
+                std::string descriptor_);
 
             const std::unique_ptr<Schema> & schema() const;
 
