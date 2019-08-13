@@ -64,47 +64,96 @@ computeIfAbsent (
  */
 void
 CompositeFactory::process (const SchemaPtr & schema_) {
-    // Deals with hitting a recursive loop in our type hierarchy, at the moment
-    // if we find a loop we'll die on our arse... later on we might want to do
-    // something a bit smarter than shitting the bed!.
-    std::set<std::string> l;
-
-    /*
     for (auto i = schema_->begin() ; i != schema_->end() ; ++i) {
-        l.clear();
+        for (const auto & j : *i) {
+            process(*j);
+            m_readersByDescriptor[j->descriptor()] = m_readersByType[j->name()];
+        }
 
-        process(i, l);
-
-        m_readersByDescriptor[(*i)->descriptor()] = m_readersByType[(*i)->name()];
     }
-     */
 }
 
 /******************************************************************************/
 
-/*
 std::shared_ptr<amqp::Reader>
 CompositeFactory::process(
-    amqp::internal::schema::Schema::SchemaSet::const_iterator schema_,
-    std::set<std::string> & history_)
+        const amqp::internal::schema::AMQPTypeNotation & schema_)
 {
-    DBG ("\nProcess: " << (*schema_)->name() << std::endl);
+    std::cout << "PROCESS: " << schema_.name() << std::endl;
 
     return computeIfAbsent<amqp::Reader> (
         m_readersByType,
-        (*schema_)->name(),
-        [&schema_, this, &history_] () -> std::shared_ptr<amqp::Reader> {
-            switch ((*schema_)->type()) {
+        schema_.name(),
+        [& schema_, this] () -> std::shared_ptr<amqp::Reader> {
+            switch (schema_.type()) {
                 case amqp::internal::schema::AMQPTypeNotation::Composite : {
-                    return processComposite(schema_, history_);
+                    return processComposite(schema_);
                 }
                 case amqp::internal::schema::AMQPTypeNotation::Restricted : {
-                    return processRestricted(schema_, history_);
+                    return processRestricted(schema_);
                 }
             }
         });
 }
-*/
+
+/******************************************************************************/
+
+std::shared_ptr<amqp::Reader>
+CompositeFactory::processComposite (
+        const amqp::internal::schema::AMQPTypeNotation & type_)
+{
+    std::cout << "PROCESS COMPOSITE: " << type_.name() << std::endl;
+
+    std::vector<std::weak_ptr<amqp::Reader>> readers;
+
+    auto & fields = dynamic_cast<const amqp::internal::schema::Composite &> (
+            type_).fields();
+
+    readers.reserve(fields.size());
+
+    for (const auto & field : fields) {
+        DBG ("  Field: " << field->name() << ": " << field->type() << std::endl);
+
+        switch (field->fieldType()) {
+            case amqp::internal::schema::FieldType::PrimitiveProperty : {
+                auto reader = computeIfAbsent<amqp::Reader>(
+                        m_readersByType,
+                        field->type(),
+                        [&field]() -> std::shared_ptr<amqp::PropertyReader> {
+                            return amqp::PropertyReader::make(field);
+                        });
+
+                assert (reader);
+                readers.emplace_back(reader);
+                assert (readers.back().lock());
+                break;
+            }
+            case amqp::internal::schema::FieldType::CompositeProperty :
+            case amqp::internal::schema::FieldType::RestrictedProperty :  {
+                auto reader = m_readersByType[field->type()];
+
+                assert (reader);
+                readers.emplace_back(reader);
+                assert (readers.back().lock());
+                break;
+            }
+        }
+
+        assert (readers.back().lock());
+    }
+
+    return std::make_shared<amqp::CompositeReader> (type_.name(), readers);
+}
+
+/******************************************************************************/
+
+std::shared_ptr<amqp::Reader>
+CompositeFactory::processRestricted (
+        const amqp::internal::schema::AMQPTypeNotation & type_)
+{
+    std::cout << "PROCESS RESTRICTED: " << type_.name() << std::endl;
+}
+
 /******************************************************************************/
 /*
 std::shared_ptr<amqp::Reader>

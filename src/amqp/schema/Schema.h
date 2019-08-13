@@ -52,6 +52,9 @@ namespace amqp::internal::schema {
 
             SchemaMap::const_iterator fromType (const std::string &) const;
             SchemaMap::const_iterator fromDescriptor (const std::string &) const;
+
+            decltype(m_types.begin()) begin() const { return m_types.begin(); }
+            decltype(m_types.end()) end() const { return m_types.end(); }
     };
 
 }

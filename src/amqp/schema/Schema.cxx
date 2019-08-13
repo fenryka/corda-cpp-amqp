@@ -14,17 +14,12 @@ namespace amqp::internal::schema {
 
 std::ostream &
 operator << (std::ostream & stream_, const Schema & schema_) {
-    uint32_t count { 1 };
-    bool first { true };
 
-    /*
-    for (auto const & type : schema_.m_types) {
-        if (!first) stream_ << std::endl << std::endl; else first = false;
-        stream_ << count++ << "/" << schema_.m_types.size() << ") "
-                <<  type->name() << std::endl
-                << *type;
+    for (auto i { schema_.m_types.begin() } ; i != schema_.m_types.end() ; ++i) {
+        for (auto & j : *i) {
+            stream_ << j->name() << " " << j->type() << std::endl;
+        }
     }
-     */
 
     return stream_;
 }
