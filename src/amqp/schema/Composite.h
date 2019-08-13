@@ -72,9 +72,9 @@ namespace amqp::internal::schema {
 
             Type type() const override;
 
-            bool dependsOn (const OrderedTypeNotation &) const override;
-            bool dependsOn (const class Restricted &) const override;
-            bool dependsOn (const Composite &) const override;
+            int dependsOn (const OrderedTypeNotation &) const override;
+            int dependsOn (const class Restricted &) const override;
+            int dependsOn (const Composite &) const override;
 
             decltype(m_fields)::const_iterator begin() const { return m_fields.cbegin();}
             decltype(m_fields)::const_iterator end() const { return m_fields.cend(); }

@@ -23,8 +23,8 @@ namespace amqp::internal::schema {
 
             const std::string & listOf() const;
 
-            bool dependsOn (const Restricted &) const override;
-            bool dependsOn (const class Composite &) const override;
+            int dependsOn (const Restricted &) const override;
+            int dependsOn (const class Composite &) const override;
     };
 
 }

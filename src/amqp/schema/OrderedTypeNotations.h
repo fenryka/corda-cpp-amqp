@@ -31,7 +31,7 @@ namespace amqp::internal::schema {
         public :
             virtual ~OrderedTypeNotation() = default;
 
-            virtual bool dependsOn(const OrderedTypeNotation &) const = 0;
+            virtual int dependsOn(const OrderedTypeNotation &) const = 0;
     };
 
 }
@@ -42,7 +42,6 @@ namespace amqp::internal::schema {
 
     template<class T>
     class OrderedTypeNotations {
-
         private:
             std::list<std::list<uPtr<T>>> m_schemas;
 
@@ -50,10 +49,11 @@ namespace amqp::internal::schema {
             typedef decltype(m_schemas.begin()) iterator;
 
         private:
-
             void insert(uPtr<T> &&, iterator);
-
             void insertNewList (uPtr<T> &&);
+            void insertNewList (
+                    uPtr<T> &&,
+                    typename std::list<std::list<uPtr<T>>>::iterator &);
 
         public :
             void insert(uPtr<T> && ptr);
@@ -106,6 +106,25 @@ OrderedTypeNotations<T>::insertNewList(uPtr<T> && ptr) {
 
 /******************************************************************************/
 
+/**
+ * This could be a bit more space efficient by checking the previous element
+ * for dependendies again as its possible we are moving multiple elements "up"
+ * but the extra checks probably don't make it worth it.
+ */
+template<class T>
+void
+amqp::internal::schema::
+OrderedTypeNotations<T>::insertNewList(
+        uPtr<T> && ptr,
+        typename std::list<std::list<uPtr<T>>>::iterator & here_)
+{
+    std::list<uPtr<T>> l;
+    l.emplace_back (std::move (ptr));
+    m_schemas.insert(here_, std::move (l));
+}
+
+/******************************************************************************/
+
 template<class T>
 void
 amqp::internal::schema::
@@ -122,36 +141,60 @@ OrderedTypeNotations<T>::insert (
         uPtr<T> && ptr,
         amqp::internal::schema::OrderedTypeNotations<T>::iterator l_
 ) {
-    std::cout << RED << "insert: " << BLUE << " " << ptr->name() << RESET << std::endl;
+    /*
+     * First we find where this element needs to be added
+     */
+    amqp::internal::schema::OrderedTypeNotations<T>::iterator insertionPoint { l_ };
 
-    for (auto i  = l_ ; i != m_schemas.end() ; ++i) {
-        auto okToInsert { true };
-        for (auto j = i->begin() ; j != i->end() ; ) {
-            std::cout << "* compare " << (*j)->name() << " to " << ptr->name() << std::endl;
-            if ((*j)->dependsOn (*ptr)) {
-                std::cout << "  * " << (*j)->name() << " depends on " << ptr->name() << std::endl;
-                okToInsert = false;
-                ++j;
-            } else if (ptr->dependsOn(**j)) {
-                std::cout << "  * " << ptr->name() << " depends on " << (*j)->name() << std::endl;
-                uPtr<T> tmpPtr { std::move (*j) };
-                auto toErase = j++;
-                i->erase(toErase);
+    for (auto i = l_ ; i != m_schemas.end() ; ++i) {
+        for (const auto & j : *i) {
+            /*
+             * A score of 0 means no dependencies at all
+             * A score of 1 means "j" has a dependency on what's being inserted
+             * A score of 2 means what's being inserted depends on "j"
+             */
+            auto score = j->dependsOn(*ptr);
 
-                // shuffle that element down the stack;
-                insert (std::move (tmpPtr), std::next (i));
-            } else {
-                ++j;
+            if (score == 1) {
+                insertionPoint = std::next(i);
+            } else if (score == 2) {
+                insertionPoint = i;
+                goto done;
             }
         }
+    }
+done:
 
-        if (okToInsert) {
-            i->emplace_back (std::move (ptr));
-            return;
+    /*
+     * Now we insert it and work out if anything requires shuffling
+     */
+    if (insertionPoint == m_schemas.end()) {
+        insertNewList (std::move(ptr));
+    } else {
+        const auto & insertedPtr = insertionPoint->emplace_front (std::move(ptr));
+
+        for (auto j = std::next (insertionPoint->begin()) ; j != insertionPoint->end() ; ) {
+            auto toErase = j++;
+
+            auto score { insertedPtr->dependsOn (**toErase) };
+
+            if (score > 0) {
+                uPtr<T> tmpPtr{std::move(*toErase)};
+                insertionPoint->erase (toErase);
+                switch (score) {
+                    case 1: {
+                        insert(std::move(tmpPtr), std::next(insertionPoint));
+                        break;
+                    }
+                    case 2: {
+                        insertNewList (std::move(tmpPtr), insertionPoint);
+                        break;
+                    }
+                }
+
+            }
         }
     }
-
-    insertNewList (std::move (ptr));
 }
 
 /******************************************************************************/

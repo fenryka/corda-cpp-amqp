@@ -58,9 +58,9 @@ namespace amqp::internal::schema {
 
             virtual Type type() const = 0;
 
-            bool dependsOn (const OrderedTypeNotation &) const override = 0;
-            virtual bool dependsOn (const class Restricted &) const = 0;
-            virtual bool dependsOn (const class Composite &) const = 0;
+            int dependsOn (const OrderedTypeNotation &) const override = 0;
+            virtual int dependsOn (const class Restricted &) const = 0;
+            virtual int dependsOn (const class Composite &) const = 0;
     };
 
 }

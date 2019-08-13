@@ -7,7 +7,6 @@
 
 #include "amqp/schema/Field.h"
 
-
 /******************************************************************************/
 
 namespace amqp {
@@ -18,31 +17,31 @@ namespace amqp {
 
         public :
             /**
-             * Static Factory method for creating apropriate derived types
+             * Static Factory method for creating appropriate derived types
              */
             static std::shared_ptr<PropertyReader> make (const FieldPtr &);
             static std::shared_ptr<PropertyReader> make (const std::string &);
 
-            virtual ~PropertyReader() = default;
+            ~PropertyReader() override = default;
 
-            virtual std::string readString(pn_data_t *) const override = 0;
+            std::string readString(pn_data_t *) const override = 0;
 
-            virtual std::any read (pn_data_t *) const override = 0;
+            std::any read (pn_data_t *) const override = 0;
 
-            virtual std::unique_ptr<Value> dump(
+            std::unique_ptr<Value> dump(
                 const std::string &,
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
             ) const override = 0;
 
-            virtual std::unique_ptr<Value> dump(
+            std::unique_ptr<Value> dump(
                 pn_data_t *,
                 const std::unique_ptr<internal::schema::Schema> &
             ) const override = 0;
 
-            virtual const std::string & name() const override = 0;
+            const std::string & name() const override = 0;
 
-            virtual const std::string & type() const override = 0;
+            const std::string & type() const override = 0;
     };
 
 
@@ -82,9 +81,8 @@ namespace amqp {
             static const std::string m_type;
 
         public :
-            ~IntPropertyReader() {
-                std::cout << "Destroying: " << m_name << std::endl;
-            }
+            ~IntPropertyReader() override = default;
+
             std::string readString (pn_data_t *) const override;
 
             std::any read (pn_data_t *) const override;

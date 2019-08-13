@@ -26,23 +26,11 @@ namespace amqp {
 
         public :
             CompositeReader (
-                const std::string & type_,
+                std::string type_,
                 std::vector<std::weak_ptr<amqp::Reader>> & readers_
-            ) : m_readers (readers_)
-              , m_type (type_)
-            {
-                std::cout << "MAKE CompositeReader: " << m_type << ": " << m_readers.size() << std::endl;
-                for (auto reader : m_readers) {
-                    assert (reader.lock());
-                    if (auto r = reader.lock()) {
-                        std::cout << "  prop: " << r->name() << " " << r->type() << std::endl;
-                    }
-                }
-            }
+            );
 
-            ~CompositeReader() override {
-                std::cout << "DESTROY COMP READER " << m_type << std::endl;
-            }
+            ~CompositeReader() = default;
 
             std::any read (pn_data_t *) const override;
 

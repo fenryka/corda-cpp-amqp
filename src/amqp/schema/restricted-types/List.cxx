@@ -1,6 +1,7 @@
 #include <iostream>
 #include "List.h"
 
+#include "debug.h"
 #include "colours.h"
 
 #include "schema/Composite.h"
@@ -14,7 +15,7 @@ namespace {
         auto pos = list_.find ('<');
 
         return std::make_pair (
-                std::string { list_.substr (0, pos) },
+               std::string { list_.substr (0, pos) },
                 std::string { list_.substr(pos + 1, list_.size() - pos - 2) }
         );
     }
@@ -66,38 +67,51 @@ List::listOf() const {
 
 /******************************************************************************/
 
-bool
+int
 amqp::internal::schema::
 List::dependsOn (const amqp::internal::schema::Restricted & lhs_) const {
-    std::cout << "Restricted::List gte rest" << std::endl;
+    auto rtn { 0 };
+    switch (lhs_.restrictedType()) {
+        case RestrictedTypes::List : {
+            const auto & list { dynamic_cast<const List &>(lhs_) };
 
-    // For example, if *this* is a list of lists and lhs_ is the list type
-    // we are a list of, then we depend on lhs_
-    for (auto i { lhs_.begin() } ; i != lhs_.end() ; ++i) {
-        std::cout << "  " << *i << " " << listOf() << std::endl;
-        if (listOf() == *i) return true;
-    }
-
-    return false;
-}
-
-/*********************************************************o*********************/
-
-bool
-amqp::internal::schema::
-List::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
-
-    for (const auto & f : lhs_.fields()) {
-        if (f->type() == "*") {
-            if (f->requires().front() == name()) {
-                return true;
+            // does the left hand side depend on us
+            DBG ("  L/L a) " << list.listOf() << " == " << name() << std::endl); // NOLINT
+            if (list.listOf() == name()) {
+                rtn = 1;
             }
-        } else if (f->type() == name()) {
-            return true;
+
+            // do we depend on the lhs
+            DBG ("  L/L b) " << listOf() << " == " << list.name() << std::endl); // NOLINT
+            if (listOf() == list.name()) {
+                rtn = 2;
+            }
         }
     }
 
-    return false;
+    return rtn;
+}
+
+/******************************************************************************/
+
+int
+amqp::internal::schema::
+List::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
+    auto rtn { 0 };
+    for (const auto & field : lhs_.fields()) {
+        DBG ("  L/C a) " << field->resolvedType() << " == " << name() << std::endl); // NOLINT
+        if (field->resolvedType() == name()) {
+            rtn = 1;
+        }
+    }
+
+
+    DBG ("  L/C b) " << listOf() << " == " << lhs_.name() << std::endl); // NOLINT
+    if (listOf() == lhs_.name()) {
+        rtn = 2;
+    }
+
+    return rtn;
 }
 
 /*********************************************************o*********************/

@@ -20,6 +20,24 @@ const std::string amqp::CompositeReader::m_name { // NOLINT
  *
  ******************************************************************************/
 
+amqp::
+CompositeReader::CompositeReader (
+        std::string type_,
+        std::vector<std::weak_ptr<amqp::Reader>> & readers_
+) : m_readers (readers_)
+  , m_type (std::move (type_))
+{
+    DBG ("MAKE CompositeReader: " << m_type << ": " << m_readers.size() << std::endl); // NOLINT
+    for (auto reader : m_readers) {
+        assert (reader.lock());
+        if (auto r = reader.lock()) {
+            DBG ("  prop: " << r->name() << " " << r->type() << std::endl); // NOLINT
+        }
+    }
+}
+
+/******************************************************************************/
+
 const std::string &
 amqp::
 CompositeReader::name() const {
@@ -62,7 +80,7 @@ CompositeReader::_dump (
         pn_data_t * data_,
         const std::unique_ptr<amqp::internal::schema::Schema> & schema_
 ) const {
-    DBG ("Read Composite: " << m_name << " : " << type() << std::endl);
+    DBG ("Read Composite: " << m_name << " : " << type() << std::endl); // NOLINT
     proton::is_described (data_);
     proton::auto_enter ae (data_);
 
@@ -82,7 +100,7 @@ CompositeReader::_dump (
 
         for (int i (0) ; i < m_readers.size() ; ++i) {
             if (auto l =  m_readers[i].lock()) {
-                DBG (fields[i]->name() << " " << (l ? "true" : "false") << std::endl);
+                DBG (fields[i]->name() << " " << (l ? "true" : "false") << std::endl); // NOLINT
 
                 read.emplace_back(l->dump(fields[i]->name(), data_, schema_));
             } else {

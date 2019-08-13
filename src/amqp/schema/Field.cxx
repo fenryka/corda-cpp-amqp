@@ -76,6 +76,14 @@ Field::type() const {
 
 /******************************************************************************/
 
+const std::string &
+amqp::internal::schema::
+Field::resolvedType() const {
+    return (type() == "*") ? requires().front() : type();
+}
+
+/******************************************************************************/
+
 amqp::internal::schema::FieldType
 amqp::internal::schema::
 Field::fieldType() const {

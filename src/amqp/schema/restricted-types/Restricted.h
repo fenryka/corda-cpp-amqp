@@ -86,9 +86,9 @@ namespace amqp::internal::schema {
             virtual std::vector<std::string>::const_iterator begin() const = 0;
             virtual std::vector<std::string>::const_iterator end() const = 0;
 
-            bool dependsOn (const OrderedTypeNotation &) const override;
-            bool dependsOn (const Restricted &) const override = 0;
-            bool dependsOn (const class Composite &) const override = 0;
+            int dependsOn (const OrderedTypeNotation &) const override;
+            int dependsOn (const Restricted &) const override = 0;
+            int dependsOn (const class Composite &) const override = 0;
     };
 
 

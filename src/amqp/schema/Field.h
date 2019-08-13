@@ -51,6 +51,7 @@ namespace amqp::internal::schema {
 
             const std::string            & name() const;
             const std::string            & type() const;
+            const std::string            & resolvedType() const;
             FieldType                      fieldType() const;
             const std::list<std::string> & requires() const;
             bool primitive() const;

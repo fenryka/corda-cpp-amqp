@@ -4,13 +4,13 @@
 
 #include "Reader.h"
 
-TEST (Single, string) {
+TEST (Single, string) { // NOLINT
     amqp::TypedSingle<std::string> str_test ("Hello");
 
     EXPECT_EQ("Hello", str_test.dump());
 }
 
-TEST (Single, list) {
+TEST (Single, list) { // NOLINT
 
     struct builder {
         static std::unique_ptr<amqp::Value>

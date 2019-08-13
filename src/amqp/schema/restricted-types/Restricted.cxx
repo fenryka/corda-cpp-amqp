@@ -121,7 +121,7 @@ Restricted::restrictedType() const {
 
 /******************************************************************************/
 
-bool
+int
 amqp::internal::schema::
 Restricted::dependsOn (const OrderedTypeNotation & rhs_) const {
     return dynamic_cast<const AMQPTypeNotation &>(rhs_).dependsOn(*this);
