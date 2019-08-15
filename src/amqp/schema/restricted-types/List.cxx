@@ -35,8 +35,8 @@ List::List (
         name_,
         label_,
         provides_,
-        amqp::internal::schema::Restricted::RestrictedTypes::List),
-    m_listOf { listType(name_).second }
+        amqp::internal::schema::Restricted::RestrictedTypes::List)
+  , m_listOf { listType(name_).second }
 {
 
 }
@@ -104,7 +104,6 @@ List::dependsOn (const amqp::internal::schema::Composite & lhs_) const {
             rtn = 1;
         }
     }
-
 
     DBG ("  L/C b) " << listOf() << " == " << lhs_.name() << std::endl); // NOLINT
     if (listOf() == lhs_.name()) {

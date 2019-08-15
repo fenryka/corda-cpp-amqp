@@ -1,6 +1,8 @@
 
 #include "Schema.h"
 
+#include "debug.h"
+
 #include <memory>
 #include <iostream>
 
@@ -38,7 +40,7 @@ Schema::Schema (
 ) : m_types (std::move (types_)) {
     for (auto i { m_types.begin() } ; i != m_types.end() ; ++i) {
         for (auto & j : *i) {
-            std::cout << j->descriptor() << " " << j->name() << std::endl;
+            DBG ("Schema: " << j->descriptor() << " " << j->name() << std::endl); // NOLINT
             m_descriptorToType.emplace(j->descriptor(), std::ref (j));
             m_typeToDescriptor.emplace(j->name(), std::ref (j));
         }

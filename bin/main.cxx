@@ -9,6 +9,8 @@
 #include <proton/codec.h>
 #include <sys/stat.h>
 
+#import "debug.h"
+
 #include "proton/proton_wrapper.h"
 
 #include "amqp/AMQPHeader.h"
@@ -34,7 +36,7 @@ data_and_stop(std::ifstream & f_, ssize_t sz) {
     auto rtn = pn_data_decode (d, blob, sz);
     assert (rtn == sz);
 
-    std::unique_ptr<amqp::internal::schema::Envelope> envelope{};
+    std::unique_ptr<amqp::internal::schema::Envelope> envelope;
 
     if (pn_data_is_described(d)) {
         proton::auto_enter p (d);
@@ -45,8 +47,8 @@ data_and_stop(std::ifstream & f_, ssize_t sz) {
             dynamic_cast<amqp::internal::schema::Envelope *> (
                 amqp::AMQPDescriptorRegistory[a]->build(d).release()));
 
-        std::cout << std::endl << "Types in schema: " << std::endl
-            << *envelope << std::endl;
+        DBG (std::cout << std::endl << "Types in schema: " << std::endl
+            << *envelope << std::endl); // NOLINT
     }
 
     CompositeFactory cf;
@@ -67,9 +69,11 @@ data_and_stop(std::ifstream & f_, ssize_t sz) {
         {
             proton::auto_enter p (d);
 
+            // We wrap our output like this to make sure it's valid JSON to
+            // facilitate easy pretty printing
             std::cout
                 << reader->dump ("{ Parsed", d, envelope->schema())->dump()
-                << "}" << std::endl;
+                << " }" << std::endl;
         }
 
     }

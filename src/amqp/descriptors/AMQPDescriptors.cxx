@@ -64,11 +64,6 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     }
 
     pn_data_next(data_);
-/*
-    if (pn_data_type(data_) != PN_LIST) {
-        throw std::runtime_error ("Envelope should be list");
-    }
-    */
 }
 
 /******************************************************************************/
@@ -143,13 +138,8 @@ SchemaDescriptor::build(pn_data_t * data_) const {
         for (int i { 1 } ; pn_data_next(data_) ; ++i) {
             DBG ("  " << i << "/" << ale.elements() <<  std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
-#if defined AMQP_DEBUG && AMQP_DEBUG >= 1
-            int j { 0 };
-#endif
             while (pn_data_next(data_)) {
-//                DBG(std::endl << "    " << "Insert next " << ++j << "/" << ale2.elements() << std::endl);
                 schemas.insert (dispatchDescribed<schema::AMQPTypeNotation>(data_));
-                std::cout << schemas << std::endl;
             }
         }
     }
@@ -352,7 +342,7 @@ amqp::internal::
 ChoiceDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "CHOICE " << data_ << std::endl;
+    DBG ("CHOICE " << data_ << std::endl); // NOLINT
 
     return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
@@ -364,7 +354,7 @@ amqp::internal::
 ReferencedObjectDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "REFERENCED OBJECT " << data_ << std::endl;
+    DBG ("REFERENCED OBJECT " << data_ << std::endl); // NOLINT
 
     return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
@@ -376,7 +366,7 @@ amqp::internal::
 TransformSchemaDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "TRANSFORM SCHEMA " << data_ << std::endl;
+    DBG ("TRANSFORM SCHEMA " << data_ << std::endl); // NOLINT
 
     return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
@@ -388,7 +378,7 @@ amqp::internal::
 TransformElementDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "TRANFORM ELEMENT " << data_ << std::endl;
+    DBG ("TRANSFORM ELEMENT " << data_ << std::endl); // NOLINT
 
     return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }
@@ -400,7 +390,7 @@ amqp::internal::
 TransformElementKeyDescriptor::build(pn_data_t * data_) const {
     validateAndNext(data_);
 
-    std::cout << "TRANSFORM ELEMENT KEY" << data_ << std::endl;
+    DBG ("TRANSFORM ELEMENT KEY" << data_ << std::endl); // NOLINT
 
     return std::unique_ptr<amqp::internal::AMQPDescribed> (nullptr);
 }

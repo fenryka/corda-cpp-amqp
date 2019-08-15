@@ -4,7 +4,7 @@ This is a best effort attempt at a C++ implemention of the CORDA serialization f
 
 ## Currently Working
 
-An implementation of a "blob inspector" that can take a serialised blob and decode it into a printable JSON format where that blob contains a constrained set of types. That is, any non container types are currently working (as far as testing has shown). 
+An implementation of a "blob inspector" that can take a serialised blob and decode it into a printable JSON format where that blob contains a constrained set of types. The current limitation with this implementation is that it does not understand associative containers (maps).
 
 ## Fututre Work
 

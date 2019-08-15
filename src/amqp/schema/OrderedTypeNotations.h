@@ -23,7 +23,11 @@ std::ostream & operator << (
         std::ostream &,
         const amqp::internal::schema::OrderedTypeNotations<T> &);
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * OrderedTypeNotation
+ *
+ ******************************************************************************/
 
 namespace amqp::internal::schema {
 
@@ -31,7 +35,7 @@ namespace amqp::internal::schema {
         public :
             virtual ~OrderedTypeNotation() = default;
 
-            virtual int dependsOn(const OrderedTypeNotation &) const = 0;
+            virtual int dependsOn (const OrderedTypeNotation &) const = 0;
     };
 
 }
@@ -49,7 +53,7 @@ namespace amqp::internal::schema {
             typedef decltype(m_schemas.begin()) iterator;
 
         private:
-            void insert(uPtr<T> &&, iterator);
+            void insert (uPtr<T> &&, iterator);
             void insertNewList (uPtr<T> &&);
             void insertNewList (
                     uPtr<T> &&,
@@ -182,10 +186,12 @@ done:
                 uPtr<T> tmpPtr{std::move(*toErase)};
                 insertionPoint->erase (toErase);
                 switch (score) {
+                    // Needs to go after the element we're adding
                     case 1: {
                         insert(std::move(tmpPtr), std::next(insertionPoint));
                         break;
                     }
+                    // Needs to go before the element we're adding
                     case 2: {
                         insertNewList (std::move(tmpPtr), insertionPoint);
                         break;

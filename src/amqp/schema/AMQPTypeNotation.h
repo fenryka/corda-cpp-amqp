@@ -41,9 +41,6 @@ namespace amqp::internal::schema {
             std::string                 m_name;
             std::unique_ptr<Descriptor> m_descriptor;
 
-        protected :
-            bool gteDefault(const AMQPTypeNotation &) const;
-
         public :
             AMQPTypeNotation (
                 const std::string & name_,
