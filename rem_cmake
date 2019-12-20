@@ -9,12 +9,21 @@ function cmake_rem_func {
 }
 
 rm -f BLOB-INSPECTOR.cbp
-
-cmake_rem_func .
-cmake_rem_func ./bin
-cmake_rem_func ./src
-cmake_rem_func ./src/amqp
-cmake_rem_func ./src/amqp/test
-cmake_rem_func ./src/proton
+rm -rf cmake-build-debug
 
 
+for x in `find . -name CMakeFiles -type d`; do
+    rm -rf $x
+done
+
+for x in `find . -name Makefile`; do
+    rm -f $x
+done
+
+for x in `find . -name cmake_install.cmake`; do
+    rm -f $x
+done
+
+for x in `find . -name CMakeCache.txt`; do
+    rm -f $x
+done
