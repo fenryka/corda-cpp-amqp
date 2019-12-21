@@ -2,9 +2,13 @@
 
 This is a best effort attempt at a C++ implemention of the CORDA serialization framework in a non JVM language. The initial target is a working "blob inspector", that is an exe that can take a serialised blob from a vault (or other) and decode it using C++.
 
+This project exists in parallel with the code checked into the experimental part of the Corda repository.
+
 ## Currently Working
 
-An implementation of a "blob inspector" that can take a serialised blob and decode it into a printable JSON format where that blob contains a constrained set of types. The current limitation with this implementation is that it does not understand associative containers (maps).
+An implementation of a "blob inspector" that can take a serialised blob and decode it into a printable JSON format where that blob contains a constrained set of types.
+
+Containers and enumerations are now supported
 
 ## Fututre Work
 
