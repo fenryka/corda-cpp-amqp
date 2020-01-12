@@ -10,22 +10,7 @@
 #include <sys/stat.h>
 
 #include "amqp/include/CordaBytes.h"
-
-/******************************************************************************/
-
-void
-printNode (pn_data_t * d_) {
-    /*
-    std::stringstream ss;
-
-    if (pn_data_is_described (d_)) {
-        amqp::internal::AMQPDescriptorRegistory[22UL]->read (d_, ss);
-    }
-
-    std::cout << ss.str() << std::endl;
-     */
-}
-
+#include "SchemaDumper.h"
 
 /******************************************************************************/
 
@@ -41,9 +26,8 @@ main (int argc, char **argv) {
     amqp::CordaBytes cb (argv[1]);
 
     if (cb.encoding() == amqp::DATA_AND_STOP) {
-//        BlobInspector blobInspector (cb);
-//        auto val = blobInspector.dump();
-//        std::cout << val << std::endl;
+        SchemaDumper schemaDumper (cb);
+        std::cout << schemaDumper.dump() << std::endl;
     } else {
         std::cerr << "BAD ENCODING " << cb.encoding() << " != "
                   << amqp::DATA_AND_STOP << std::endl;
@@ -53,3 +37,5 @@ main (int argc, char **argv) {
 
     return EXIT_SUCCESS;
 }
+
+/******************************************************************************/

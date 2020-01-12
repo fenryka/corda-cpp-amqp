@@ -13,7 +13,7 @@ namespace amqp {
         public :
             explicit AMQPBlob (CordaBytes &);
             std::string dumpContents() const;
-
+            std::string dumpSchema() const;
     };
 
 }
