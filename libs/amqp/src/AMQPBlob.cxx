@@ -9,6 +9,8 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
+/******************************************************************************/
+
 amqp::
 AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
     : m_data { pn_data (cb_.size()) }
@@ -20,6 +22,22 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
     auto rtn = pn_data_decode(m_data, cb_.bytes(), cb_.size());
     assert (rtn == cb_.size());
 }
+
+/******************************************************************************/
+
+std::string
+amqp::
+AMQPBlob::dumpSchema() const {
+    std::stringstream ss;
+
+    if (pn_data_is_described (m_data)) {
+        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data, ss);
+    }
+
+    return ss.str();
+}
+
+/******************************************************************************/
 
 std::string
 amqp::
@@ -65,3 +83,5 @@ AMQPBlob::dumpContents() const {
         }
     }
 }
+
+/******************************************************************************/
