@@ -36,7 +36,7 @@ namespace {
  */
 void
 amqp::internal::schema::descriptors::
-EnvelopeDescriptor::read (
+EnvelopeDescriptor::readRaw (
     pn_data_t * data_,
     std::stringstream & ss_,
     const AutoIndent & ai_
@@ -49,12 +49,12 @@ EnvelopeDescriptor::read (
         proton::auto_enter p (data_);
 
         ss_ << ai << "1]" << std::endl;
-        AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+        AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
                 (pn_data_t *)proton::auto_next (data_), ss_, AutoIndent { ai });
 
 
         ss_ << ai << "2]" << std::endl;
-        AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+        AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
                 (pn_data_t *)proton::auto_next(data_), ss_, AutoIndent { ai });
 
     }

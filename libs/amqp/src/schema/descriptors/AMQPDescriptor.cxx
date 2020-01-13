@@ -42,16 +42,27 @@ inline void
 amqp::internal::schema::descriptors::
 AMQPDescriptor::read (
         pn_data_t * data_,
-        std::stringstream & ss_
+        std::stringstream & ss_,
+        amqp::schema::DumpTarget target_
 ) const {
-    return read (data_, ss_, AutoIndent());
+    switch (target_) {
+        case amqp::schema::DumpTarget::raw : {
+            return readRaw (data_, ss_, AutoIndent());
+        }
+        case amqp::schema::DumpTarget::amqp : {
+            return readAMQP (data_, ss_, AutoIndent());
+        }
+        case amqp::schema::DumpTarget::avro : {
+            return readAvro (data_, ss_, AutoIndent());
+        }
+    }
 }
 
 /******************************************************************************/
 
 void
 amqp::internal::schema::descriptors::
-AMQPDescriptor::read (
+AMQPDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -65,12 +76,12 @@ AMQPDescriptor::read (
 
                 switch (pn_data_type (data_)) {
                     case PN_ULONG : {
-                        auto key = proton::readAndNext<u_long>(data_);
+                        auto key = proton::readAndNext<u_long> (data_);
 
                         ss_ << ai << "key  : "
-                            << key << " :: " << amqp::stripCorda(key)
+                            << key << " :: " << amqp::stripCorda (key)
                             << " -> "
-                            <<  amqp::describedToString ((uint64_t )key)
+                            <<  amqp::describedToString ((uint64_t)key)
                             << std::endl;
 
                         proton::is_list (data_);
@@ -78,12 +89,12 @@ AMQPDescriptor::read (
                             << pn_data_get_list(data_)
                             << std::endl;
 
-                        AMQPDescriptorRegistory[key]->read (data_, ss_, ai);
+                        AMQPDescriptorRegistory[key]->readRaw (data_, ss_, ai);
                         break;
                     }
                     case PN_SYMBOL : {
                         ss_ << ai << "blob: bytes: "
-                            << pn_data_get_symbol(data_).size
+                            << pn_data_get_symbol (data_).size
                             << std::endl;
                         break;
                     }
@@ -99,6 +110,30 @@ AMQPDescriptor::read (
             throw std::runtime_error ("Can only dispatch described objects");
         }
     }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+AMQPDescriptor::readAMQP (
+    pn_data_t *,
+    std::stringstream &,
+    const AutoIndent &
+) const {
+
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+AMQPDescriptor::readAvro (
+    pn_data_t *,
+    std::stringstream &,
+    const AutoIndent &
+) const {
+
 }
 
 /******************************************************************************/

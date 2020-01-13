@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/include/schema/SchemaDumpTargets.h"
 
 /******************************************************************************
  *
@@ -72,11 +73,22 @@ namespace amqp::internal::schema::descriptors {
 
             virtual std::unique_ptr<AMQPDescribed> build (pn_data_t *) const;
 
-            virtual void read (
+            void read (
                 pn_data_t *,
-                std::stringstream &) const;
+                std::stringstream &,
+                amqp::schema::DumpTarget) const;
 
-            virtual void read (
+            virtual void readRaw (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const;
+
+            virtual void readAMQP (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const;
+
+            virtual void readAvro (
                 pn_data_t *,
                 std::stringstream &,
                 const AutoIndent &) const;

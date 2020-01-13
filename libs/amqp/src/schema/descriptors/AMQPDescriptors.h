@@ -28,7 +28,7 @@ namespace amqp::internal::schema::descriptors {
     /**
      * Look up a described type by its ID in the AMQPDescriptorRegistry and
      * return the corresponding schema type. Specialised below to avoid
-     * the cast and re-owning of the unigue pointer when we're happy
+     * the cast and re-owning of the unique pointer when we're happy
      * with a simple uPtr<AMQPDescribed>
      */
     template<class T>

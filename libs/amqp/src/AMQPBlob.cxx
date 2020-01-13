@@ -32,7 +32,9 @@ AMQPBlob::dumpSchema() const {
     std::stringstream ss;
 
     if (pn_data_is_described (m_data)) {
-        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data, ss);
+        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data,
+                ss,
+                schema::DumpTarget::raw);
     }
 
     return ss.str();
