@@ -9,14 +9,13 @@ struct pn_data_t;
 /******************************************************************************/
 
 class SchemaDumper {
-private :
-    amqp::AMQPBlob m_blob;
+    private :
+        amqp::AMQPBlob m_blob;
 
-public :
-    explicit SchemaDumper (amqp::CordaBytes &);
+    public :
+        explicit SchemaDumper (amqp::CordaBytes &);
 
-    std::string dump();
-
+        std::string dump (amqp::schema::DumpTarget);
 };
 
 /******************************************************************************/

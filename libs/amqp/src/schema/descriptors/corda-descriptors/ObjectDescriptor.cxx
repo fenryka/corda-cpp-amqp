@@ -44,7 +44,7 @@ ObjectDescriptor::build (pn_data_t * data_) const {
 
 void
 amqp::internal::schema::descriptors::
-ObjectDescriptor::read (
+ObjectDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -62,6 +62,29 @@ ObjectDescriptor::read (
             << std::endl;
 
         ss_ << ai << "2/2] " << data_ << std::endl;
+    }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+ObjectDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const  {
+    DBG ("readAvro::Object" << std::endl);
+    proton::is_list (data_);
+
+    {
+        proton::auto_list_enter ale (data_);
+        pn_data_next(data_);
+
+        ss_ << ai_ << R"("aliases" : [ ")"
+            << proton::get_symbol<std::string>(
+                    (pn_data_t *)proton::auto_next (data_))
+            << R"(" ],)" << std::endl;
     }
 }
 

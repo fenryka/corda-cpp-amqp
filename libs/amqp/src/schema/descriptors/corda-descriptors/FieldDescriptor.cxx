@@ -86,7 +86,7 @@ FieldDescriptor::build (pn_data_t * data_) const {
 
 void
 amqp::internal::schema::descriptors::
-FieldDescriptor::read (
+FieldDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -132,6 +132,82 @@ FieldDescriptor::read (
     ss_ << ai << "7/7] Boolean: Multiple: "
         << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
         << std::endl;
+}
+
+/******************************************************************************/
+
+namespace {
+
+    bool
+    typeIsContainer (const std::string & type_) {
+
+    }
+
+    void
+    inferType (
+            const std::string & type_,
+            std::stringstream & ss_,
+            const amqp::internal::schema::descriptors::AutoIndent & ai_
+    ) {
+
+        const std::string array { "[]" };
+        const std::string primArray { "[p]" };
+
+        // when C++20 is done we can use .endswith, until then we have to do a reverse search
+        if (   std::equal (type_.rbegin(), type_.rbegin() + array.size(), array.rbegin(), array.rend())
+            || std::equal (type_.rbegin(), type_.rbegin() + primArray.size(), primArray.rbegin(), primArray.rend()))
+        {
+            auto type { type_.substr (0, type_.find_last_of ('[')) };
+
+
+
+            ss_ << ai_ << R"("type" : "array",)" << std::endl
+                << ai_ << R"("items" : )" << type << std::endl;
+        }
+    }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+FieldDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const  {
+    proton::is_list (data_);
+
+    proton::auto_list_enter ale (data_, true);
+    ss_ << ai_ << "{" << std::endl;
+    {
+        AutoIndent ai {ai_};
+
+        ss_ << ai << R"("name" : )"
+            << proton::get_string((pn_data_t *) proton::auto_next(data_))
+            << R"(", )" << std::endl;
+
+        inferType (proton::get_string((pn_data_t *) proton::auto_next(data_)), ss_, ai);
+
+    }
+    ss_ << ai_ << "}" << std::endl;
+
+    /*
+    proton::is_string (data_, true);
+
+    ss_ << ai << "4/7] String: Default: "
+        << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)
+        << std::endl;
+    ss_ << ai << "5/7] String: Label: "
+        << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)
+        << std::endl;
+    ss_ << ai << "6/7] Boolean: Mandatory: "
+        << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
+        << std::endl;
+    ss_ << ai << "7/7] Boolean: Multiple: "
+        << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
+        << std::endl;
+        */
 }
 
 /******************************************************************************/

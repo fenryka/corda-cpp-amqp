@@ -28,7 +28,7 @@ namespace proton {
     void is_list (pn_data_t *);
     void is_ulong (pn_data_t *);
     void is_symbol (pn_data_t *);
-    void is_string (pn_data_t *, bool allowNull = false);
+    void is_string (pn_data_t *, bool allowNull = false, const std::string & = __FILE__, int line = __LINE__);
     void is_described (pn_data_t *);
 
     /**

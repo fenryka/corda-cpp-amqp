@@ -89,7 +89,7 @@ CompositeDescriptor::build (pn_data_t * data_) const {
 
 void
 amqp::internal::schema::descriptors::
-CompositeDescriptor::read (
+CompositeDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -128,7 +128,7 @@ CompositeDescriptor::read (
 
         ss_ << ai << "4] Descriptor:" << std::endl;
 
-        AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+        AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
             (pn_data_t *)proton::auto_next(data_), ss_, AutoIndent { ai });
 
         ss_ << ai << "5] List: Fields: " << std::endl;
@@ -141,11 +141,71 @@ CompositeDescriptor::read (
                     << ale.elements() << "]"
                     << std::endl;
 
-                AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+                AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
                         data_, ss_, AutoIndent { ai2 });
             }
         }
     }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+CompositeDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const {
+    DBG ("readAvro::Composite" << std::endl);
+
+    ss_ << "{" << std::endl;
+
+    proton::is_list (data_);
+
+    {
+        AutoIndent ai { ai_ };
+        proton::auto_enter p (data_);
+
+        proton::is_string (data_);
+
+
+        ss_ << ai << R"("type" : "record",)" << std::endl;
+        auto name = proton::readAndNext<std::string>(data_);
+        std::size_t found = name.find_last_of('.');
+
+        ss_ << ai << R"("name" : ")" << name.substr (found + 1) << R"(",)" << std::endl;
+        ss_ << ai << R"("namespace" : ")" << name.substr (0, found) << R"(",)" << std::endl;
+
+
+        // skip the label
+        proton::is_string (data_, true);
+        pn_data_next (data_);
+
+        // skip provides
+        proton::is_list (data_);
+        pn_data_next (data_);
+
+        // skip descriptor fingerprint
+        proton::is_described (data_);
+
+        AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
+                (pn_data_t *)proton::auto_next (data_), ss_, ai_);
+
+        ss_ << ai << R"("fields" : [)" << std::endl;
+        {
+            AutoIndent ai2 { ai };
+
+            proton::auto_list_enter ale (data_);
+            for (int i { 1 } ; pn_data_next (data_) ; ++i) {
+                AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
+                        data_, ss_, AutoIndent { ai2 });
+            }
+        }
+        ss_ << ai << R"(])" << std::endl;
+    }
+
+    ss_ << "}" << std::endl;
 }
 
 /******************************************************************************/

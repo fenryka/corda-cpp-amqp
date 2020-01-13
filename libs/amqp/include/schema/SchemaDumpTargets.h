@@ -1,8 +1,11 @@
 #pragma once
 
+
+
+
 namespace amqp::schema {
 
-    enum class DumpTarget {
+    enum DumpTarget {
         raw,
         amqp,
         avro

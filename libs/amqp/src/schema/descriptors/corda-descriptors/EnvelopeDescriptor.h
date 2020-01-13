@@ -34,6 +34,11 @@ namespace amqp::internal::schema::descriptors {
                     pn_data_t *,
                     std::stringstream &,
                     const AutoIndent &) const override;
+
+            void readAvro (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const override;
     };
 
 }

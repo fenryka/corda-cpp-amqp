@@ -80,7 +80,7 @@ namespace amqp::internal::schema {
 
 namespace {
 
-    std::map<std::string, std::string> boxedToUnboxed = {
+    std::map<std::string, std::string> boxedToUnboxed = { // NOLINT
             { "java.lang.Integer", "int" },
             { "java.lang.Boolean", "bool" },
             { "java.lang.Byte", "char" },

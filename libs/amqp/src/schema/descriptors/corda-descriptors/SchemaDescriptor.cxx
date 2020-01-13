@@ -61,10 +61,9 @@ SchemaDescriptor::build (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-
 void
 amqp::internal::schema::descriptors::
-SchemaDescriptor::read (
+SchemaDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -88,9 +87,44 @@ SchemaDescriptor::read (
                 ss_ << ai2 << i << ":" << j << "/" << ale2.elements()
                         << "] " << std::endl;
 
-                AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+                AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
                         data_, ss_,
                         AutoIndent { ai2 });
+            }
+        }
+    }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+SchemaDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const {
+    DBG ("readAvro::Schema" << std::endl);
+
+    proton::is_list (data_);
+
+    {
+        // schema wrapper, this list should always be 1, also move onto the
+        // first element
+        proton::auto_list_enter ale (data_, true);
+        assert (ale.elements() == 1);
+
+        // contents of the scema should also be a list, this time one
+        // for each schema elmenet
+
+        {
+            proton::auto_list_enter ale2(data_);
+
+            for (int j{1}; pn_data_next(data_); ++j) {
+
+                AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro(
+                        data_, ss_,
+                        ai_);
             }
         }
     }

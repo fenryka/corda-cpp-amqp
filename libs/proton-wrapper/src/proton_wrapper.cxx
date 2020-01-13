@@ -115,10 +115,14 @@ proton::is_list (pn_data_t * data_) {
 /******************************************************************************/
 
 void
-proton::is_string (pn_data_t * data_, bool allowNull) {
+proton::is_string (pn_data_t * data_, bool allowNull, const std::string & file_, int line_) {
     if (pn_data_type(data_) != PN_STRING) {
         if (allowNull && pn_data_type(data_) != PN_NULL) {
-            throw std::runtime_error ("Expected a String");
+            std::stringstream ss;
+
+            ss << "Expected a String: " << __func__ << ", loc " << file_ << "::" << line_ << std::endl;
+
+            throw std::runtime_error (ss.str());
         }
     }
 }
@@ -130,10 +134,13 @@ proton::get_string (pn_data_t * data_, bool allowNull) {
     if (pn_data_type(data_) == PN_STRING) {
         auto str = pn_data_get_string (data_);
         return std::string (str.start, str.size);
-    } else  if (allowNull && pn_data_type(data_) == PN_NULL) {
+    } else  if (allowNull && pn_data_type (data_) == PN_NULL) {
         return "";
     }
-    throw std::runtime_error ("Expected a String");
+
+    std::stringstream ss;
+    ss << "Expected a String: " << __func__ << std::endl;
+    throw std::runtime_error (ss.str());
 }
 
 /******************************************************************************/
@@ -296,15 +303,16 @@ readAndNext<std::string> (
 ) {
     auto_next an (data_);
 
-    if (pn_data_type(data_) == PN_STRING) {
-        auto str = pn_data_get_string(data_);
-        return std::string(str.start, str.size);
-    } else if (pn_data_type(data_) == PN_SYMBOL) {
-        auto symbol = pn_data_get_symbol(data_);
+    if (pn_data_type (data_) == PN_STRING) {
+        auto str = pn_data_get_string (data_);
+        return std::string (str.start, str.size);
+    } else if (pn_data_type (data_) == PN_SYMBOL) {
+        auto symbol = pn_data_get_symbol (data_);
         return std::string(symbol.start, symbol.size);
     } else  if (tolerateDeviance_ && pn_data_type(data_) == PN_NULL) {
         return "";
     }
+
     std::stringstream ss;
     ss << "Expected a String but found [" << data_ << "]";
     throw std::runtime_error (ss.str());
