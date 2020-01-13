@@ -1,3 +1,5 @@
+set (libName amqp)
+
 include_directories (include)
 include_directories (src/reader)
 include_directories (src/schema)
@@ -59,8 +61,6 @@ set (amqp_sources
         src/AMQPBlob.cxx
         src/CordaBytes.cxx)
 
-set (libName amqp)
-
 ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_reader_sources} ${amqp_schema_sources} ${amqp_assembler_sources})
 
 SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
@@ -79,6 +79,14 @@ set (amqp_public_includes
     )
 
 
-SET_TARGET_PROPERTIES (${libName} PROPERTIES PUBLIC_HEADER include/mylib.h)
+SET_TARGET_PROPERTIES (${libName} PROPERTIES PUBLIC_HEADER ${amqp_public_includes})
+
+#
+# So on Linux we don't need to add these static libraries to this dynamic library
+# target buton MacOS it appears we do
+#
+if(APPLE)
+    target_link_libraries (${libName} proton-wrapper qpid-proton)
+endif()
 
 ADD_SUBDIRECTORY (src)
