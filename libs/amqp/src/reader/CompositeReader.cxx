@@ -110,7 +110,7 @@ CompositeReader::_dump (
     {
         proton::auto_enter ae (data_);
 
-        for (int i (0) ; i < m_readers.size() ; ++i) {
+        for (size_t i (0) ; i < m_readers.size() ; ++i) {
             if (auto l =  m_readers[i].lock()) {
                 DBG (fields[i]->name() << " "
                     << (l ? "true" : "false") << std::endl); // NOLINT

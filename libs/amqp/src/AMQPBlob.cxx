@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cassert>
 
 #include "AMQPBlob.h"
 
@@ -20,7 +21,7 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
     // entire file
 
     auto rtn = pn_data_decode(m_data, cb_.bytes(), cb_.size());
-    assert (rtn == cb_.size());
+    assert (static_cast<size_t>(rtn) == cb_.size());
 }
 
 /******************************************************************************/

@@ -18,5 +18,5 @@ add_executable (${EXE} ${amqp-test-sources})
 target_link_libraries (${EXE} gtest amqp)
 
 if (UNIX)
-    target_link_libraries (${EXE} pthread qpid-proton proton)
+    target_link_libraries (${EXE} pthread qpid-proton proton-wrapper)
 endif (UNIX)

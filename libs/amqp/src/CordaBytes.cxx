@@ -1,6 +1,7 @@
 #include "CordaBytes.h"
 
 #include <array>
+#include <cstring>
 #include <sys/stat.h>
 
 #include "AMQPHeader.h"

@@ -39,7 +39,7 @@ set (amqp_assembler_sources
         src/assembler/CompositeFactory.cxx
      )
 
-set (amqp_sources
+set (amqp_reader_sources
         src/reader/Reader.cxx
         src/reader/PropertyReader.cxx
         src/reader/CompositeReader.cxx
@@ -53,9 +53,32 @@ set (amqp_sources
         src/reader/restricted-readers/ListReader.cxx
         src/reader/restricted-readers/ArrayReader.cxx
         src/reader/restricted-readers/EnumReader.cxx
+        )
+
+set (amqp_sources
         src/AMQPBlob.cxx
         src/CordaBytes.cxx)
 
-ADD_LIBRARY ( amqp ${amqp_sources} ${amqp_schema_sources} ${amqp_assembler_sources})
+set (libName amqp)
+
+ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_reader_sources} ${amqp_schema_sources} ${amqp_assembler_sources})
+
+SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
+SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)
+
+set (amqp_public_includes
+    AMQPBlob.h
+    AMQPHeader.h
+    CordaBytes.h
+    assembler/ICompositeFactory.h
+    reader/IReader.h
+    schema/AMQPDescribed.h
+    schema/Descriptors.h
+    schema/ISchema.h
+    serializable/ISerializable.h
+    )
+
+
+SET_TARGET_PROPERTIES (${libName} PROPERTIES PUBLIC_HEADER include/mylib.h)
 
 ADD_SUBDIRECTORY (src)

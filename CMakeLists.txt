@@ -1,10 +1,10 @@
-PROJECT (BLOB-INSPECTOR)
+# Want to be able to use the new method of setting the project version
+CMAKE_POLICY (SET CMP0048 NEW)
 
-cmake_minimum_required(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.10)
 
-SET (${PROJECT_NAME}_MAJOR_VERSION 0)
-SET (${PROJECT_NAME}_MINOR_VERSION 0)
-SET (${PROJECT_NAME}_PATCH_LEVEL 1)
+
+PROJECT (BLOB-INSPECTOR VERSION 0.0.1)
 
 ADD_DEFINITIONS ("-Wall -g -ansi -pedantic")
 

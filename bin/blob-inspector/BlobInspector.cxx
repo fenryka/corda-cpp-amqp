@@ -1,4 +1,5 @@
 #include "BlobInspector.h"
+#include "include/CordaBytes.h"
 
 #include <iostream>
 #include <sstream>
