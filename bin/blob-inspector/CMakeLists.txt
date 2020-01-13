@@ -11,7 +11,7 @@ set (blob-inspector-sources
 
 add_executable (blob-inspector main.cxx ${blob-inspector-sources})
 
-target_link_libraries (blob-inspector amqp proton qpid-proton)
+target_link_libraries (blob-inspector amqp proton-wrapper qpid-proton)
 
 #
 # Unit tests for the blob inspector. For this to work we also need to create
