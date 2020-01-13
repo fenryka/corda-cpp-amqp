@@ -23,19 +23,24 @@ main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    amqp::CordaBytes cb (argv[1]);
+    try {
+        amqp::CordaBytes cb(argv[1]);
 
-    if (cb.encoding() == amqp::DATA_AND_STOP) {
-        SchemaDumper schemaDumper (cb);
-        std::cout << schemaDumper.dump() << std::endl;
-    } else {
-        std::cerr << "BAD ENCODING " << cb.encoding() << " != "
-                  << amqp::DATA_AND_STOP << std::endl;
+        if (cb.encoding() == amqp::DATA_AND_STOP) {
+            SchemaDumper schemaDumper(cb);
+            std::cout << schemaDumper.dump() << std::endl;
+        } else {
+            std::cerr << "BAD ENCODING " << cb.encoding() << " != "
+                      << amqp::DATA_AND_STOP << std::endl;
 
+            return EXIT_FAILURE;
+        }
+
+        return EXIT_SUCCESS;
+    } catch (const std::runtime_error & e) {
+        std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-
-    return EXIT_SUCCESS;
 }
 
 /******************************************************************************/
