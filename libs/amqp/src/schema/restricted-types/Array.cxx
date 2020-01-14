@@ -3,6 +3,8 @@
 #include "Map.h"
 #include "List.h"
 #include "Enum.h"
+#include "SchemaUtils.h"
+
 #include "described-types/Composite.h"
 
 /******************************************************************************
@@ -58,7 +60,7 @@ Array::Array (
         std::move (label_),
         std::move (provides_),
         amqp::internal::schema::Restricted::RestrictedTypes::array_t)
-  , m_arrayOf { unbox (arrayType (name())) }
+  , m_arrayOf { types::unbox (arrayType (name())) }
   , m_source { std::move (source_) }
 {
     DBG ("ARRAY OF::" << arrayOf() << ", name::" << name() <<  std::endl);

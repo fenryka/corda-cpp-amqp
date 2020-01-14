@@ -1,6 +1,8 @@
 #include "Map.h"
 #include "List.h"
 #include "Enum.h"
+#include "SchemaUtils.h"
+
 #include "described-types/Composite.h"
 
 /******************************************************************************
@@ -31,7 +33,7 @@ Map::mapType (const std::string & map_) {
     auto to  = std::string { map_.substr (idx + 1, map_.size() - (idx + 2)) };
     to = to.erase(0, to.find_first_not_of(' '));
 
-    return { map, unbox (of), unbox (to) };
+    return { map, types::unbox (of), types::unbox (to) };
 }
 
 /******************************************************************************

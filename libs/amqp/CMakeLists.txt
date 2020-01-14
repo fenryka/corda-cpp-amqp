@@ -35,6 +35,7 @@ set (amqp_schema_sources
         src/schema/restricted-types/Array.cxx
         src/schema/AMQPTypeNotation.cxx
         src/schema/Descriptors.cxx
+        src/schema/SchemaUtils.cxx
         )
 
 set (amqp_assembler_sources

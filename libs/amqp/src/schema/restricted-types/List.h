@@ -7,10 +7,6 @@
 namespace amqp::internal::schema {
 
     class List : public Restricted {
-        public :
-            static std::pair<std::string, std::string> listType (
-                    const std::string &);
-
         private :
             std::vector<std::string> m_listOf;
             std::string m_source;

@@ -8,6 +8,7 @@
 #include "field-types/Field.h"
 
 #include <sstream>
+#include "SchemaUtils.h"
 
 /******************************************************************************
  *
@@ -138,10 +139,8 @@ FieldDescriptor::readRaw (
 
 namespace {
 
-    bool
-    typeIsContainer (const std::string & type_) {
-
-    }
+    using namespace amqp::internal::schema::types;
+    using namespace amqp::internal::schema::descriptors;
 
     void
     inferType (
@@ -149,20 +148,33 @@ namespace {
             std::stringstream & ss_,
             const amqp::internal::schema::descriptors::AutoIndent & ai_
     ) {
-
-        const std::string array { "[]" };
-        const std::string primArray { "[p]" };
-
+        std::cout << "inferTpye - " << type_ << std::endl;
         // when C++20 is done we can use .endswith, until then we have to do a reverse search
-        if (   std::equal (type_.rbegin(), type_.rbegin() + array.size(), array.rbegin(), array.rend())
-            || std::equal (type_.rbegin(), type_.rbegin() + primArray.size(), primArray.rbegin(), primArray.rend()))
-        {
+        if (isArray (type_)) {
+            ss_ << ai_ << R"("type" : "array",)" << std::endl;
+
             auto type { type_.substr (0, type_.find_last_of ('[')) };
 
+            if (isContainer (type)) {
+                ss_ << ai_ << R"("items" : )";
+                inferType (type, ss_, AutoIndent { ai_ });
+            } else {
+                ss_ << ai_ << R"("items" : )" << type << std::endl;
+            }
+        } else if (type_.find ("java.util.List") == 0) {
+            ss_ << ai_ << R"("type" : "array",)" << std::endl;
+
+            auto type { amqp::internal::schema::types::listType (type_) };
+
+            if (isContainer (type.second)) {
+                ss_ << ai_ << R"("items" : )";
+                inferType (type.second, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+
+            } else {
+                ss_ << ai_ << R"("items" : )" << type.second << std::endl;
+            }
 
 
-            ss_ << ai_ << R"("type" : "array",)" << std::endl
-                << ai_ << R"("items" : )" << type << std::endl;
         }
     }
 }
