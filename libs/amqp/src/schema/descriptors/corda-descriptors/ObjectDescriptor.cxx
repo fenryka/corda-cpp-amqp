@@ -77,6 +77,8 @@ ObjectDescriptor::readAvro (
     DBG ("readAvro::Object" << std::endl);
     proton::is_list (data_);
 
+    std::cout << "INDENT: " << ai_.length() << std::endl;
+
     {
         proton::auto_list_enter ale (data_);
         pn_data_next (data_);

@@ -189,16 +189,16 @@ CompositeDescriptor::readAvro (
         // make the fingerprint an alias
         proton::is_described (data_);
         AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
-                (pn_data_t *)proton::auto_next (data_), ss_, ai_);
+                (pn_data_t *)proton::auto_next (data_), ss_, ai);
 
         ss_ << ai << R"("fields" : [)" << std::endl;
         {
-            AutoIndent ai2 { ai };
+            AutoIndent ai2 ( ai );
 
             proton::auto_list_enter ale (data_);
             for (int i { 1 } ; pn_data_next (data_) ; ++i) {
                 AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
-                        data_, ss_, AutoIndent { ai2 });
+                        data_, ss_, ai2);
             }
         }
         ss_ << ai << R"(])" << std::endl;

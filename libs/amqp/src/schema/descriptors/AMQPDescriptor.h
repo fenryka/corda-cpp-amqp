@@ -38,6 +38,8 @@ namespace amqp::internal::schema::descriptors {
 
             friend std::ostream &
             operator << (std::ostream & stream_, const AutoIndent & ai_);
+
+            decltype (indent.length()) length() const { return indent.length(); }
         };
 }
 

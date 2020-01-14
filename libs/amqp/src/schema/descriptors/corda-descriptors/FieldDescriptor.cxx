@@ -148,7 +148,6 @@ namespace {
             std::stringstream & ss_,
             const amqp::internal::schema::descriptors::AutoIndent & ai_
     ) {
-        std::cout << "inferTpye - " << type_ << std::endl;
         // when C++20 is done we can use .endswith, until then we have to do a reverse search
         if (isArray (type_)) {
             ss_ << ai_ << R"("type" : "array",)" << std::endl;
@@ -178,8 +177,8 @@ namespace {
             } else {
                 ss_ << ai_ << R"("items" : )" << type.second << std::endl;
             }
-
-
+        } else {
+            ss_ << ai_ << R"("type" : ")" << type_ << R"(",)" << std::endl;
         }
     }
 }
@@ -198,33 +197,18 @@ FieldDescriptor::readAvro (
     proton::auto_list_enter ale (data_, true);
     ss_ << ai_ << "{" << std::endl;
     {
-        AutoIndent ai {ai_};
+        AutoIndent ai (ai_);
+        std::cout << "ai.len: "<< ai.length() << std::endl;
 
         ss_ << ai << R"("name" : )"
-            << proton::get_string((pn_data_t *) proton::auto_next(data_))
+            << proton::get_string ((pn_data_t *) proton::auto_next (data_))
             << R"(", )" << std::endl;
 
-        inferType (proton::get_string((pn_data_t *) proton::auto_next(data_)), ss_, ai);
+        inferType (proton::get_string((pn_data_t *) proton::auto_next (data_)), ss_, ai);
 
     }
     ss_ << ai_ << "}" << std::endl;
 
-    /*
-    proton::is_string (data_, true);
-
-    ss_ << ai << "4/7] String: Default: "
-        << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)
-        << std::endl;
-    ss_ << ai << "5/7] String: Label: "
-        << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)
-        << std::endl;
-    ss_ << ai << "6/7] Boolean: Mandatory: "
-        << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
-        << std::endl;
-    ss_ << ai << "7/7] Boolean: Multiple: "
-        << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
-        << std::endl;
-        */
 }
 
 /******************************************************************************/
