@@ -186,9 +186,8 @@ CompositeDescriptor::readAvro (
         proton::is_list (data_);
         pn_data_next (data_);
 
-        // skip descriptor fingerprint
+        // make the fingerprint an alias
         proton::is_described (data_);
-
         AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
                 (pn_data_t *)proton::auto_next (data_), ss_, ai_);
 

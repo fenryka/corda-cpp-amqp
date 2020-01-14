@@ -79,7 +79,7 @@ ObjectDescriptor::readAvro (
 
     {
         proton::auto_list_enter ale (data_);
-        pn_data_next(data_);
+        pn_data_next (data_);
 
         ss_ << ai_ << R"("aliases" : [ ")"
             << proton::get_symbol<std::string>(

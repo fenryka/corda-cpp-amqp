@@ -132,7 +132,6 @@ AMQPDescriptor::readAvro (
     std::stringstream & ss_,
     const AutoIndent & ai_
 ) const {
-    AutoIndent ai { ai_ } ; // NOLINT
     proton::auto_enter p (data_);
 
     DBG ("readAvro::Descriptor" << std::endl);
@@ -144,14 +143,17 @@ AMQPDescriptor::readAvro (
             // a described type really has to be describing something
             proton::is_list(data_);
 
-            AMQPDescriptorRegistory[key]->readAvro (data_, ss_, ai);
+            AMQPDescriptorRegistory[key]->readAvro (data_, ss_, ai_);
             break;
         }
         case PN_SYMBOL : {
-            ss_ << ai << "blob: bytes: "
-                << pn_data_get_symbol(data_).size
+            ss_ << ai_ << "blob: bytes: "
+                << pn_data_get_symbol (data_).size
                 << std::endl;
             break;
+        }
+        default : {
+            throw std::runtime_error ("Unexpected Type");
         }
     }
 

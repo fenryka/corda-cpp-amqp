@@ -156,8 +156,12 @@ namespace {
             auto type { type_.substr (0, type_.find_last_of ('[')) };
 
             if (isContainer (type)) {
-                ss_ << ai_ << R"("items" : )";
+                ss_ << ai_ << R"("items" : { )" << std::endl;
+
                 inferType (type, ss_, AutoIndent { ai_ });
+
+                ss_ << ai_ << "}" << std::endl;
+
             } else {
                 ss_ << ai_ << R"("items" : )" << type << std::endl;
             }
@@ -167,8 +171,9 @@ namespace {
             auto type { amqp::internal::schema::types::listType (type_) };
 
             if (isContainer (type.second)) {
-                ss_ << ai_ << R"("items" : )";
+                ss_ << ai_ << R"("items" : {)";
                 inferType (type.second, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+                ss_ << ai_ << "}";
 
             } else {
                 ss_ << ai_ << R"("items" : )" << type.second << std::endl;
