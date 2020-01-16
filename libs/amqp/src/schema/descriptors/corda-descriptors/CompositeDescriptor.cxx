@@ -197,14 +197,20 @@ CompositeDescriptor::readAvro (
 
             proton::auto_list_enter ale (data_);
             for (int i { 1 } ; pn_data_next (data_) ; ++i) {
-                AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
+                AMQPDescriptorRegistory[pn_data_type (data_)]->readAvro (
                         data_, ss_, ai2);
+
+                if (i < ale.elements()) {
+                    ss_ << "," << std::endl;
+                } else {
+                    ss_ << std::endl;
+                }
             }
         }
         ss_ << ai << R"(])" << std::endl;
     }
 
-    ss_ << "}" << std::endl;
+    ss_ << "}";
 }
 
 /******************************************************************************/

@@ -55,17 +55,49 @@ listType (const std::string & list_) {
 
 /******************************************************************************/
 
+std::tuple<std::string, std::string, std::string>
+amqp::internal::schema::types::
+mapType (const std::string & map_) {
+    auto pos = map_.find ('<');
+
+    auto idx { pos + 1 };
+    for (auto nesting { 0 } ; idx < map_.size(); ++idx) {
+        if (map_[idx] == '<') {
+            ++nesting;
+        } else if (map_[idx] == '>') {
+            --nesting;
+        } else if (map_[idx] == ',' && nesting == 0) {
+            break;
+        }
+    }
+
+    auto map = std::string { map_.substr (0, pos) };
+    auto of  = std::string { map_.substr (pos + 1, idx - pos - 1) };
+    of = of.erase(0, of.find_first_not_of(' '));
+    auto to  = std::string { map_.substr (idx + 1, map_.size() - (idx + 2)) };
+    to = to.erase(0, to.find_first_not_of(' '));
+
+    return { map, types::unbox (of), types::unbox (to) };
+}
+
+/******************************************************************************/
+
 bool
 amqp::internal::schema::types::
 isContainer (const std::string & type_) {
     // when C++20 is done we can use .endswith, until then we have to do a reverse search
     return (   std::equal (type_.rbegin(), type_.rbegin() + array.size(), array.rbegin(), array.rend())
             || std::equal (type_.rbegin(), type_.rbegin() + primArray.size(), primArray.rbegin(), primArray.rend())
-            || type_.find ("java.util.List") == 0);
+            || type_.find ("java.util.List") == 0
+            || type_.find ("java.util.Map") == 0);
 }
 
 /******************************************************************************/
 
+/**
+ * Used to diferentiate between lists and arrays in the underlaying code
+ * which the Corda serialisatoin scheme treats differently
+ */
 bool
 amqp::internal::schema::types::
 isArray (const std::string & type_) {

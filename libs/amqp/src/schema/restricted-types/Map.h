@@ -7,10 +7,6 @@
 namespace amqp::internal::schema {
 
     class Map : public Restricted {
-        public :
-            static std::tuple<std::string, std::string, std::string>
-            mapType (const std::string &);
-
         private :
             std::vector<std::string> m_mapOf;
             std::string m_source;

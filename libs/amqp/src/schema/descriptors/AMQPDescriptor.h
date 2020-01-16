@@ -90,6 +90,14 @@ namespace amqp::internal::schema::descriptors {
                 std::stringstream &,
                 const AutoIndent &) const;
 
+            /**
+             * So this method won't be perfect because we're not parsing the scema into
+             * a form we can then transofrm into acro. Rather, we're looking at the raw
+             * schema data in the packet and on the fly rendering it as an Avro schema.
+             *
+             * This is for the most part fine but there are complications and edge cases
+             * this won't be reliable for.
+             */
             virtual void readAvro (
                 pn_data_t *,
                 std::stringstream &,

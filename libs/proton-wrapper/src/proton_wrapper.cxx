@@ -221,7 +221,7 @@ auto_list_enter::auto_list_enter (pn_data_t * data_, bool next_)
     : m_elements (pn_data_get_list (data_))
     , m_data (data_)
 {
-   ::pn_data_enter(m_data);
+   ::pn_data_enter (m_data);
    if (next_) {
        pn_data_next (m_data);
    }

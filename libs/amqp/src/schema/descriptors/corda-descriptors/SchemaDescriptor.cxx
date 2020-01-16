@@ -51,7 +51,7 @@ SchemaDescriptor::build (pn_data_t * data_) const {
                     descriptors::dispatchDescribed<schema::AMQPTypeNotation> (
                         data_));
 
-                DBG("=======" << std::endl << schemas << "======" << std::endl);
+                DBG("=======" << std::endl << schemas << "======" << std::endl); // NOLINT
             }
         }
     }
@@ -104,7 +104,7 @@ SchemaDescriptor::readAvro (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    DBG ("readAvro::Schema" << std::endl);
+    DBG ("readAvro::Schema" << std::endl); // NOLINT
 
     proton::is_list (data_);
 
@@ -120,11 +120,26 @@ SchemaDescriptor::readAvro (
         {
             proton::auto_list_enter ale2(data_);
 
-            for (int j{1}; pn_data_next(data_); ++j) {
+            for (int j { 1 }; pn_data_next (data_); ++j) {
+                ss_.seekg (0, ss_.end);
+                auto pos = ss_.tellg();
 
-                AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro(
+                AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
                         data_, ss_,
                         ai_);
+
+                ss_.seekg (0, ss_.end);
+                std::cout << pos << " " << ss_.tellg() << std::endl;
+
+                // Slightly non obvious bit here but its possible we don't actually add a type
+                // to the Avro schema. This is normally where we find a restricted type we've
+                // already embedded elsewhere
+                if (pos != ss_.tellg()) {
+                    if (j < ale2.elements()) {
+                        ss_ << ",";
+                    }
+                    ss_ << std::endl;
+                }
             }
         }
     }

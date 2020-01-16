@@ -144,10 +144,16 @@ namespace {
 
     void
     inferType (
-            const std::string & type_,
+            std::string & type_,
+            const std::string & requires_,
             std::stringstream & ss_,
             const amqp::internal::schema::descriptors::AutoIndent & ai_
     ) {
+        if (type_ == "*") {
+            std::cout << "CONTAINER " << requires_ << std::endl;
+            type_ = requires_;
+        }
+
         // when C++20 is done we can use .endswith, until then we have to do a reverse search
         if (isArray (type_)) {
             ss_ << ai_ << R"("type" : "array",)" << std::endl;
@@ -157,7 +163,7 @@ namespace {
             if (isContainer (type)) {
                 ss_ << ai_ << R"("items" : { )" << std::endl;
 
-                inferType (type, ss_, AutoIndent { ai_ });
+                inferType (type, requires_, ss_, AutoIndent { ai_ });
 
                 ss_ << ai_ << "}" << std::endl;
 
@@ -171,14 +177,31 @@ namespace {
 
             if (isContainer (type.second)) {
                 ss_ << ai_ << R"("items" : {)";
-                inferType (type.second, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+                inferType (type.second, requires_, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
                 ss_ << ai_ << "}";
 
             } else {
                 ss_ << ai_ << R"("items" : )" << type.second << std::endl;
             }
         } else {
-            ss_ << ai_ << R"("type" : ")" << type_ << R"(",)" << std::endl;
+            ss_ << ai_ << R"("type" : ")" << type_ << R"(")" << std::endl;
+        }
+    }
+
+    void
+    inferType (
+            pn_data_t * data_,
+            std::stringstream & ss_,
+            const amqp::internal::schema::descriptors::AutoIndent & ai_
+    ) {
+        auto type = proton::get_string ((pn_data_t *) proton::auto_next (data_));
+
+        proton::auto_list_enter ale (data_, true);
+        if (ale.elements() > 0) {
+            inferType (type, proton::get_string( (data_)), ss_, ai_);
+        }
+        else {
+            inferType (type, "", ss_, ai_);
         }
     }
 }
@@ -200,15 +223,15 @@ FieldDescriptor::readAvro (
         AutoIndent ai (ai_);
         std::cout << "ai.len: "<< ai.length() << std::endl;
 
-        ss_ << ai << R"("name" : )"
+        ss_ << ai << R"("name" : ")"
             << proton::get_string ((pn_data_t *) proton::auto_next (data_))
             << R"(", )" << std::endl;
 
-        inferType (proton::get_string((pn_data_t *) proton::auto_next (data_)), ss_, ai);
+        //inferType (proton::get_string((pn_data_t *) proton::auto_next (data_)), ss_, ai);
+        inferType (data_, ss_, ai);
 
     }
-    ss_ << ai_ << "}" << std::endl;
-
+    ss_ << ai_ << "}";
 }
 
 /******************************************************************************/

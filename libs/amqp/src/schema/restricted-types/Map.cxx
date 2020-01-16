@@ -7,37 +7,6 @@
 
 /******************************************************************************
  *
- * Map Static Member Functions
- *
- ******************************************************************************/
-
-std::tuple<std::string, std::string, std::string>
-amqp::internal::schema::
-Map::mapType (const std::string & map_) {
-    uint pos = map_.find ('<');
-
-    uint idx { pos + 1 };
-    for (uint nesting { 0 } ; idx < map_.size(); ++idx) {
-        if (map_[idx] == '<') {
-            ++nesting;
-        } else if (map_[idx] == '>') {
-            --nesting;
-        } else if (map_[idx] == ',' && nesting == 0) {
-            break;
-        }
-    }
-
-    auto map = std::string { map_.substr (0, pos) };
-    auto of  = std::string { map_.substr (pos + 1, idx - pos - 1) };
-    of = of.erase(0, of.find_first_not_of(' '));
-    auto to  = std::string { map_.substr (idx + 1, map_.size() - (idx + 2)) };
-    to = to.erase(0, to.find_first_not_of(' '));
-
-    return { map, types::unbox (of), types::unbox (to) };
-}
-
-/******************************************************************************
- *
  * Map Member Functions
  *
  ******************************************************************************/
@@ -57,7 +26,7 @@ Map::Map (
         amqp::internal::schema::Restricted::RestrictedTypes::map_t)
   , m_source { std::move (source_) }
 {
-    auto [map, of, to] = mapType (name());
+    auto [map, of, to] = types::mapType (name());
     m_mapOf = { of, to };
 }
 
