@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+
 #include "include/CordaBytes.h"
 #include "BlobInspector.h"
 
@@ -30,6 +31,37 @@ TEST (BlobInspector, _i_) { // NOLINT
 /******************************************************************************/
 
 /**
+ * int, int
+ */
+TEST (BlobInspector, _ii_) { // NOLINT
+    test ("_ii_", "{ Parsed : { a : 1, b : 2 } }");
+}
+
+/******************************************************************************/
+
+
+/**
+ * int, int, int
+ *
+ * NOTE: Currently, this test fails because we're not mapping the stored
+ * property order onto the construction order. Essentialy, the Corda
+ * serialiser stores properties in the stream in a stable order based
+ * on a sorting of the property names, whilst we're assuming they're
+ * stored in declaration order
+ */
+TEST (BlobInspector, _iii_) { // NOLINT
+    test ("_iii_", "{ Parsed : { a : 10, b : 20, c : 30 } }");
+}
+
+/******************************************************************************/
+
+TEST (BlobInspector, __i__i__) { // NOLINT
+    test ("__i__i__", "{ Parsed : { a : { a : 1000 }, b : { a : 200 } } }");
+}
+
+/******************************************************************************/
+
+/**
  * long
  */
 TEST (BlobInspector, _l_) { // NOLINT
@@ -48,7 +80,7 @@ TEST (BlobInspector, _Oi_) { // NOLINT
 /******************************************************************************/
 
 /**
- * int
+ * array of int
  */
 TEST (BlobInspector, _Ai_) { // NOLINT
     test ("_Ai_", "{ Parsed : { z : [ 1, 2, 3, 4, 5, 6 ] } }");

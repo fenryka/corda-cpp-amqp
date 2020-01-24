@@ -35,6 +35,7 @@ set (amqp_schema_sources
         src/schema/restricted-types/Array.cxx
         src/schema/AMQPTypeNotation.cxx
         src/schema/Descriptors.cxx
+        src/schema/SchemaUtils.cxx
         )
 
 set (amqp_assembler_sources
@@ -65,21 +66,6 @@ ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_reader_sources} ${amqp_sc
 
 SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
 SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)
-
-set (amqp_public_includes
-    AMQPBlob.h
-    AMQPHeader.h
-    CordaBytes.h
-    assembler/ICompositeFactory.h
-    reader/IReader.h
-    schema/AMQPDescribed.h
-    schema/Descriptors.h
-    schema/ISchema.h
-    serializable/ISerializable.h
-    )
-
-
-SET_TARGET_PROPERTIES (${libName} PROPERTIES PUBLIC_HEADER ${amqp_public_includes})
 
 #
 # So on Linux we don't need to add these static libraries to this dynamic library

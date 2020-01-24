@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "SchemaUtils.h"
 
 #include "restricted-types/List.h"
 #include "restricted-types/Restricted.h"
@@ -7,7 +8,7 @@
 /******************************************************************************/
 
 TEST (List, name) {
-    auto rtn = amqp::internal::schema::List::listType("java.util.list<int>");
+    auto rtn = amqp::internal::schema::types::listType("java.util.list<int>");
 
     ASSERT_EQ ("java.util.list", rtn.first);
     ASSERT_EQ ("int", rtn.second);

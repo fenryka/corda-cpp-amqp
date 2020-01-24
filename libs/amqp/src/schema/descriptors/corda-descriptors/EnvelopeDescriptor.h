@@ -30,10 +30,15 @@ namespace amqp::internal::schema::descriptors {
 
             std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
 
-            void read (
+            void readRaw (
                     pn_data_t *,
                     std::stringstream &,
                     const AutoIndent &) const override;
+
+            void readAvro (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const override;
     };
 
 }

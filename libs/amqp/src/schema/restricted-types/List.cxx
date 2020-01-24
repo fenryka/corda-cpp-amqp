@@ -2,6 +2,7 @@
 #include "List.h"
 #include "Map.h"
 #include "Enum.h"
+#include "SchemaUtils.h"
 
 #include "corda-utils/include/debug.h"
 #include "corda-utils/include/colours.h"
@@ -14,16 +15,6 @@
  *
  ******************************************************************************/
 
-std::pair<std::string, std::string>
-amqp::internal::schema::
-List::listType (const std::string & list_) {
-    auto pos = list_.find ('<');
-
-    return std::make_pair (
-           std::string { unbox (list_.substr (0, pos)) },
-           std::string { unbox (list_.substr(pos + 1, list_.size() - pos - 2)) }
-    );
-}
 
 /******************************************************************************
  *
@@ -44,7 +35,7 @@ List::List (
         std::move (label_),
         std::move (provides_),
         amqp::internal::schema::Restricted::RestrictedTypes::list_t)
-  , m_listOf { listType (name()).second }
+  , m_listOf { types::listType (name()).second }
   , m_source { std::move (source_) }
 {
 }

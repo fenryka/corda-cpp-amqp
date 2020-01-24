@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include "corda-utils/include/debug.h"
+
 #include "proton-wrapper/include/proton_wrapper.h"
 
 #include "corda-descriptors/EnvelopeDescriptor.h"
@@ -38,67 +40,123 @@ AMQPDescriptor::build (pn_data_t *) const {
 
 /******************************************************************************/
 
-inline void
+void
 amqp::internal::schema::descriptors::
 AMQPDescriptor::read (
         pn_data_t * data_,
-        std::stringstream & ss_
+        std::stringstream & ss_,
+        amqp::schema::DumpTarget target_
 ) const {
-    return read (data_, ss_, AutoIndent());
+    if (pn_data_type (data_) != PN_DESCRIBED) {
+        throw std::runtime_error ("Can only dispatch described objects");
+    }
+
+    switch (target_) {
+        case amqp::schema::DumpTarget::raw : {
+            return readRaw (data_, ss_, AutoIndent());
+        }
+        case amqp::schema::DumpTarget::amqp : {
+            return readAMQP (data_, ss_, AutoIndent());
+        }
+        case amqp::schema::DumpTarget::avro : {
+            return readAvro (data_, ss_, AutoIndent());
+        }
+    }
 }
 
 /******************************************************************************/
 
 void
 amqp::internal::schema::descriptors::
-AMQPDescriptor::read (
+AMQPDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    switch (pn_data_type (data_)) {
-        case PN_DESCRIBED : {
-            ss_ << ai_ << "DESCRIBED: " << std::endl;
-            {
-                AutoIndent ai { ai_ } ; // NOLINT
-                proton::auto_enter p (data_);
+    ss_ << ai_ << "DESCRIBED: " << std::endl;
 
-                switch (pn_data_type (data_)) {
-                    case PN_ULONG : {
-                        auto key = proton::readAndNext<u_long>(data_);
+    {
+        AutoIndent ai { ai_ } ; // NOLINT
+        proton::auto_enter p (data_);
 
-                        ss_ << ai << "key  : "
-                            << key << " :: " << amqp::stripCorda(key)
-                            << " -> "
-                            <<  amqp::describedToString ((uint64_t )key)
-                            << std::endl;
+        switch (pn_data_type (data_)) {
+            case PN_ULONG : {
+                auto key = proton::readAndNext<u_long> (data_);
 
-                        proton::is_list (data_);
-                        ss_ << ai << "list : entries: "
-                            << pn_data_get_list(data_)
-                            << std::endl;
+                ss_ << ai << "key  : "
+                    << key << " :: " << amqp::stripCorda (key)
+                    << " -> "
+                    <<  amqp::describedToString ((uint64_t)key)
+                    << std::endl;
 
-                        AMQPDescriptorRegistory[key]->read (data_, ss_, ai);
-                        break;
-                    }
-                    case PN_SYMBOL : {
-                        ss_ << ai << "blob: bytes: "
-                            << pn_data_get_symbol(data_).size
-                            << std::endl;
-                        break;
-                    }
-                    default : {
-                        throw std::runtime_error (
-                            "Described type should only contain long or blob");
-                    }
-                }
+                proton::is_list (data_);
+                ss_ << ai << "list : entries: "
+                    << pn_data_get_list(data_)
+                    << std::endl;
+
+                AMQPDescriptorRegistory[key]->readRaw (data_, ss_, ai);
+                break;
             }
+            case PN_SYMBOL : {
+                ss_ << ai << "blob: bytes: "
+                    << pn_data_get_symbol (data_).size
+                    << std::endl;
+                break;
+            }
+            default : {
+                throw std::runtime_error (
+                        "Described type should only contain long or blob");
+            }
+        }
+    }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+AMQPDescriptor::readAMQP (
+    pn_data_t *,
+    std::stringstream &,
+    const AutoIndent &
+) const {
+
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+AMQPDescriptor::readAvro (
+    pn_data_t * data_,
+    std::stringstream & ss_,
+    const AutoIndent & ai_
+) const {
+    proton::auto_enter p (data_);
+
+    DBG ("readAvro::Descriptor" << std::endl);
+
+    switch (pn_data_type (data_)) {
+        case PN_ULONG : {
+            auto key = proton::readAndNext<u_long>(data_);
+
+            // a described type really has to be describing something
+            proton::is_list(data_);
+
+            AMQPDescriptorRegistory[key]->readAvro (data_, ss_, ai_);
+            break;
+        }
+        case PN_SYMBOL : {
+            ss_ << ai_ << "blob: bytes: "
+                << pn_data_get_symbol (data_).size
+                << std::endl;
             break;
         }
         default : {
-            throw std::runtime_error ("Can only dispatch described objects");
+            throw std::runtime_error ("Unexpected Type");
         }
     }
+
 }
 
 /******************************************************************************/

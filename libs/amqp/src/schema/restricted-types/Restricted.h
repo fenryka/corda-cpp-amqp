@@ -46,8 +46,6 @@ namespace amqp::internal::schema {
 
             enum RestrictedTypes { list_t, map_t, enum_t, array_t };
 
-            static std::string unbox (const std::string &);
-
         private :
             // could be null in the stream... not sure that information is
             // worth preserving beyond an empty string here.

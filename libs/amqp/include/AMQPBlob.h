@@ -4,6 +4,8 @@
 
 #include <string>
 #include <proton/codec.h>
+
+#include "schema/SchemaDumpTargets.h"
 #include "CordaBytes.h"
 
 /******************************************************************************/
@@ -17,7 +19,7 @@ namespace amqp {
         public :
             explicit AMQPBlob (CordaBytes &);
             std::string dumpContents() const;
-            std::string dumpSchema() const;
+            std::string dumpSchema (schema::DumpTarget) const;
     };
 
 }

@@ -8,6 +8,7 @@
 #include "field-types/Field.h"
 
 #include <sstream>
+#include "SchemaUtils.h"
 
 /******************************************************************************
  *
@@ -86,7 +87,7 @@ FieldDescriptor::build (pn_data_t * data_) const {
 
 void
 amqp::internal::schema::descriptors::
-FieldDescriptor::read (
+FieldDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -132,6 +133,126 @@ FieldDescriptor::read (
     ss_ << ai << "7/7] Boolean: Multiple: "
         << proton::get_boolean ((pn_data_t *)proton::auto_next (data_))
         << std::endl;
+}
+
+/******************************************************************************/
+
+namespace {
+
+    using namespace amqp::internal::schema::types;
+    using namespace amqp::internal::schema::descriptors;
+
+    /**
+     * This is an imperfect transform method where we're attempting to
+     * infer the fields type from our encoded Java which isn't always
+     * going to work because the information isn't always encoded
+     * here in the field.
+     *
+     * An actual transform can't be done as we're parsing the stream
+     * so this is just a best effort method for looking at what a
+     * schema might look like.
+     */
+    void
+    inferType (
+            std::string & type_,
+            const std::string & requires_,
+            std::stringstream & ss_,
+            const amqp::internal::schema::descriptors::AutoIndent & ai_
+    ) {
+        if (type_ == "*") {
+            type_ = requires_;
+        }
+
+        // when C++20 is done we can use .endswith, until then we have to do a reverse search
+        if (isArray (type_)) {
+            ss_ << ai_ << R"("type" : "array",)" << std::endl;
+
+            auto type { type_.substr (0, type_.find_last_of ('[')) };
+
+            if (isContainer (type)) {
+                ss_ << ai_ << R"("items" : { )" << std::endl;
+
+                inferType (type, requires_, ss_, AutoIndent { ai_ });
+
+                ss_ << ai_ << "}" << std::endl;
+
+            } else {
+                ss_ << ai_ << R"("items" : )" << type << std::endl;
+            }
+        } else if (type_.find ("java.util.List") == 0) {
+            ss_ << ai_ << R"("type" : "array",)" << std::endl;
+
+            auto type { amqp::internal::schema::types::listType (type_) };
+
+            if (isContainer (type.second)) {
+                ss_ << ai_ << R"("items" : {)";
+                inferType (type.second, requires_, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+                ss_ << ai_ << "}";
+
+            } else {
+                ss_ << ai_ << R"("items" : )" << type.second << std::endl;
+            }
+        } else if (type_.find ("java.util.Map") == 0) {
+            ss_ << ai_ << R"("type" : "map,)" << std::endl;
+
+            auto type = std::get<2>(amqp::internal::schema::types::mapType (type_));
+
+            if (isContainer (type)) {
+                ss_ << ai_ << R"("values" : {)";
+                inferType (type, requires_, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+                ss_ << ai_ << "}";
+
+            } else {
+                ss_ << ai_ << R"("values: )" << type << std::endl;
+            }
+
+        } else {
+            ss_ << ai_ << R"("type" : ")" << type_ << R"(")" << std::endl;
+        }
+    }
+
+    void
+    inferType (
+            pn_data_t * data_,
+            std::stringstream & ss_,
+            const amqp::internal::schema::descriptors::AutoIndent & ai_
+    ) {
+        auto type = proton::get_string ((pn_data_t *) proton::auto_next (data_));
+
+        proton::auto_list_enter ale (data_, true);
+        if (ale.elements() > 0) {
+            inferType (type, proton::get_string( (data_)), ss_, ai_);
+        }
+        else {
+            inferType (type, "", ss_, ai_);
+        }
+    }
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+FieldDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const  {
+    proton::is_list (data_);
+
+    proton::auto_list_enter ale (data_, true);
+    ss_ << ai_ << "{" << std::endl;
+    {
+        AutoIndent ai (ai_);
+
+        ss_ << ai << R"("name" : ")"
+            << proton::get_string ((pn_data_t *) proton::auto_next (data_))
+            << R"(", )" << std::endl;
+
+        inferType (data_, ss_, ai);
+
+    }
+    ss_ << ai_ << "}";
 }
 
 /******************************************************************************/

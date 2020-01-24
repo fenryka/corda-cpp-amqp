@@ -4,6 +4,7 @@
 #include "List.h"
 #include "Enum.h"
 #include "Array.h"
+#include "SchemaUtils.h"
 
 #include <string>
 #include <vector>
@@ -74,44 +75,6 @@ namespace amqp::internal::schema {
 
 /******************************************************************************
  *
- * Static member functions
- *
- ******************************************************************************/
-
-namespace {
-
-    std::map<std::string, std::string> boxedToUnboxed = {
-            { "java.lang.Integer", "int" },
-            { "java.lang.Boolean", "bool" },
-            { "java.lang.Byte", "char" },
-            { "java.lang.Short", "short" },
-            { "java.lang.Character", "char" },
-            { "java.lang.Float", "float" },
-            { "java.lang.Long", "long" },
-            { "java.lang.Double", "double" }
-    };
-
-}
-
-/******************************************************************************/
-
-/**
- * Java gas two types of primitive, boxed and unboxed, essentially actual
- * primitives and classes representing those primitives. Of course, we
- * don't care about that, so treat boxed primitives as their underlying
- * type.
- */
-std::string
-amqp::internal::schema::
-Restricted::unbox (const std::string & type_) {
-    auto it = boxedToUnboxed.find (type_);
-    if (it == boxedToUnboxed.end()) return type_;
-    else return it->second;
-}
-
-
-/******************************************************************************
- *
  * amqp::internal::schema::Restricted
  *
  ******************************************************************************/
@@ -151,9 +114,7 @@ Restricted::make(
             const std::string primArray { "[p]" };
 
             // when C++20 is done we can use .endswith, until then we have to do a reverse search
-            if (   std::equal (name_.rbegin(), name_.rbegin() + array.size(), array.rbegin(), array.rend())
-                || std::equal (name_.rbegin(), name_.rbegin() + primArray.size(), primArray.rbegin(), primArray.rend()))
-            {
+            if (types::isArray (name_)) {
                 return std::make_unique<Array>(
                         std::move (descriptor_),
                         std::move (name_),

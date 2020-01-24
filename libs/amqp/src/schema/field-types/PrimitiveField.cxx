@@ -3,7 +3,7 @@
 /******************************************************************************/
 
 const std::string
-amqp::internal::schema::PrimitiveField::m_fieldType {
+amqp::internal::schema::PrimitiveField::m_fieldType { // NOLINT
         "primitive"
 };
 

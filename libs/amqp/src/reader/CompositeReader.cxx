@@ -32,7 +32,7 @@ CompositeReader::CompositeReader (
   , m_type (std::move (type_))
 {
     DBG ("MAKE CompositeReader: " << m_type << ": " << m_readers.size() << std::endl); // NOLINT
-    for (auto const reader : m_readers) {
+    for (auto const & reader : m_readers) {
         assert (reader.lock());
         if (auto r = reader.lock()) {
             DBG ("  prop: " << r->name() << " " << r->type() << std::endl); // NOLINT
@@ -108,7 +108,7 @@ CompositeReader::_dump (
 
     proton::is_list (data_);
     {
-        proton::auto_enter ae (data_);
+        proton::auto_enter ae2 { data_ };
 
         for (size_t i (0) ; i < m_readers.size() ; ++i) {
             if (auto l =  m_readers[i].lock()) {

@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include "SchemaUtils.h"
+
 #include "TestUtils.h"
 
 #include "described-types/Descriptor.h"
@@ -14,7 +16,7 @@
  ******************************************************************************/
 
 TEST (Map, name1) {
-    auto [map, of, to] = amqp::internal::schema::Map::mapType (
+    auto [map, of, to] = amqp::internal::schema::types::mapType (
             "java.util.Map<int, string>");
 
     ASSERT_EQ ("java.util.Map", map);
@@ -25,7 +27,7 @@ TEST (Map, name1) {
 /******************************************************************************/
 
 TEST (Map, name2) {
-    auto [map, of, to] = amqp::internal::schema::Map::mapType (
+    auto [map, of, to] = amqp::internal::schema::types::mapType (
             "java.util.Map<int, java.util.List<string>>");
 
     ASSERT_EQ ("java.util.Map", map);
@@ -36,7 +38,7 @@ TEST (Map, name2) {
 /******************************************************************************/
 
 TEST (Map, name3) {
-    auto [map, of, to] = amqp::internal::schema::Map::mapType (
+    auto [map, of, to] = amqp::internal::schema::types::mapType (
             "java.util.Map<java.util.Pair<int, int>, java.util.List<string>>");
 
     ASSERT_EQ ("java.util.Map", map);

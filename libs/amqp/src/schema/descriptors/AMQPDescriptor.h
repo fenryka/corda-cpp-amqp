@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/include/schema/SchemaDumpTargets.h"
 
 /******************************************************************************
  *
@@ -37,6 +38,8 @@ namespace amqp::internal::schema::descriptors {
 
             friend std::ostream &
             operator << (std::ostream & stream_, const AutoIndent & ai_);
+
+            decltype (indent.length()) length() const { return indent.length(); }
         };
 }
 
@@ -72,11 +75,30 @@ namespace amqp::internal::schema::descriptors {
 
             virtual std::unique_ptr<AMQPDescribed> build (pn_data_t *) const;
 
-            virtual void read (
+            void read (
                 pn_data_t *,
-                std::stringstream &) const;
+                std::stringstream &,
+                amqp::schema::DumpTarget) const;
 
-            virtual void read (
+            virtual void readRaw (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const;
+
+            virtual void readAMQP (
+                pn_data_t *,
+                std::stringstream &,
+                const AutoIndent &) const;
+
+            /**
+             * So this method won't be perfect because we're not parsing the scema into
+             * a form we can then transofrm into acro. Rather, we're looking at the raw
+             * schema data in the packet and on the fly rendering it as an Avro schema.
+             *
+             * This is for the most part fine but there are complications and edge cases
+             * this won't be reliable for.
+             */
+            virtual void readAvro (
                 pn_data_t *,
                 std::stringstream &,
                 const AutoIndent &) const;

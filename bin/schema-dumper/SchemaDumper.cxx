@@ -10,8 +10,8 @@ SchemaDumper::SchemaDumper (amqp::CordaBytes & cb_)
 /******************************************************************************/
 
 std::string
-SchemaDumper::dump() {
-    return m_blob.dumpSchema();
+SchemaDumper::dump (amqp::schema::DumpTarget target_) {
+    return m_blob.dumpSchema (target_);
 }
 
 /******************************************************************************/

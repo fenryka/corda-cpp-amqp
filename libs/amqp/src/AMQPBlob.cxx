@@ -28,11 +28,13 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
 
 std::string
 amqp::
-AMQPBlob::dumpSchema() const {
+AMQPBlob::dumpSchema(schema::DumpTarget target_) const {
     std::stringstream ss;
 
     if (pn_data_is_described (m_data)) {
-        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data, ss);
+        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data,
+                ss,
+                target_);
     }
 
     return ss.str();

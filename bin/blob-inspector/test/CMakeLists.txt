@@ -5,6 +5,10 @@ set (blob-inspector-test-sources
         blob-inspector-test.cxx
 )
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/bin/blob-inspector)
 include_directories (${BLOB-INSPECTOR_BINARY_DIR}/bin/blob-inspector)
 

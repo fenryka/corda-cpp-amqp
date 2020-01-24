@@ -158,7 +158,7 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
 
 void
 amqp::internal::schema::descriptors::
-RestrictedDescriptor::read (
+RestrictedDescriptor::readRaw (
         pn_data_t * data_,
         std::stringstream & ss_,
         const AutoIndent & ai_
@@ -190,8 +190,23 @@ RestrictedDescriptor::read (
 
     ss_ << ai << "5] Descriptor:" << std::endl;
 
-    AMQPDescriptorRegistory[pn_data_type(data_)]->read (
+    AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
             (pn_data_t *)proton::auto_next(data_), ss_, AutoIndent { ai });
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::schema::descriptors::
+RestrictedDescriptor::readAvro (
+        pn_data_t * data_,
+        std::stringstream & ss_,
+        const AutoIndent & ai_
+) const {
+    /*
+     * So Avro doesn't really have the concept of restricted types, so
+     * we deal with them at the composite level
+     */
 }
 
 /******************************************************************************/
