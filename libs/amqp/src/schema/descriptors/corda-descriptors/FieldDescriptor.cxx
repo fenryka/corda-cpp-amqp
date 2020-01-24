@@ -142,6 +142,16 @@ namespace {
     using namespace amqp::internal::schema::types;
     using namespace amqp::internal::schema::descriptors;
 
+    /**
+     * This is an imperfect transform method where we're attempting to
+     * infer the fields type from our encoded Java which isn't always
+     * going to work because the information isn't always encoded
+     * here in the field.
+     *
+     * An actual transform can't be done as we're parsing the stream
+     * so this is just a best effort method for looking at what a
+     * schema might look like.
+     */
     void
     inferType (
             std::string & type_,
@@ -150,7 +160,6 @@ namespace {
             const amqp::internal::schema::descriptors::AutoIndent & ai_
     ) {
         if (type_ == "*") {
-            std::cout << "CONTAINER " << requires_ << std::endl;
             type_ = requires_;
         }
 
@@ -183,6 +192,20 @@ namespace {
             } else {
                 ss_ << ai_ << R"("items" : )" << type.second << std::endl;
             }
+        } else if (type_.find ("java.util.Map") == 0) {
+            ss_ << ai_ << R"("type" : "map,)" << std::endl;
+
+            auto type = std::get<2>(amqp::internal::schema::types::mapType (type_));
+
+            if (isContainer (type)) {
+                ss_ << ai_ << R"("values" : {)";
+                inferType (type, requires_, ss_, amqp::internal::schema::descriptors::AutoIndent { ai_ });
+                ss_ << ai_ << "}";
+
+            } else {
+                ss_ << ai_ << R"("values: )" << type << std::endl;
+            }
+
         } else {
             ss_ << ai_ << R"("type" : ")" << type_ << R"(")" << std::endl;
         }
@@ -221,13 +244,11 @@ FieldDescriptor::readAvro (
     ss_ << ai_ << "{" << std::endl;
     {
         AutoIndent ai (ai_);
-        std::cout << "ai.len: "<< ai.length() << std::endl;
 
         ss_ << ai << R"("name" : ")"
             << proton::get_string ((pn_data_t *) proton::auto_next (data_))
             << R"(", )" << std::endl;
 
-        //inferType (proton::get_string((pn_data_t *) proton::auto_next (data_)), ss_, ai);
         inferType (data_, ss_, ai);
 
     }

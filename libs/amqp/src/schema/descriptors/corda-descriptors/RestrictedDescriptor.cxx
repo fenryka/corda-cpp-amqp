@@ -207,7 +207,6 @@ RestrictedDescriptor::readAvro (
      * So Avro doesn't really have the concept of restricted types, so
      * we deal with them at the composite level
      */
-    return;
 }
 
 /******************************************************************************/

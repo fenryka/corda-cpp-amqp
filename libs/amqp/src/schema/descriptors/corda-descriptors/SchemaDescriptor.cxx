@@ -129,7 +129,6 @@ SchemaDescriptor::readAvro (
                         ai_);
 
                 ss_.seekg (0, ss_.end);
-                std::cout << pos << " " << ss_.tellg() << std::endl;
 
                 // Slightly non obvious bit here but its possible we don't actually add a type
                 // to the Avro schema. This is normally where we find a restricted type we've
