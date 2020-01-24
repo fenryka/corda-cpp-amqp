@@ -12,7 +12,7 @@
 #include "described-types/Descriptor.h"
 #include "AMQPTypeNotation.h"
 
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 /******************************************************************************
  *

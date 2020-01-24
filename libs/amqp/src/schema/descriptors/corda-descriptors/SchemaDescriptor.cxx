@@ -9,7 +9,7 @@
 
 #include "proton/codec.h"
 
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 #include "descriptors/AMQPDescriptors.h"
 #include "described-types/Schema.h"
 #include "OrderedTypeNotations.h"

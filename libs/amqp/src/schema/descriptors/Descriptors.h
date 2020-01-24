@@ -1,6 +1,10 @@
 #pragma once
 
+/******************************************************************************/
+
 #include <cstdint>
+
+/******************************************************************************/
 
 /**
  * R3 AMQP assigned enterprise number
@@ -10,14 +14,15 @@
  * Repeated here for brevity:
  *   50530 - R3 - Mike Hearn - mike&r3.com
  */
-namespace amqp::schema::descriptors {
+namespace amqp::internal::schema::descriptors {
 
     constexpr uint64_t DESCRIPTOR_TOP_32BITS = 0xc562UL << (unsigned int)(32 + 16);
 
 }
 
+/******************************************************************************/
 
-namespace amqp::schema::descriptors {
+namespace amqp::internal::schema::descriptors {
 
     extern const int ENVELOPE;
     extern const int SCHEMA;
@@ -32,3 +37,5 @@ namespace amqp::schema::descriptors {
     extern const int TRANSFORM_ELEMENT_KEY;
 
 }
+
+/******************************************************************************/

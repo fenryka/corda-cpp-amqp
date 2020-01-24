@@ -6,7 +6,7 @@ namespace amqp {
 
     class AMQPDescribed {
         public :
-            virtual ~AMQPDescribed() { }
+            virtual ~AMQPDescribed() = default;
     };
 
 }

@@ -2,7 +2,7 @@
 
 /******************************************************************************/
 
-#include "schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "Schema.h"
 

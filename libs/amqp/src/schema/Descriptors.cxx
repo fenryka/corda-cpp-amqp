@@ -1,8 +1,8 @@
-#include "schema/Descriptors.h"
+#include "amqp/src/schema/descriptors/Descriptors.h"
 
 /******************************************************************************/
 
-namespace amqp::schema::descriptors {
+namespace amqp::internal::schema::descriptors {
 
     const int ENVELOPE              =  1;
     const int SCHEMA                =  2;

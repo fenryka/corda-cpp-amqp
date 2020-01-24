@@ -3,7 +3,7 @@
 /******************************************************************************/
 
 #include "described-types/Descriptor.h"
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "corda-utils/include/types.h"
 
