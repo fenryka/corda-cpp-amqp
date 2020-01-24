@@ -5,7 +5,7 @@
 #include <iosfwd>
 #include <string>
 
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 /******************************************************************************/
 

@@ -1,7 +1,7 @@
 #include "EnumReader.h"
 
 #include "reader/IReader.h"
-#include "schema/Descriptors.h"
+#include "amqp/src/schema/descriptors/Descriptors.h"
 #include "descriptors/AMQPDescriptorRegistory.h"
 #include "proton-wrapper/include/proton_wrapper.h"
 
@@ -36,7 +36,7 @@ namespace {
              */
             if (pn_data_type (data_) == PN_ULONG) {
                 if (amqp::stripCorda(pn_data_get_ulong(data_)) ==
-                amqp::schema::descriptors::REFERENCED_OBJECT
+                amqp::internal::schema::descriptors::REFERENCED_OBJECT
             ) {
                     throw std::runtime_error (
                             "Currently don't support referenced objects");

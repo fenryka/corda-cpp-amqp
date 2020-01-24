@@ -4,7 +4,7 @@
 
 #include <any>
 
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "Schema.h"
 
@@ -67,7 +67,6 @@ namespace amqp::reader {
             virtual std::unique_ptr<IValue> dump(
                     pn_data_t *,
                     const SchemaType &) const = 0;
-
     };
 
 }

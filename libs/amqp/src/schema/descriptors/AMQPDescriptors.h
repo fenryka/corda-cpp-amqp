@@ -12,7 +12,7 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 #include "AMQPDescriptor.h"
 #include "described-types/Descriptor.h"
 #include "AMQPDescriptorRegistory.h"

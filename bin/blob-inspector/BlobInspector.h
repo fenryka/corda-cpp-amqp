@@ -1,5 +1,7 @@
 #pragma once
 
+/******************************************************************************/
+
 #include <iosfwd>
 #include "include/CordaBytes.h"
 #include "include/AMQPBlob.h"
@@ -18,7 +20,6 @@ class BlobInspector {
         explicit BlobInspector (amqp::CordaBytes &);
 
         std::string dump();
-
 };
 
 /******************************************************************************/

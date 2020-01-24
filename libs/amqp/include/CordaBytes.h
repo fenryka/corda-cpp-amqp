@@ -9,6 +9,7 @@
 /******************************************************************************/
 
 namespace amqp {
+
     class CordaBytes {
         private :
             amqp::amqp_section_id_t m_encoding;

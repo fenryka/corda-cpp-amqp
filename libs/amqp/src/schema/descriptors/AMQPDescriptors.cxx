@@ -1,6 +1,6 @@
 #include "AMQPDescriptors.h"
 #include "AMQPDescriptorRegistory.h"
-#include "schema/Descriptors.h"
+#include "Descriptors.h"
 
 #include <string>
 #include <iostream>
@@ -18,7 +18,7 @@
 #include "described-types/Composite.h"
 #include "restricted-types/Restricted.h"
 #include "OrderedTypeNotations.h"
-#include "amqp/include/schema/AMQPDescribed.h"
+#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "AMQPDescriptorRegistory.h"
 
@@ -36,7 +36,7 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
     }
 
     if (   (m_val == -1)
-        || (pn_data_get_ulong(data_) != (static_cast<uint32_t>(m_val) | amqp::schema::descriptors::DESCRIPTOR_TOP_32BITS)))
+        || (pn_data_get_ulong(data_) != (static_cast<uint32_t>(m_val) | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS)))
     {
         throw std::runtime_error ("Invalid Type");
     }

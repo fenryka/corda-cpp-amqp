@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 
-
 /******************************************************************************/
 
 BlobInspector::BlobInspector (amqp::CordaBytes & cb_)
