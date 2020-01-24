@@ -6,4 +6,8 @@ is exposed, or an (imperfect) transformation to an AVRO schema can be made
 
 ## Usage
 
-./schema-dumper <file> <mode[raw|avro]>
+```./schema-dumper <file> <mode[raw|avro]>```
+
+For example:
+
+```./schema-dumper ../test-files/_ii_ raw ```
