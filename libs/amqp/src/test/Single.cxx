@@ -6,7 +6,7 @@
 
 /******************************************************************************/
 
-using namespace amqp::reader;
+using namespace amqp::serialiser::reader;
 using namespace amqp::internal::reader;
 
 /******************************************************************************/

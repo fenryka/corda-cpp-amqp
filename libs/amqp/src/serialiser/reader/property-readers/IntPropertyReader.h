@@ -20,13 +20,13 @@ namespace amqp::internal::reader {
 
         std::any read(pn_data_t *) const override;
 
-        uPtr <amqp::reader::IValue> dump(
+        uPtr <amqp::serialiser::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
                 const amqp::schema::ISchema &
         ) const override;
 
-        uPtr <amqp::reader::IValue> dump(
+        uPtr <amqp::serialiser::reader::IValue> dump(
                 pn_data_t *,
                 const amqp::schema::ISchema &
         ) const override;

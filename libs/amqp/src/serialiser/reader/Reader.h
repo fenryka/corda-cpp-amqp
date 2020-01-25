@@ -15,7 +15,7 @@
 
 namespace amqp::internal::reader {
 
-    class Value : public amqp::reader::IValue {
+    class Value : public amqp::serialiser::reader::IValue {
         public :
             std::string dump() const override = 0;
 
@@ -131,8 +131,8 @@ namespace amqp::internal::reader {
      */
     class ValuePair : public Value {
         private :
-            uPtr<amqp::reader::IValue> m_key;
-            uPtr<amqp::reader::IValue> m_value;
+            uPtr<amqp::serialiser::reader::IValue> m_key;
+            uPtr<amqp::serialiser::reader::IValue> m_value;
 
         public :
             ValuePair (
@@ -171,12 +171,12 @@ TypedSingle<std::string>::dump() const {
 template<>
 std::string
 amqp::internal::reader::
-TypedSingle<sVec<uPtr<amqp::reader::IValue>>>::dump() const;
+TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
 amqp::internal::reader::
-TypedSingle<sList<uPtr<amqp::reader::IValue>>>::dump() const;
+TypedSingle<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
@@ -211,12 +211,12 @@ TypedPair<std::string>::dump() const {
 template<>
 std::string
 amqp::internal::reader::
-TypedPair<sVec<uPtr<amqp::reader::IValue>>>::dump() const;
+TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
 amqp::internal::reader::
-TypedPair<sList<uPtr<amqp::reader::IValue>>>::dump() const;
+TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
@@ -247,7 +247,7 @@ namespace amqp::internal::reader  {
      * instance of [Reader] will give a sub tree of that graph contextual
      * meaning.
      */
-    class Reader : public amqp::reader::IReader {
+    class Reader : public amqp::serialiser::reader::IReader {
         public :
             ~Reader() override = default;
 
@@ -257,12 +257,12 @@ namespace amqp::internal::reader  {
             std::any read (struct pn_data_t *) const override = 0;
             std::string readString (struct pn_data_t *) const override = 0;
 
-            uPtr<amqp::reader::IValue> dump(
+            uPtr<amqp::serialiser::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
                 const amqp::schema::ISchema &) const override = 0;
 
-            uPtr<amqp::reader::IValue> dump(
+            uPtr<amqp::serialiser::reader::IValue> dump(
                 pn_data_t *,
                 const amqp::schema::ISchema &) const override = 0;
     };

@@ -1,7 +1,7 @@
 set (libName amqp)
 
 include_directories (include)
-include_directories (src/reader)
+include_directories (src/serialiser/reader)
 include_directories (src/schema)
 include_directories (src/schema/descriptors)
 include_directories (src/schema/described-types/field-types)
@@ -43,19 +43,19 @@ set (amqp_assembler_sources
      )
 
 set (amqp_reader_sources
-        src/reader/Reader.cxx
-        src/reader/property-readers/PropertyReader.cxx
-        src/reader/CompositeReader.cxx
-        src/reader/restricted-readers/RestrictedReader.cxx
-        src/reader/property-readers/IntPropertyReader.cxx
-        src/reader/property-readers/LongPropertyReader.cxx
-        src/reader/property-readers/BoolPropertyReader.cxx
-        src/reader/property-readers/DoublePropertyReader.cxx
-        src/reader/property-readers/StringPropertyReader.cxx
-        src/reader/restricted-readers/MapReader.cxx
-        src/reader/restricted-readers/ListReader.cxx
-        src/reader/restricted-readers/ArrayReader.cxx
-        src/reader/restricted-readers/EnumReader.cxx
+        src/serialiser/reader/Reader.cxx
+        src/serialiser/reader/property-readers/PropertyReader.cxx
+        src/serialiser/reader/CompositeReader.cxx
+        src/serialiser/reader/restricted-readers/RestrictedReader.cxx
+        src/serialiser/reader/property-readers/IntPropertyReader.cxx
+        src/serialiser/reader/property-readers/LongPropertyReader.cxx
+        src/serialiser/reader/property-readers/BoolPropertyReader.cxx
+        src/serialiser/reader/property-readers/DoublePropertyReader.cxx
+        src/serialiser/reader/property-readers/StringPropertyReader.cxx
+        src/serialiser/reader/restricted-readers/MapReader.cxx
+        src/serialiser/reader/restricted-readers/ListReader.cxx
+        src/serialiser/reader/restricted-readers/ArrayReader.cxx
+        src/serialiser/reader/restricted-readers/EnumReader.cxx
         )
 
 set (amqp_sources

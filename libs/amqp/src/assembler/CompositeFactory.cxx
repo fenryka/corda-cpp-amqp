@@ -11,15 +11,15 @@
 #include "corda-utils/include/debug.h"
 
 #include "serialiser/reader/IReader.h"
-#include "amqp/src/reader/property-readers/PropertyReader.h"
+#include "amqp/src/serialiser/reader/property-readers/PropertyReader.h"
 
-#include "amqp/src/reader/Reader.h"
-#include "amqp/src/reader/CompositeReader.h"
-#include "amqp/src/reader/restricted-readers/RestrictedReader.h"
-#include "amqp/src/reader/restricted-readers/MapReader.h"
-#include "amqp/src/reader/restricted-readers/ListReader.h"
-#include "amqp/src/reader/restricted-readers/ArrayReader.h"
-#include "amqp/src/reader/restricted-readers/EnumReader.h"
+#include "amqp/src/serialiser/reader/Reader.h"
+#include "amqp/src/serialiser/reader/CompositeReader.h"
+#include "amqp/src/serialiser/reader/restricted-readers/RestrictedReader.h"
+#include "amqp/src/serialiser/reader/restricted-readers/MapReader.h"
+#include "amqp/src/serialiser/reader/restricted-readers/ListReader.h"
+#include "amqp/src/serialiser/reader/restricted-readers/ArrayReader.h"
+#include "amqp/src/serialiser/reader/restricted-readers/EnumReader.h"
 
 #include "amqp/src/schema/restricted-types/Map.h"
 #include "amqp/src/schema/restricted-types/List.h"
@@ -289,7 +289,7 @@ CompositeFactory::processRestricted (
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::reader::IReader>
+const std::shared_ptr<amqp::serialiser::reader::IReader>
 amqp::internal::assembler::
 CompositeFactory::byType (const std::string & type_) {
     auto it = m_readersByType.find (type_);
@@ -299,7 +299,7 @@ CompositeFactory::byType (const std::string & type_) {
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::reader::IReader>
+const std::shared_ptr<amqp::serialiser::reader::IReader>
 amqp::internal::assembler::
 CompositeFactory::byDescriptor (const std::string & descriptor_) {
     auto it = m_readersByDescriptor.find (descriptor_);

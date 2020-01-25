@@ -14,7 +14,7 @@ namespace amqp::internal::reader {
             std::weak_ptr<Reader> m_keyReader;
             std::weak_ptr<Reader> m_valueReader;
 
-            sVec<uPtr<amqp::reader::IValue>> dump_(
+            sVec<uPtr<amqp::serialiser::reader::IValue>> dump_(
                     pn_data_t *,
                     const amqp::schema::ISchema &) const;
 
@@ -32,12 +32,12 @@ namespace amqp::internal::reader {
 
             internal::schema::Restricted::RestrictedTypes restrictedType() const;
 
-            std::unique_ptr<amqp::reader::IValue> dump(
+            std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
                 const amqp::schema::ISchema &) const override;
 
-            std::unique_ptr<amqp::reader::IValue> dump(
+            std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 pn_data_t *,
                 const amqp::schema::ISchema &) const override;
     };

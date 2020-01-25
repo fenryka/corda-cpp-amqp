@@ -62,7 +62,7 @@ namespace {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::reader::IValue>
+std::unique_ptr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 EnumReader::dump (
         const std::string & name_,
@@ -79,7 +79,7 @@ EnumReader::dump (
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::reader::IValue>
+std::unique_ptr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 EnumReader::dump(
         pn_data_t * data_,
