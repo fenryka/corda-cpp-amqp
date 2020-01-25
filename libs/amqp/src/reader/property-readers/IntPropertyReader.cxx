@@ -6,7 +6,7 @@
 #include <proton/codec.h>
 
 #include "proton-wrapper/include/proton_wrapper.h"
-#include "reader/IReader.h"
+#include "serialiser/reader/IReader.h"
 
 /******************************************************************************
  *

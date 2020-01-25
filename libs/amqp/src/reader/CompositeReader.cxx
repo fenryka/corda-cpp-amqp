@@ -8,7 +8,7 @@
 #include <sstream>
 #include "corda-utils/include/debug.h"
 #include "Reader.h"
-#include "reader/IReader.h"
+#include "serialiser/reader/IReader.h"
 #include "proton-wrapper/include/proton_wrapper.h"
 
 /******************************************************************************/
@@ -76,7 +76,6 @@ CompositeReader::readString (pn_data_t * data_) const {
 }
 
 /******************************************************************************/
-
 
 sVec<uPtr<amqp::reader::IValue>>
 amqp::internal::reader::

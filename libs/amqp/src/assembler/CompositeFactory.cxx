@@ -10,12 +10,12 @@
 
 #include "corda-utils/include/debug.h"
 
-#include "reader/IReader.h"
-#include "amqp/src/reader/PropertyReader.h"
+#include "serialiser/reader/IReader.h"
+#include "amqp/src/reader/property-readers/PropertyReader.h"
 
 #include "amqp/src/reader/Reader.h"
 #include "amqp/src/reader/CompositeReader.h"
-#include "amqp/src/reader/RestrictedReader.h"
+#include "amqp/src/reader/restricted-readers/RestrictedReader.h"
 #include "amqp/src/reader/restricted-readers/MapReader.h"
 #include "amqp/src/reader/restricted-readers/ListReader.h"
 #include "amqp/src/reader/restricted-readers/ArrayReader.h"
@@ -49,7 +49,7 @@ namespace {
                                       << std::endl); // NOLINT
             assert (map_[k_]);
             assert (map_[k_] != nullptr);
-            DBG (k_ << " =?= " << map_[k_]->type() << std::endl);
+            DBG (k_ << " =?= " << map_[k_]->type() << std::endl); // NOLINT
             assert (k_ == map_[k_]->type());
 
             return map_[k_];
@@ -84,7 +84,7 @@ namespace {
 void
 amqp::internal::assembler::
 CompositeFactory::process (const SchemaType & schema_) {
-    DBG ("process schema" << std::endl);
+    DBG ("process schema" << std::endl); // NOLINT
 
     for (const auto & i : dynamic_cast<const schema::Schema &>(schema_)) {
         for (const auto & j : i) {
@@ -101,7 +101,7 @@ amqp::internal::assembler::
 CompositeFactory::process (
     const amqp::internal::schema::AMQPTypeNotation & schema_)
 {
-    DBG ("process::" << schema_.name() << std::endl);
+    DBG ("process::" << schema_.name() << std::endl); // NOLINT
 
     return computeIfAbsent<reader::Reader> (
         m_readersByType,
@@ -125,7 +125,7 @@ amqp::internal::assembler::
 CompositeFactory::processComposite (
         const amqp::internal::schema::AMQPTypeNotation & type_
 ) {
-    DBG ("processComposite - " << type_.name() << std::endl);
+    DBG ("processComposite - " << type_.name() << std::endl); // NOLINT
     std::vector<std::weak_ptr<reader::Reader>> readers;
 
     const auto & fields = dynamic_cast<const schema::Composite &> (
@@ -184,10 +184,10 @@ amqp::internal::assembler::
 CompositeFactory::fetchReaderForRestricted (const std::string & type_) {
     decltype(m_readersByType)::mapped_type rtn;
 
-    DBG ("fetchReaderForRestricted - " << type_ << std::endl);
+    DBG ("fetchReaderForRestricted - " << type_ << std::endl); // NOLINT
 
     if (schema::Field::typeIsPrimitive(type_)) {
-        DBG ("It's primitive" << std::endl);
+        DBG ("It's primitive" << std::endl); // NOLINT
         rtn = computeIfAbsent<reader::Reader>(
                 m_readersByType,
                 type_,
@@ -277,7 +277,7 @@ CompositeFactory::processRestricted (
                 dynamic_cast<const schema::Map &> (restricted));
         }
         case schema::Restricted::RestrictedTypes::array_t : {
-            DBG ("  array_t" << std::endl);
+            DBG ("  array_t" << std::endl); // NOLINT
             return processArray (
                 dynamic_cast<const schema::Array &> (restricted));
         }
