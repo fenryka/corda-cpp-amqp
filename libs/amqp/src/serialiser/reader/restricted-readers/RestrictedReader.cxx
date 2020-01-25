@@ -9,7 +9,7 @@
 
 /******************************************************************************/
 
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::RestrictedReader (std::string type_)
     : m_type (std::move (type_))
 { }
@@ -17,7 +17,7 @@ RestrictedReader::RestrictedReader (std::string type_)
 /******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::m_name { // NOLINT
     "Restricted Reader"
 };
@@ -25,7 +25,7 @@ RestrictedReader::m_name { // NOLINT
 /******************************************************************************/
 
 std::any
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::read (pn_data_t *) const {
     return std::any(1);
 }
@@ -33,7 +33,7 @@ RestrictedReader::read (pn_data_t *) const {
 /******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::readString (pn_data_t * data_) const {
     return "hello";
 }
@@ -41,7 +41,7 @@ RestrictedReader::readString (pn_data_t * data_) const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::name() const {
     return m_name;
 }
@@ -49,7 +49,7 @@ RestrictedReader::name() const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 RestrictedReader::type() const {
     return m_type;
 }

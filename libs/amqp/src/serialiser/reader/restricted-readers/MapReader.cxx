@@ -7,7 +7,7 @@
 /******************************************************************************/
 
 amqp::internal::schema::Restricted::RestrictedTypes
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 MapReader::restrictedType() const {
     return schema::Restricted::Restricted::map_t;
 }
@@ -15,7 +15,7 @@ MapReader::restrictedType() const {
 /******************************************************************************/
 
 sVec<uPtr<amqp::serialiser::reader::IValue>>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 MapReader::dump_(
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_
@@ -52,7 +52,7 @@ MapReader::dump_(
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 MapReader::dump(
         const std::string & name_,
         pn_data_t * data_,
@@ -68,7 +68,7 @@ MapReader::dump(
 /******************************************************************************/
 
 std::unique_ptr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 MapReader::dump(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_

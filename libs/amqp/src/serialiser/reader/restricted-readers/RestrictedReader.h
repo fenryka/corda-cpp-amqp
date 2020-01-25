@@ -15,7 +15,7 @@ struct pn_data_t;
 
 /******************************************************************************/
 
-namespace amqp::internal::reader {
+namespace amqp::internal::serialiser::reader {
 
     class RestrictedReader : public Reader {
         private :

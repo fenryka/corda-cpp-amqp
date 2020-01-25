@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::m_name { // NOLINT
         "Bool Reader"
 };
@@ -17,7 +17,7 @@ BoolPropertyReader::m_name { // NOLINT
 /******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::m_type { // NOLINT
         "bool"
 };
@@ -29,7 +29,7 @@ BoolPropertyReader::m_type { // NOLINT
  ******************************************************************************/
 
 std::any
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::read (pn_data_t * data_) const {
     return std::any (proton::readAndNext<bool> (data_));
 }
@@ -37,7 +37,7 @@ BoolPropertyReader::read (pn_data_t * data_) const {
 /******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::readString (pn_data_t * data_) const {
     return std::to_string (proton::readAndNext<bool> (data_));
 }
@@ -45,7 +45,7 @@ BoolPropertyReader::readString (pn_data_t * data_) const {
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::dump (
         const std::string & name_,
         pn_data_t * data_,
@@ -59,7 +59,7 @@ BoolPropertyReader::dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_) const
@@ -71,7 +71,7 @@ BoolPropertyReader::dump (
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::name() const {
     return m_name;
 }
@@ -79,7 +79,7 @@ BoolPropertyReader::name() const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 BoolPropertyReader::type() const {
     return m_type;
 }

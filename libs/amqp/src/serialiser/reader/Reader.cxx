@@ -89,12 +89,12 @@ namespace {
 
 /******************************************************************************
  *
- * amqp::internal::reader::TypedValuePair
+ * amqp::internal::serialiser::reader::TypedValuePair
  *
  ******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ValuePair::dump() const {
     std::stringstream ss;
 
@@ -105,34 +105,34 @@ ValuePair::dump() const {
 
 /******************************************************************************
  *
- * amqp::internal::reader::TypedPair
+ * amqp::internal::serialiser::reader::TypedPair
  *
  ******************************************************************************/
 
 template<>
 std::string
-amqp::internal::reader::
-TypedPair<sVec<uPtr<amqp::internal::reader::Pair>>>::dump() const {
+amqp::internal::serialiser::reader::
+TypedPair<sVec<uPtr<amqp::internal::serialiser::reader::Pair>>>::dump() const {
     return ::dumpPair<AutoMap> (m_property, m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
-TypedPair<sList<uPtr<amqp::internal::reader::Pair>>>::dump() const {
+amqp::internal::serialiser::reader::
+TypedPair<sList<uPtr<amqp::internal::serialiser::reader::Pair>>>::dump() const {
     return ::dumpPair<AutoMap> (m_property, m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
     return ::dumpPair<AutoMap> (m_property, m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
     return ::dumpPair<AutoList> (m_property, m_value.begin(), m_value.end());
 }
@@ -145,29 +145,29 @@ TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
     return ::dumpSingle<AutoList> (m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
     return ::dumpSingle<AutoMap> (m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
-TypedSingle<sList<uPtr<amqp::internal::reader::Single>>>::dump() const {
+amqp::internal::serialiser::reader::
+TypedSingle<sList<uPtr<amqp::internal::serialiser::reader::Single>>>::dump() const {
     return ::dumpSingle<AutoList> (m_value.begin(), m_value.end());
 }
 
 template<>
 std::string
-amqp::internal::reader::
-TypedSingle<sVec<uPtr<amqp::internal::reader::Single>>>::dump() const {
+amqp::internal::serialiser::reader::
+TypedSingle<sVec<uPtr<amqp::internal::serialiser::reader::Single>>>::dump() const {
     return ::dumpSingle<AutoMap> (m_value.begin(), m_value.end());
 }
 

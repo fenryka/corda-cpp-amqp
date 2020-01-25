@@ -11,7 +11,7 @@
  ******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::m_type { // NOLINT
         "string"
 };
@@ -19,7 +19,7 @@ StringPropertyReader::m_type { // NOLINT
 /******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::m_name { // NOLINT
         "String Reader"
 };
@@ -31,7 +31,7 @@ StringPropertyReader::m_name { // NOLINT
  ******************************************************************************/
 
 std::any
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::read (pn_data_t * data_) const {
     return std::any { proton::readAndNext<std::string> (data_) };
 }
@@ -39,7 +39,7 @@ StringPropertyReader::read (pn_data_t * data_) const {
 /******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::readString (pn_data_t * data_) const {
     return proton::readAndNext<std::string> (data_);
 }
@@ -47,7 +47,7 @@ StringPropertyReader::readString (pn_data_t * data_) const {
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::dump (
     const std::string & name_,
     pn_data_t * data_,
@@ -61,7 +61,7 @@ StringPropertyReader::dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_) const
@@ -73,7 +73,7 @@ StringPropertyReader::dump (
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::name() const {
     return m_name;
 }
@@ -81,7 +81,7 @@ StringPropertyReader::name() const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 StringPropertyReader::type() const {
     return m_type;
 }

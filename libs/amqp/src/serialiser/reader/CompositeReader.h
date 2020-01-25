@@ -12,7 +12,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::reader {
+namespace amqp::internal::serialiser::reader {
 
     class CompositeReader : public Reader {
         private :

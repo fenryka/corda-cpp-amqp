@@ -9,13 +9,13 @@
  ******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::m_name { // NOLINT
     "Double Reader"
 };
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::m_type { // NOLINT
     "double"
 };
@@ -27,7 +27,7 @@ DoublePropertyReader::m_type { // NOLINT
  ******************************************************************************/
 
 std::any
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::read (pn_data_t * data_) const {
     return std::any { proton::readAndNext<double> (data_) };
 }
@@ -35,7 +35,7 @@ DoublePropertyReader::read (pn_data_t * data_) const {
 /******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::readString (pn_data_t * data_) const {
     return std::to_string (proton::readAndNext<double> (data_));
 }
@@ -43,7 +43,7 @@ DoublePropertyReader::readString (pn_data_t * data_) const {
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::dump (
     const std::string & name_,
     pn_data_t * data_,
@@ -57,7 +57,7 @@ DoublePropertyReader::dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_) const
@@ -69,7 +69,7 @@ DoublePropertyReader::dump (
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::name() const {
     return m_name;
 }
@@ -77,7 +77,7 @@ DoublePropertyReader::name() const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 DoublePropertyReader::type() const {
     return m_type;
 }

@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 EnumReader::EnumReader (
     std::string type_,
     std::vector<std::string> choices_
@@ -63,7 +63,7 @@ namespace {
 /******************************************************************************/
 
 std::unique_ptr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 EnumReader::dump (
         const std::string & name_,
         pn_data_t * data_,
@@ -80,7 +80,7 @@ EnumReader::dump (
 /******************************************************************************/
 
 std::unique_ptr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 EnumReader::dump(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_

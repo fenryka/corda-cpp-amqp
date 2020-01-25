@@ -4,7 +4,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::reader {
+namespace amqp::internal::serialiser::reader {
 
     class EnumReader : public RestrictedReader {
         private :

@@ -8,7 +8,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::reader {
+namespace amqp::internal::serialiser::reader {
 
     class PropertyReader : public Reader {
         private :
