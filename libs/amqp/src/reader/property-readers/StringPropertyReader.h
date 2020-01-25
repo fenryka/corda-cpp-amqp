@@ -21,12 +21,12 @@ namespace amqp::internal::reader {
             uPtr<amqp::reader::IValue> dump (
                 const std::string &,
                 pn_data_t *,
-                const SchemaType &
+                const amqp::schema::ISchema &
             ) const override;
 
             uPtr<amqp::reader::IValue> dump (
                 pn_data_t *,
-                const SchemaType &
+                const amqp::schema::ISchema &
             ) const override;
 
             const std::string & name() const override;

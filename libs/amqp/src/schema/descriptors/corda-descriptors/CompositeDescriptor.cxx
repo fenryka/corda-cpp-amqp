@@ -31,7 +31,7 @@ CompositeDescriptor::CompositeDescriptor (
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 CompositeDescriptor::build (pn_data_t * data_) const {
     DBG ("COMPOSITE" << std::endl); // NOLINT

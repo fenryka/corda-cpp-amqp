@@ -236,8 +236,6 @@ TypedPair<sList<uPtr<amqp::internal::reader::Pair>>>::dump() const;
 
 namespace amqp::internal::reader  {
 
-    using IReader = amqp::reader::IReader<schema::SchemaMap::const_iterator>;
-
     /**
      * Interface that represents an object that has the ability to consume
      * the payload of a Corda serialized blob in a way defined by some
@@ -249,7 +247,7 @@ namespace amqp::internal::reader  {
      * instance of [Reader] will give a sub tree of that graph contextual
      * meaning.
      */
-    class Reader : public IReader {
+    class Reader : public amqp::reader::IReader {
         public :
             ~Reader() override = default;
 
@@ -262,11 +260,11 @@ namespace amqp::internal::reader  {
             uPtr<amqp::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
-                const SchemaType &) const override = 0;
+                const amqp::schema::ISchema &) const override = 0;
 
             uPtr<amqp::reader::IValue> dump(
                 pn_data_t *,
-                const SchemaType &) const override = 0;
+                const amqp::schema::ISchema &) const override = 0;
     };
 
 }

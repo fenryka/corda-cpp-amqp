@@ -15,11 +15,11 @@ namespace amqp::internal::reader {
             std::unique_ptr<amqp::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
 
             std::unique_ptr<amqp::reader::IValue> dump(
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
     };
 
 }

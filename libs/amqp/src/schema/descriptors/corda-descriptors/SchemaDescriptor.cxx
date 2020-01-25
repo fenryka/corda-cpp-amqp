@@ -9,7 +9,6 @@
 
 #include "proton/codec.h"
 
-#include "amqp/src/schema/AMQPDescribed.h"
 #include "descriptors/AMQPDescriptors.h"
 #include "described-types/Schema.h"
 #include "OrderedTypeNotations.h"
@@ -28,7 +27,7 @@ SchemaDescriptor::SchemaDescriptor (
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 SchemaDescriptor::build (pn_data_t * data_) const {
     DBG ("SCHEMA" << std::endl); // NOLINT
@@ -56,7 +55,7 @@ SchemaDescriptor::build (pn_data_t * data_) const {
         }
     }
 
-    return std::make_unique<schema::Schema> (std::move (schemas));
+    return std::make_unique<amqp::internal::schema::Schema> (std::move (schemas));
 }
 
 /******************************************************************************/

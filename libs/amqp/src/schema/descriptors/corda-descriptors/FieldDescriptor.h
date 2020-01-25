@@ -4,7 +4,6 @@
 
 #include "proton/codec.h"
 
-#include "amqp/src/schema/AMQPDescribed.h"
 #include "descriptors/AMQPDescriptor.h"
 
 /******************************************************************************/
@@ -18,7 +17,7 @@ namespace amqp::internal::schema::descriptors {
 
             ~FieldDescriptor() final = default;
 
-            std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
+            std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
 
             void readRaw (
                 pn_data_t *,

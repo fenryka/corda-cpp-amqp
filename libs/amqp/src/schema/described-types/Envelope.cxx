@@ -36,7 +36,7 @@ Envelope::Envelope (
 
 /******************************************************************************/
 
-const amqp::internal::schema::ISchemaType &
+const amqp::schema::ISchema &
 amqp::internal::schema::
 Envelope::schema() const {
     return *m_schema;

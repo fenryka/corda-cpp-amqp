@@ -83,7 +83,7 @@ namespace {
  */
 void
 amqp::internal::assembler::
-CompositeFactory::process (const SchemaType & schema_) {
+CompositeFactory::process (const amqp::schema::ISchema & schema_) {
     DBG ("process schema" << std::endl); // NOLINT
 
     for (const auto & i : dynamic_cast<const schema::Schema &>(schema_)) {
@@ -289,7 +289,7 @@ CompositeFactory::processRestricted (
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::internal::reader::IReader>
+const std::shared_ptr<amqp::reader::IReader>
 amqp::internal::assembler::
 CompositeFactory::byType (const std::string & type_) {
     auto it = m_readersByType.find (type_);
@@ -299,7 +299,7 @@ CompositeFactory::byType (const std::string & type_) {
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::internal::reader::IReader>
+const std::shared_ptr<amqp::reader::IReader>
 amqp::internal::assembler::
 CompositeFactory::byDescriptor (const std::string & descriptor_) {
     auto it = m_readersByDescriptor.find (descriptor_);

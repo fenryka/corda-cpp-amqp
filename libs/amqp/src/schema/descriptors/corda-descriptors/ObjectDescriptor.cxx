@@ -26,7 +26,7 @@ ObjectDescriptor::ObjectDescriptor (
 /**
  *
  */
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 ObjectDescriptor::build (pn_data_t * data_) const {
     DBG ("DESCRIPTOR" << std::endl); // NOLINT

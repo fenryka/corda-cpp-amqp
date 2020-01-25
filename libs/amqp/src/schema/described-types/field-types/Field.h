@@ -3,7 +3,6 @@
 /******************************************************************************/
 
 #include "described-types/Descriptor.h"
-#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "corda-utils/include/types.h"
 
@@ -26,7 +25,7 @@ namespace amqp::internal::schema {
      *   - mandatory : Boolean
      *   - multiple  : Boolean
      */
-    class Field : public AMQPDescribed {
+    class Field : public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Field &);
 

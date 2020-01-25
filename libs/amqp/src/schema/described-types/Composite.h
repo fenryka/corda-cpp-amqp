@@ -14,8 +14,6 @@
 #include "Descriptor.h"
 #include "AMQPTypeNotation.h"
 
-#include "amqp/src/schema/AMQPDescribed.h"
-
 /******************************************************************************
  *
  * Forward class declarations

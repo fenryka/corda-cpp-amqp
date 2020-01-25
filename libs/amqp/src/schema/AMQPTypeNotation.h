@@ -30,7 +30,7 @@ namespace amqp::internal::schema {
 namespace amqp::internal::schema {
 
     class AMQPTypeNotation
-            : public AMQPDescribed, public OrderedTypeNotation
+        : public amqp::schema::ISchemaElement, public OrderedTypeNotation
     {
         public :
             friend std::ostream & operator << (

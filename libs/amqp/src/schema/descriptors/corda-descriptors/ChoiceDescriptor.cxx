@@ -16,7 +16,7 @@ ChoiceDescriptor::ChoiceDescriptor (
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 ChoiceDescriptor::build (pn_data_t * data_) const  {
     validateAndNext (data_);

@@ -18,7 +18,6 @@
 #include "described-types/Composite.h"
 #include "restricted-types/Restricted.h"
 #include "OrderedTypeNotations.h"
-#include "amqp/src/schema/AMQPDescribed.h"
 
 #include "AMQPDescriptorRegistory.h"
 
@@ -46,50 +45,50 @@ AMQPDescriptor::validateAndNext (pn_data_t * const data_) const {
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 ReferencedObjectDescriptor::build (pn_data_t * data_) const {
     validateAndNext (data_);
 
     DBG ("REFERENCED OBJECT " << data_ << std::endl); // NOLINT
 
-    return uPtr<amqp::AMQPDescribed> (nullptr);
+    return uPtr<amqp::schema::ISchemaElement> (nullptr);
 }
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 TransformSchemaDescriptor::build (pn_data_t * data_) const {
     validateAndNext (data_);
 
     DBG ("TRANSFORM SCHEMA " << data_ << std::endl); // NOLINT
 
-    return uPtr<amqp::AMQPDescribed> (nullptr);
+    return uPtr<amqp::schema::ISchemaElement> (nullptr);
 }
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 TransformElementDescriptor::build (pn_data_t * data_) const {
     validateAndNext (data_);
 
     DBG ("TRANSFORM ELEMENT " << data_ << std::endl); // NOLINT
 
-    return uPtr<amqp::AMQPDescribed> (nullptr);
+    return uPtr<amqp::schema::ISchemaElement> (nullptr);
 }
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 TransformElementKeyDescriptor::build (pn_data_t * data_) const {
     validateAndNext (data_);
 
     DBG ("TRANSFORM ELEMENT KEY" << data_ << std::endl); // NOLINT
 
-    return uPtr<amqp::AMQPDescribed> (nullptr);
+    return uPtr<amqp::schema::ISchemaElement> (nullptr);
 }
 
 /******************************************************************************/

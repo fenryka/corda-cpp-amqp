@@ -8,7 +8,7 @@
 
 namespace amqp::internal::schema {
 
-    class Choice : public AMQPDescribed {
+    class Choice : public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Choice &);
 
@@ -21,7 +21,6 @@ namespace amqp::internal::schema {
             explicit Choice (std::string);
 
             const std::string & choice() const;
-
     };
 
 }
