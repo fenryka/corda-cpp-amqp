@@ -25,7 +25,7 @@ struct pn_data_t;
  * it represents the ability to pull out a value from the blob as determined
  * by the reader type and convert it to a string formatted nicely as JSON
  */
-namespace amqp::reader {
+namespace amqp::serialiser::reader {
 
     class IValue {
         public :
@@ -42,7 +42,7 @@ namespace amqp::reader {
  *
  ******************************************************************************/
 
-namespace amqp::reader {
+namespace amqp::serialiser::reader {
 
     class IReader {
         public :

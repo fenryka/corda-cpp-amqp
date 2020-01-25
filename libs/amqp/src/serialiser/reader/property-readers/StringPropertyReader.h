@@ -8,7 +8,7 @@
 
 namespace amqp::internal::reader {
 
-    class DoublePropertyReader : public PropertyReader {
+    class StringPropertyReader : public PropertyReader {
         private :
             static const std::string m_name;
             static const std::string m_type;
@@ -18,13 +18,13 @@ namespace amqp::internal::reader {
 
             std::any read (pn_data_t *) const override;
 
-            uPtr<amqp::reader::IValue> dump (
+            uPtr<amqp::serialiser::reader::IValue> dump (
                 const std::string &,
                 pn_data_t *,
                 const amqp::schema::ISchema &
             ) const override;
 
-            uPtr<amqp::reader::IValue> dump (
+            uPtr<amqp::serialiser::reader::IValue> dump (
                 pn_data_t *,
                 const amqp::schema::ISchema &
             ) const override;

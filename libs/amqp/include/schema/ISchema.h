@@ -13,6 +13,12 @@ namespace amqp::schema {
             virtual ~ISchemaElement() = default;
     };
 
+}
+
+/******************************************************************************/
+
+namespace amqp::schema {
+
     class ISchema {
         public :
             virtual const ISchemaElement & fromType (const std::string &) const = 0;

@@ -1,84 +1,78 @@
-
-#include "IntPropertyReader.h"
-
-#include <any>
-#include <string>
-#include <proton/codec.h>
+#include "LongPropertyReader.h"
 
 #include "proton-wrapper/include/proton_wrapper.h"
-#include "serialiser/reader/IReader.h"
 
 /******************************************************************************
  *
- * IntPropertyReader statics
+ * LongPropertyReader statics
  *
  ******************************************************************************/
 
 const std::string
 amqp::internal::reader::
-IntPropertyReader::m_name { // NOLINT
-    "Int Reader"
+LongPropertyReader::m_name { // NOLINT
+        "Long Reader"
 };
 
 /******************************************************************************/
 
 const std::string
 amqp::internal::reader::
-IntPropertyReader::m_type { // NOLINT
-    "int"
+LongPropertyReader::m_type { // NOLINT
+        "long"
 };
 
 /******************************************************************************
  *
- * IntPropertyReader
+ * LongPropertyReader
  *
  ******************************************************************************/
 
 std::any
 amqp::internal::reader::
-IntPropertyReader::read (pn_data_t * data_) const {
-    return std::any { proton::readAndNext<int> (data_) };
+LongPropertyReader::read (pn_data_t * data_) const {
+    return std::any { proton::readAndNext<long> (data_) };
 }
 
 /******************************************************************************/
 
 std::string
 amqp::internal::reader::
-IntPropertyReader::readString (pn_data_t * data_) const {
-    return std::to_string (proton::readAndNext<int> (data_));
+LongPropertyReader::readString (pn_data_t * data_) const {
+    return std::to_string (proton::readAndNext<long> (data_));
 }
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
-IntPropertyReader::dump (
+LongPropertyReader::dump (
     const std::string & name_,
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
-            std::to_string (proton::readAndNext<int> (data_)));
+            std::to_string (proton::readAndNext<long> (data_)));
 }
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
-IntPropertyReader::dump (
+LongPropertyReader::dump (
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const
 {
     return std::make_unique<TypedSingle<std::string>> (
-            std::to_string (proton::readAndNext<int> (data_)));
+            std::to_string (proton::readAndNext<long> (data_)));
 }
 
 /******************************************************************************/
 
 const std::string &
 amqp::internal::reader::
-IntPropertyReader::name() const {
+LongPropertyReader::name() const {
     return m_name;
 }
 
@@ -86,7 +80,7 @@ IntPropertyReader::name() const {
 
 const std::string &
 amqp::internal::reader::
-IntPropertyReader::type() const {
+LongPropertyReader::type() const {
     return m_type;
 }
 

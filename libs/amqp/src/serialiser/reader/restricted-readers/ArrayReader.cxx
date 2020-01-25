@@ -26,7 +26,7 @@ ArrayReader::restrictedType() const {
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 ArrayReader::dump (
         const std::string & name_,
@@ -35,14 +35,14 @@ ArrayReader::dump (
 ) const {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedPair<sList<uPtr<amqp::reader::IValue>>>>(
+    return std::make_unique<TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>>(
             name_,
             dump_ (data_, schema_));
 }
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 ArrayReader::dump(
         pn_data_t * data_,
@@ -50,13 +50,13 @@ ArrayReader::dump(
 ) const {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedSingle<sList<uPtr<amqp::reader::IValue>>>>(
+    return std::make_unique<TypedSingle<sList<uPtr<amqp::serialiser::reader::IValue>>>>(
             dump_ (data_, schema_));
 }
 
 /******************************************************************************/
 
-sList<uPtr<amqp::reader::IValue>>
+sList<uPtr<amqp::serialiser::reader::IValue>>
 amqp::internal::reader::
 ArrayReader::dump_(
         pn_data_t * data_,

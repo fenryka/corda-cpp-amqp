@@ -19,8 +19,8 @@ namespace amqp {
 
             virtual void process (const amqp::schema::ISchema &) = 0;
 
-            virtual const std::shared_ptr<amqp::reader::IReader> byType (const std::string &) = 0;
-            virtual const std::shared_ptr<amqp::reader::IReader> byDescriptor (const std::string &) = 0;
+            virtual const std::shared_ptr<amqp::serialiser::reader::IReader> byType (const std::string &) = 0;
+            virtual const std::shared_ptr<amqp::serialiser::reader::IReader> byDescriptor (const std::string &) = 0;
     };
 
 }

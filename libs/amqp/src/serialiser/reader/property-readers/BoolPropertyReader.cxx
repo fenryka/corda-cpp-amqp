@@ -44,7 +44,7 @@ BoolPropertyReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 BoolPropertyReader::dump (
         const std::string & name_,
@@ -58,7 +58,7 @@ BoolPropertyReader::dump (
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 BoolPropertyReader::dump (
         pn_data_t * data_,

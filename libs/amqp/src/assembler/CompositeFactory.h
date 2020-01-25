@@ -9,10 +9,12 @@
 #include "corda-utils/include/types.h"
 
 #include "amqp/include/assembler/ICompositeFactory.h"
+
+#include "amqp/src/serialiser/reader/CompositeReader.h"
+
 #include "amqp/src/schema/described-types/Schema.h"
 #include "amqp/src/schema/described-types/Envelope.h"
 #include "amqp/src/schema/described-types/Composite.h"
-#include "amqp/src/reader/CompositeReader.h"
 #include "amqp/src/schema/restricted-types/Map.h"
 #include "amqp/src/schema/restricted-types/Array.h"
 #include "amqp/src/schema/restricted-types/List.h"
@@ -35,10 +37,10 @@ namespace amqp::internal::assembler {
 
             void process (const amqp::schema::ISchema &) override;
 
-            const std::shared_ptr<amqp::reader::IReader> byType (
+            const std::shared_ptr<amqp::serialiser::reader::IReader> byType (
                     const std::string &) override;
 
-            const std::shared_ptr<amqp::reader::IReader> byDescriptor (
+            const std::shared_ptr<amqp::serialiser::reader::IReader> byDescriptor (
                     const std::string &) override;
 
         private :

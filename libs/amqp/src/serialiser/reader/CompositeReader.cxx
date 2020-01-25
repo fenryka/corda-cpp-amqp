@@ -77,7 +77,7 @@ CompositeReader::readString (pn_data_t * data_) const {
 
 /******************************************************************************/
 
-sVec<uPtr<amqp::reader::IValue>>
+sVec<uPtr<amqp::serialiser::reader::IValue>>
 amqp::internal::reader::
 CompositeReader::_dump (
         pn_data_t * data_,
@@ -102,7 +102,7 @@ CompositeReader::_dump (
 
     pn_data_next (data_);
 
-    sVec<uPtr<amqp::reader::IValue>> read;
+    sVec<uPtr<amqp::serialiser::reader::IValue>> read;
     read.reserve (fields.size());
 
     proton::is_list (data_);
@@ -128,7 +128,7 @@ CompositeReader::_dump (
 
 /******************************************************************************/
 
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 CompositeReader::dump (
     const std::string & name_,
@@ -137,7 +137,7 @@ CompositeReader::dump (
 {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedPair<sVec<uPtr<amqp::reader::IValue>>>> (
+    return std::make_unique<TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
         name_,
         _dump(data_, schema_));
 }
@@ -147,7 +147,7 @@ CompositeReader::dump (
 /**
  *
  */
-uPtr<amqp::reader::IValue>
+uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::reader::
 CompositeReader::dump (
     pn_data_t * data_,
@@ -155,7 +155,7 @@ CompositeReader::dump (
 {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedSingle<sVec<uPtr<amqp::reader::IValue>>>> (
+    return std::make_unique<TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
         _dump (data_, schema_));
 }
 

@@ -30,7 +30,7 @@ namespace amqp::internal::reader {
 
             std::string readString (pn_data_t *) const override;
 
-            std::unique_ptr<amqp::reader::IValue> dump(
+            std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
                 const amqp::schema::ISchema &) const override = 0;
