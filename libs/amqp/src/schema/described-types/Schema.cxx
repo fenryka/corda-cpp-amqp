@@ -1,5 +1,4 @@
 
-#include "amqp/src/schema/AMQPDescribed.h"
 #include "AMQPTypeNotation.h"
 
 #include "schema/ISchema.h"
@@ -62,18 +61,30 @@ Schema::types() const {
 
 /******************************************************************************/
 
-amqp::internal::schema::SchemaMap::const_iterator
+const amqp::schema::ISchemaElement &
 amqp::internal::schema::
 Schema::fromType (const std::string & type_) const {
-    return m_typeToDescriptor.find(type_);
+    auto rtn = m_typeToDescriptor.find (type_);
+
+    if (rtn == m_typeToDescriptor.end()) {
+        throw std::runtime_error ("ARSE");
+    } else {
+        return *((*rtn).second.get());
+    }
 }
 
 /******************************************************************************/
 
-amqp::internal::schema::SchemaMap::const_iterator
+const amqp::schema::ISchemaElement &
 amqp::internal::schema::
 Schema::fromDescriptor (const std::string & descriptor_) const {
-    return m_descriptorToType.find (descriptor_);
+    auto rtn = m_descriptorToType.find (descriptor_);
+
+    if (rtn == m_descriptorToType.end()) {
+        throw std::runtime_error ("ARSE");
+    } else {
+        return *((*rtn).second.get());
+    }
 }
 
 /******************************************************************************/

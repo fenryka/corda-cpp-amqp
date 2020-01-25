@@ -4,7 +4,7 @@ include_directories (include)
 include_directories (src/reader)
 include_directories (src/schema)
 include_directories (src/schema/descriptors)
-include_directories (src/schema/field-types)
+include_directories (src/schema/described-types/field-types)
 include_directories (src/schema/described-types)
 
 set (amqp_schema_sources
@@ -18,11 +18,11 @@ set (amqp_schema_sources
         src/schema/descriptors/corda-descriptors/EnvelopeDescriptor.cxx
         src/schema/descriptors/corda-descriptors/CompositeDescriptor.cxx
         src/schema/descriptors/corda-descriptors/RestrictedDescriptor.cxx
-        src/schema/field-types/Field.cxx
-        src/schema/field-types/PrimitiveField.cxx
-        src/schema/field-types/CompositeField.cxx
-        src/schema/field-types/RestrictedField.cxx
-        src/schema/field-types/ArrayField.cxx
+        src/schema/described-types/field-types/Field.cxx
+        src/schema/described-types/field-types/PrimitiveField.cxx
+        src/schema/described-types/field-types/CompositeField.cxx
+        src/schema/described-types/field-types/RestrictedField.cxx
+        src/schema/described-types/field-types/ArrayField.cxx
         src/schema/described-types/Schema.cxx
         src/schema/described-types/Choice.cxx
         src/schema/described-types/Envelope.cxx

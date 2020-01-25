@@ -20,7 +20,7 @@ namespace amqp::internal::schema::descriptors {
 
         ~ObjectDescriptor() final = default;
 
-        std::unique_ptr<AMQPDescribed> build (pn_data_t *) const override;
+        std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
 
         void readRaw (
                 pn_data_t *,

@@ -8,7 +8,7 @@
 
 const std::string
 amqp::internal::schema::
-ArrayField::m_fieldType {
+ArrayField::m_fieldType { // NOLINT
         "array"
 };
 

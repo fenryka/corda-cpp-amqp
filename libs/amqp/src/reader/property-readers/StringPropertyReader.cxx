@@ -51,7 +51,7 @@ amqp::internal::reader::
 StringPropertyReader::dump (
     const std::string & name_,
     pn_data_t * data_,
-    const SchemaType & schema_) const
+    const amqp::schema::ISchema & schema_) const
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
@@ -64,7 +64,7 @@ uPtr<amqp::reader::IValue>
 amqp::internal::reader::
 StringPropertyReader::dump (
         pn_data_t * data_,
-        const SchemaType & schema_) const
+        const amqp::schema::ISchema & schema_) const
 {
     return std::make_unique<TypedSingle<std::string>> (
             "\"" + proton::readAndNext<std::string> (data_) + "\"");

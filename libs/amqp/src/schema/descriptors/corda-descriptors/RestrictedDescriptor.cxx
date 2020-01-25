@@ -97,7 +97,7 @@ RestrictedDescriptor::RestrictedDescriptor (
  *
  ******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 RestrictedDescriptor::build (pn_data_t * data_) const {
     DBG ("RESTRICTED" << std::endl); // NOLINT

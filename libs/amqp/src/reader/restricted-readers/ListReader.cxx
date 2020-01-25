@@ -21,7 +21,7 @@ amqp::internal::reader::
 ListReader::dump (
     const std::string & name_,
     pn_data_t * data_,
-    const SchemaType & schema_
+    const amqp::schema::ISchema & schema_
 ) const {
     proton::auto_next an (data_);
 
@@ -36,7 +36,7 @@ uPtr<amqp::reader::IValue>
 amqp::internal::reader::
 ListReader::dump(
     pn_data_t * data_,
-    const SchemaType & schema_
+    const amqp::schema::ISchema & schema_
 ) const {
     proton::auto_next an (data_);
 
@@ -50,7 +50,7 @@ sList<uPtr<amqp::reader::IValue>>
 amqp::internal::reader::
 ListReader::dump_(
         pn_data_t * data_,
-        const SchemaType & schema_
+        const amqp::schema::ISchema & schema_
 ) const {
     proton::is_described (data_);
 

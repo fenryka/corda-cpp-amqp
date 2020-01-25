@@ -4,14 +4,13 @@
 
 #include <iosfwd>
 #include <string>
-
-#include "amqp/src/schema/AMQPDescribed.h"
+#include <amqp/include/schema/ISchema.h>
 
 /******************************************************************************/
 
 namespace amqp::internal::schema {
 
-    class Descriptor : public AMQPDescribed {
+    class Descriptor : public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Descriptor&);
 

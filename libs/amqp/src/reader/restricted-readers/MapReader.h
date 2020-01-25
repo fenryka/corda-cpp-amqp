@@ -16,7 +16,7 @@ namespace amqp::internal::reader {
 
             sVec<uPtr<amqp::reader::IValue>> dump_(
                     pn_data_t *,
-                    const SchemaType &) const;
+                    const amqp::schema::ISchema &) const;
 
         public :
             MapReader (
@@ -35,11 +35,11 @@ namespace amqp::internal::reader {
             std::unique_ptr<amqp::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
 
             std::unique_ptr<amqp::reader::IValue> dump(
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
     };
 
 }

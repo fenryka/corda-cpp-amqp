@@ -2,8 +2,6 @@
 
 /******************************************************************************/
 
-#include "amqp/src/schema/AMQPDescribed.h"
-
 #include "Schema.h"
 
 #include <iosfwd>
@@ -12,7 +10,7 @@
 
 namespace amqp::internal::schema {
 
-    class Envelope : public AMQPDescribed {
+    class Envelope : public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Envelope &);
 
@@ -27,7 +25,7 @@ namespace amqp::internal::schema {
                 std::unique_ptr<Schema> & schema_,
                 std::string descriptor_);
 
-            const ISchemaType & schema() const;
+            const amqp::schema::ISchema & schema() const;
 
             const std::string & descriptor() const;
     };

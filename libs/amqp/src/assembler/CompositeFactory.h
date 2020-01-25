@@ -22,9 +22,7 @@
 
 namespace amqp::internal::assembler {
 
-    class CompositeFactory
-        : public ICompositeFactory<schema::SchemaMap::const_iterator>
-    {
+    class CompositeFactory : public ICompositeFactory {
         private :
             using CompositePtr = uPtr<schema::Composite>;
             using EnvelopePtr  = uPtr<schema::Envelope>;
@@ -35,12 +33,12 @@ namespace amqp::internal::assembler {
         public :
             CompositeFactory() = default;
 
-            void process (const SchemaType &) override;
+            void process (const amqp::schema::ISchema &) override;
 
-            const std::shared_ptr<ReaderType> byType (
+            const std::shared_ptr<amqp::reader::IReader> byType (
                     const std::string &) override;
 
-            const std::shared_ptr<ReaderType> byDescriptor (
+            const std::shared_ptr<amqp::reader::IReader> byDescriptor (
                     const std::string &) override;
 
         private :

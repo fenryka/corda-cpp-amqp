@@ -3,7 +3,7 @@
 /******************************************************************************/
 
 const std::string
-amqp::internal::schema::RestrictedField::m_fieldType {
+amqp::internal::schema::RestrictedField::m_fieldType { // NOLINT
     "restricted"
 };
 

@@ -26,7 +26,7 @@ FieldDescriptor::FieldDescriptor (
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPDescribed>
+uPtr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 FieldDescriptor::build (pn_data_t * data_) const {
     DBG ("FIELD" << std::endl); // NOLINT

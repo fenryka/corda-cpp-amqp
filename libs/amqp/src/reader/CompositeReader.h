@@ -36,11 +36,11 @@ namespace amqp::internal::reader {
             std::unique_ptr<amqp::reader::IValue> dump(
                 const std::string &,
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
 
             std::unique_ptr<amqp::reader::IValue> dump(
                 pn_data_t *,
-                const SchemaType &) const override;
+                const amqp::schema::ISchema &) const override;
 
             const std::string & name() const override;
             const std::string & type() const override;
@@ -48,7 +48,7 @@ namespace amqp::internal::reader {
         private :
             std::vector<std::unique_ptr<amqp::reader::IValue>> _dump (
                 pn_data_t *,
-                const SchemaType &) const;
+                const amqp::schema::ISchema &) const;
     };
 
 }

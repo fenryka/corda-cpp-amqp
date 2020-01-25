@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <amqp/include/schema/ISchema.h>
 
-#include "amqp/src/schema/AMQPDescribed.h"
 #include "amqp/include/schema/SchemaDumpTargets.h"
 
 /******************************************************************************
@@ -73,7 +73,7 @@ namespace amqp::internal::schema::descriptors {
 
             void validateAndNext (pn_data_t *) const;
 
-            virtual std::unique_ptr<AMQPDescribed> build (pn_data_t *) const;
+            virtual std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const;
 
             void read (
                 pn_data_t *,

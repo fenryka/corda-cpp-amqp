@@ -32,7 +32,7 @@ AMQPDescriptor::symbol() const {
 
 /******************************************************************************/
 
-std::unique_ptr<amqp::AMQPDescribed>
+std::unique_ptr<amqp::schema::ISchemaElement>
 amqp::internal::schema::descriptors::
 AMQPDescriptor::build (pn_data_t *) const {
     throw std::runtime_error ("Should never be called");

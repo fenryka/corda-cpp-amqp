@@ -4,8 +4,6 @@
 
 #include <any>
 
-#include "amqp/src/schema/AMQPDescribed.h"
-
 #include "Schema.h"
 
 /******************************************************************************
@@ -46,11 +44,8 @@ namespace amqp::reader {
 
 namespace amqp::reader {
 
-    template <class SchemaIterator>
     class IReader {
         public :
-            using SchemaType = amqp::schema::ISchema<SchemaIterator>;
-
             virtual ~IReader() = default;
 
             virtual const std::string & name() const = 0;
@@ -62,11 +57,11 @@ namespace amqp::reader {
             virtual std::unique_ptr<IValue> dump(
                     const std::string &,
                     pn_data_t *,
-                    const SchemaType &) const = 0;
+                    const schema::ISchema &) const = 0;
 
             virtual std::unique_ptr<IValue> dump(
                     pn_data_t *,
-                    const SchemaType &) const = 0;
+                    const schema::ISchema &) const = 0;
     };
 
 }
