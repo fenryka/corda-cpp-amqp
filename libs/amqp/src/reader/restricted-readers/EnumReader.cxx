@@ -1,6 +1,6 @@
 #include "EnumReader.h"
 
-#include "reader/IReader.h"
+#include "serialiser/reader/IReader.h"
 #include "amqp/src/schema/descriptors/Descriptors.h"
 #include "descriptors/AMQPDescriptorRegistory.h"
 #include "proton-wrapper/include/proton_wrapper.h"

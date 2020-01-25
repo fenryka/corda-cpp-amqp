@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "described-types/Schema.h"
-#include "reader/IReader.h"
+#include "serialiser/reader/IReader.h"
 
 /******************************************************************************/
 

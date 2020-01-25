@@ -5,7 +5,7 @@
 #include "corda-utils/include/types.h"
 
 #include "schema/ISchema.h"
-#include "reader/IReader.h"
+#include "serialiser/reader/IReader.h"
 
 /******************************************************************************/
 

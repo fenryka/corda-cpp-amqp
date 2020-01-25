@@ -44,9 +44,9 @@ set (amqp_assembler_sources
 
 set (amqp_reader_sources
         src/reader/Reader.cxx
-        src/reader/PropertyReader.cxx
+        src/reader/property-readers/PropertyReader.cxx
         src/reader/CompositeReader.cxx
-        src/reader/RestrictedReader.cxx
+        src/reader/restricted-readers/RestrictedReader.cxx
         src/reader/property-readers/IntPropertyReader.cxx
         src/reader/property-readers/LongPropertyReader.cxx
         src/reader/property-readers/BoolPropertyReader.cxx
