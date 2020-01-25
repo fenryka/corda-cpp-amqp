@@ -14,7 +14,7 @@
 /******************************************************************************/
 
 const std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::m_name { // NOLINT
     "Composite Reader"
 };
@@ -24,7 +24,7 @@ CompositeReader::m_name { // NOLINT
  *
  ******************************************************************************/
 
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::CompositeReader (
         std::string type_,
         sVec<std::weak_ptr<Reader>> & readers_
@@ -43,7 +43,7 @@ CompositeReader::CompositeReader (
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::name() const {
     return m_name;
 }
@@ -51,7 +51,7 @@ CompositeReader::name() const {
 /******************************************************************************/
 
 const std::string &
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::type() const  {
     return m_type;
 }
@@ -59,7 +59,7 @@ CompositeReader::type() const  {
 /******************************************************************************/
 
 std::any
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::read (pn_data_t * data_) const {
     return std::any(1);
 }
@@ -67,7 +67,7 @@ CompositeReader::read (pn_data_t * data_) const {
 /******************************************************************************/
 
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::readString (pn_data_t * data_) const {
     pn_data_next (data_);
     proton::auto_enter ae (data_);
@@ -78,7 +78,7 @@ CompositeReader::readString (pn_data_t * data_) const {
 /******************************************************************************/
 
 sVec<uPtr<amqp::serialiser::reader::IValue>>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::_dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
@@ -129,7 +129,7 @@ CompositeReader::_dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::dump (
     const std::string & name_,
     pn_data_t * data_,
@@ -148,7 +148,7 @@ CompositeReader::dump (
  *
  */
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 CompositeReader::dump (
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const

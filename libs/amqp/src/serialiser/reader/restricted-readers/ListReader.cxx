@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 amqp::internal::schema::Restricted::RestrictedTypes
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ListReader::restrictedType() const {
     return internal::schema::Restricted::RestrictedTypes::list_t;
 }
@@ -17,7 +17,7 @@ ListReader::restrictedType() const {
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ListReader::dump (
     const std::string & name_,
     pn_data_t * data_,
@@ -33,7 +33,7 @@ ListReader::dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ListReader::dump(
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_
@@ -47,7 +47,7 @@ ListReader::dump(
 /******************************************************************************/
 
 sList<uPtr<amqp::serialiser::reader::IValue>>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ListReader::dump_(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_

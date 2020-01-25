@@ -29,8 +29,8 @@ namespace amqp::internal::assembler {
             using CompositePtr = uPtr<schema::Composite>;
             using EnvelopePtr  = uPtr<schema::Envelope>;
 
-            spStrMap_t<reader::Reader> m_readersByType;
-            spStrMap_t<reader::Reader> m_readersByDescriptor;
+            spStrMap_t<serialiser::reader::Reader> m_readersByType;
+            spStrMap_t<serialiser::reader::Reader> m_readersByDescriptor;
 
         public :
             CompositeFactory() = default;
@@ -44,25 +44,25 @@ namespace amqp::internal::assembler {
                     const std::string &) override;
 
         private :
-            std::shared_ptr<reader::Reader> process (
+            std::shared_ptr<serialiser::reader::Reader> process (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<reader::Reader> processComposite (
+            std::shared_ptr<serialiser::reader::Reader> processComposite (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<reader::Reader> processRestricted (
+            std::shared_ptr<serialiser::reader::Reader> processRestricted (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<reader::Reader> processList (
+            std::shared_ptr<serialiser::reader::Reader> processList (
                     const schema::List &);
 
-            std::shared_ptr<reader::Reader> processEnum (
+            std::shared_ptr<serialiser::reader::Reader> processEnum (
                     const schema::Enum &);
 
-            std::shared_ptr<reader::Reader> processMap (
+            std::shared_ptr<serialiser::reader::Reader> processMap (
                     const schema::Map &);
 
-            std::shared_ptr<reader::Reader> processArray (
+            std::shared_ptr<serialiser::reader::Reader> processArray (
                     const schema::Array &);
 
             decltype(m_readersByType)::mapped_type

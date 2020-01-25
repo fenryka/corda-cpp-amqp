@@ -19,11 +19,11 @@
 
 namespace {
 
-    using namespace amqp::internal::reader;
+    using namespace amqp::internal::serialiser::reader;
 
     std::map<
             std::string,
-            std::shared_ptr<amqp::internal::reader::PropertyReader>(*)()
+            std::shared_ptr<amqp::internal::serialiser::reader::PropertyReader>(*)()
     > propertyMap = { // NOLINT
         {
             "int", []() -> std::shared_ptr<PropertyReader> {
@@ -60,24 +60,24 @@ namespace {
  *
  ******************************************************************************/
 
-std::shared_ptr<amqp::internal::reader::PropertyReader>
-amqp::internal::reader::
+std::shared_ptr<amqp::internal::serialiser::reader::PropertyReader>
+amqp::internal::serialiser::reader::
 PropertyReader::make (const FieldPtr & field_) {
     return propertyMap[field_->type()]();
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::reader::PropertyReader>
-amqp::internal::reader::
+std::shared_ptr<amqp::internal::serialiser::reader::PropertyReader>
+amqp::internal::serialiser::reader::
 PropertyReader::make (const std::string & type_) {
     return propertyMap[type_]();
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::reader::PropertyReader>
-amqp::internal::reader::
+std::shared_ptr<amqp::internal::serialiser::reader::PropertyReader>
+amqp::internal::serialiser::reader::
 PropertyReader::make (const internal::schema::Field & field_) {
     return propertyMap[field_.type()]();
 }

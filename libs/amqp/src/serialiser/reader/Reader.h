@@ -13,7 +13,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::reader {
+namespace amqp::internal::serialiser::reader {
 
     class Value : public amqp::serialiser::reader::IValue {
         public :
@@ -150,83 +150,83 @@ namespace amqp::internal::reader {
 
 /******************************************************************************
  *
- * amqp::internal::reader::TypedSingle
+ * amqp::internal::serialiser::reader::TypedSingle
  *
  ******************************************************************************/
 
 template<typename T>
 inline std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<T>::dump() const {
     return std::to_string (m_value);
 }
 
 template<>
 inline std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<std::string>::dump() const {
     return m_value;
 }
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedSingle<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
-TypedSingle<sVec<uPtr<amqp::internal::reader::Single>>>::dump() const;
+amqp::internal::serialiser::reader::
+TypedSingle<sVec<uPtr<amqp::internal::serialiser::reader::Single>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
-TypedSingle<sList<uPtr<amqp::internal::reader::Single>>>::dump() const;
+amqp::internal::serialiser::reader::
+TypedSingle<sList<uPtr<amqp::internal::serialiser::reader::Single>>>::dump() const;
 
 /******************************************************************************
  *
- * amqp::internal::reader::TypedPair
+ * amqp::internal::serialiser::reader::TypedPair
  *
  ******************************************************************************/
 
 template<typename T>
 inline std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<T>::dump() const {
     return m_property + " : " + std::to_string (m_value);
 }
 
 template<>
 inline std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<std::string>::dump() const {
     return m_property + " : " + m_value;
 }
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
-TypedPair<sVec<uPtr<amqp::internal::reader::Pair>>>::dump() const;
+amqp::internal::serialiser::reader::
+TypedPair<sVec<uPtr<amqp::internal::serialiser::reader::Pair>>>::dump() const;
 
 template<>
 std::string
-amqp::internal::reader::
-TypedPair<sList<uPtr<amqp::internal::reader::Pair>>>::dump() const;
+amqp::internal::serialiser::reader::
+TypedPair<sList<uPtr<amqp::internal::serialiser::reader::Pair>>>::dump() const;
 
 /******************************************************************************
  *
@@ -234,7 +234,7 @@ TypedPair<sList<uPtr<amqp::internal::reader::Pair>>>::dump() const;
  *
  ******************************************************************************/
 
-namespace amqp::internal::reader  {
+namespace amqp::internal::serialiser::reader  {
 
     /**
      * Interface that represents an object that has the ability to consume

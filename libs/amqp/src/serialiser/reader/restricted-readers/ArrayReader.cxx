@@ -8,7 +8,7 @@
  *
  ******************************************************************************/
 
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ArrayReader::ArrayReader (
     std::string type_,
     std::weak_ptr<Reader> reader_
@@ -19,7 +19,7 @@ ArrayReader::ArrayReader (
 /******************************************************************************/
 
 amqp::internal::schema::Restricted::RestrictedTypes
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ArrayReader::restrictedType() const {
     return internal::schema::Restricted::RestrictedTypes::array_t;
 }
@@ -27,7 +27,7 @@ ArrayReader::restrictedType() const {
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ArrayReader::dump (
         const std::string & name_,
         pn_data_t * data_,
@@ -43,7 +43,7 @@ ArrayReader::dump (
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ArrayReader::dump(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
@@ -57,7 +57,7 @@ ArrayReader::dump(
 /******************************************************************************/
 
 sList<uPtr<amqp::serialiser::reader::IValue>>
-amqp::internal::reader::
+amqp::internal::serialiser::reader::
 ArrayReader::dump_(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
