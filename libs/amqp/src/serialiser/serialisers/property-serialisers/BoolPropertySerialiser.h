@@ -6,7 +6,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::serialiser {
+namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader>
     class BoolPropertySerialiser : public PropertySerialiser<Reader> {
@@ -25,13 +25,13 @@ namespace amqp::internal::serialiser {
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::BoolPropertySerialiser<Reader>::m_name { // NOLINT
+amqp::internal::serialiser::serialisers::BoolPropertySerialiser<Reader>::m_name { // NOLINT
         "Boolean Serialiser"
 };
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::BoolPropertySerialiser<Reader>::m_type { // NOLINT
+amqp::internal::serialiser::serialisers::BoolPropertySerialiser<Reader>::m_type { // NOLINT
         "bool"
 };
 

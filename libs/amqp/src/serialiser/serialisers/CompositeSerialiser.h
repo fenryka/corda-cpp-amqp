@@ -6,7 +6,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::serialiser {
+namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader>
     class CompositeSerialiser : public Serialiser<Reader> {
@@ -41,8 +41,8 @@ namespace amqp::internal::serialiser {
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::CompositeSerialiser<Reader>::m_name { // NOLINT
-        "Composite Serialiser"
+amqp::internal::serialiser::serialisers::CompositeSerialiser<Reader>::m_name { // NOLINT
+    "Composite Serialiser"
 };
 
 /******************************************************************************/

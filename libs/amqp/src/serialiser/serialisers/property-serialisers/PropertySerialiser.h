@@ -6,7 +6,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::serialiser {
+namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader>
     class PropertySerialiser : public Serialiser<Reader> {

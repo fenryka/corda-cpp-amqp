@@ -179,7 +179,7 @@ CompositeFactory::processComposite (
         assert (readers.back().lock());
     }
 
-    return std::make_shared<serialiser::CompositeSerialiser<serialiser::reader::CompositeReader>>(
+    return std::make_shared<serialiser::serialisers::CompositeSerialiser<serialiser::reader::CompositeReader>>(
             type_.name(), readers);
 }
 

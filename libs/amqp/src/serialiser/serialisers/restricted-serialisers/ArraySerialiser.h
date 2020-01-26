@@ -24,7 +24,7 @@ namespace amqp::internal::serialiser::serialisers {
               , m_serialiser (std::move (serialiser_))
             { }
 
-            decltype(m_serialiser) serialiser() const { return m_serialiser; }
+            const decltype(m_serialiser) & serialiser() const { return m_serialiser; }
     };
 
 }

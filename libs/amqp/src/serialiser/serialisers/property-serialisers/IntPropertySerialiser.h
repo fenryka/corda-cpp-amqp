@@ -8,7 +8,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::serialiser {
+namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader>
     class IntPropertySerialiser : public PropertySerialiser<Reader> {
@@ -27,13 +27,13 @@ namespace amqp::internal::serialiser {
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::IntPropertySerialiser<Reader>::m_name { // NOLINT
+amqp::internal::serialiser::serialisers::IntPropertySerialiser<Reader>::m_name { // NOLINT
         "Integer Serialiser"
 };
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::IntPropertySerialiser<Reader>::m_type { // NOLINT
+amqp::internal::serialiser::serialisers::IntPropertySerialiser<Reader>::m_type { // NOLINT
         "int"
 };
 

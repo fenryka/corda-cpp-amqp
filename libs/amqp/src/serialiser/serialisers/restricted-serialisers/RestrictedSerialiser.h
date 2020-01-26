@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-namespace amqp::internal::serialiser {
+namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader>
     class RestrictedSerialiser : public Serialiser<Reader> {
@@ -33,7 +33,7 @@ namespace amqp::internal::serialiser {
 
 template<typename Reader>
 const std::string
-        amqp::internal::serialiser::RestrictedSerialiser<Reader>::m_name { // NOLINT
+amqp::internal::serialiser::serialisers::RestrictedSerialiser<Reader>::m_name { // NOLINT
         "Restricted Serialiser"
 };
 
