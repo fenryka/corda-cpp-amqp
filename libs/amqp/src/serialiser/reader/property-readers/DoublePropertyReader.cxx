@@ -4,24 +4,6 @@
 
 /******************************************************************************
  *
- * DoublePropertyReader statics
- *
- ******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-DoublePropertyReader::m_name { // NOLINT
-    "Double Reader"
-};
-
-const std::string
-amqp::internal::serialiser::reader::
-DoublePropertyReader::m_type { // NOLINT
-    "double"
-};
-
-/******************************************************************************
- *
  * DoublePropertyReader
  *
  ******************************************************************************/
@@ -68,18 +50,3 @@ DoublePropertyReader::dump (
 
 /******************************************************************************/
 
-const std::string &
-amqp::internal::serialiser::reader::
-DoublePropertyReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-DoublePropertyReader::type() const {
-    return m_type;
-}
-
-/******************************************************************************/

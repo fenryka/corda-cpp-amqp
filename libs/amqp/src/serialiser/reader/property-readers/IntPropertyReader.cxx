@@ -1,4 +1,3 @@
-
 #include "IntPropertyReader.h"
 
 #include <any>
@@ -7,26 +6,6 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 #include "serialiser/reader/IReader.h"
-
-/******************************************************************************
- *
- * IntPropertyReader statics
- *
- ******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-IntPropertyReader::m_name { // NOLINT
-    "Int Reader"
-};
-
-/******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-IntPropertyReader::m_type { // NOLINT
-    "int"
-};
 
 /******************************************************************************
  *
@@ -76,18 +55,3 @@ IntPropertyReader::dump (
 
 /******************************************************************************/
 
-const std::string &
-amqp::internal::serialiser::reader::
-IntPropertyReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-IntPropertyReader::type() const {
-    return m_type;
-}
-
-/******************************************************************************/

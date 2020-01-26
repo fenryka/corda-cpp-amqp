@@ -6,26 +6,6 @@
 
 /******************************************************************************
  *
- * StringPropertyReader statics
- *
- ******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-StringPropertyReader::m_type { // NOLINT
-        "string"
-};
-
-/******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-StringPropertyReader::m_name { // NOLINT
-        "String Reader"
-};
-
-/******************************************************************************
- *
  * class StringPropertyReader
  *
  ******************************************************************************/
@@ -72,18 +52,3 @@ StringPropertyReader::dump (
 
 /******************************************************************************/
 
-const std::string &
-amqp::internal::serialiser::reader::
-StringPropertyReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-StringPropertyReader::type() const {
-    return m_type;
-}
-
-/******************************************************************************/

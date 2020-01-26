@@ -1,0 +1,56 @@
+#pragma once
+
+/******************************************************************************/
+
+#include <map>
+#include <string>
+#include <amqp/src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h>
+#include <amqp/src/serialiser/reader/restricted-readers/ListReader.h>
+
+#include "amqp/src/serialiser/Serialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/IntPropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/DoublePropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/LongPropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/BoolPropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/StringPropertySerialiser.h"
+
+#include "amqp/src/serialiser/reader/property-readers/IntPropertyReader.h"
+#include "amqp/src/serialiser/reader/property-readers/DoublePropertyReader.h"
+#include "amqp/src/serialiser/reader/property-readers/LongPropertyReader.h"
+#include "amqp/src/serialiser/reader/property-readers/BoolPropertyReader.h"
+#include "amqp/src/serialiser/reader/property-readers/StringPropertyReader.h"
+
+/******************************************************************************/
+
+namespace amqp::internal::serialiser::serialisers {
+
+    class SerialisersFactory {
+        public :
+            std::shared_ptr<amqp::serialiser::ISerialiser>
+            makePropertyReader (const std::string & type_) {
+                if (type_ == "int") {
+                    return std::make_shared<IntPropertySerialiser<reader::IntPropertyReader>>();
+                } else if (type_ == "long")  {
+                    return std::make_shared<LongPropertySerialiser<reader::LongPropertyReader>>();
+                } else if (type_ == "double")  {
+                    return std::make_shared<DoublePropertySerialiser<reader::DoublePropertyReader>>();
+                } else if (type_ == "bool")  {
+                    return std::make_shared<BoolPropertySerialiser<reader::BoolPropertyReader>>();
+                } else if (type_ == "string") {
+                    return std::make_shared<StringPropertySerialiser<reader::StringPropertyReader>>();
+                } else {
+                    throw std::runtime_error ("THIS IS BAD");
+                }
+        }
+
+        std::shared_ptr<amqp::serialiser::ISerialiser>
+        makeList (const std::string & type_, std::weak_ptr<amqp::serialiser::ISerialiser> serialser_) {
+            return std::make_shared<ListSerialiser<reader::ListReader>> (type_, serialser_);
+        }
+    };
+
+
+
+}
+
+/******************************************************************************/

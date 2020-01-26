@@ -2,21 +2,13 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/ArraySerialiser.h"
+
 /******************************************************************************
  *
  * class ArrayReader
  *
  ******************************************************************************/
-
-amqp::internal::serialiser::reader::
-ArrayReader::ArrayReader (
-    std::string type_,
-    std::weak_ptr<Reader> reader_
-) : RestrictedReader (std::move (type_))
-  , m_reader (std::move (reader_))
-{ }
-
-/******************************************************************************/
 
 amqp::internal::schema::Restricted::RestrictedTypes
 amqp::internal::serialiser::reader::
@@ -73,8 +65,10 @@ ArrayReader::dump_(
         {
             proton::auto_list_enter ale (data_, true);
 
+            auto reader = dynamic_cast<const serialisers::ArraySerialiser<ArrayReader> *>(this)->serialiser().lock();
+
             for (size_t i { 0 } ; i < ale.elements() ; ++i) {
-                read.emplace_back (m_reader.lock()->dump (data_, schema_));
+                read.emplace_back (reader->dump (data_, schema_));
             }
         }
     }

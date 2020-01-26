@@ -7,11 +7,20 @@
 #include <functional>
 
 #include <assert.h>
+#include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/RestrictedSerialiser.h"
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/ArraySerialiser.h"
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/MapSerialiser.h"
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/EnumSerialiser.h"
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h"
 
 #include "corda-utils/include/debug.h"
 
 #include "serialiser/reader/IReader.h"
 #include "amqp/src/serialiser/reader/property-readers/PropertyReader.h"
+
+#include "amqp/src/serialiser/serialisers/SerialiserFactory.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/PropertySerialiser.h"
 
 #include "amqp/src/serialiser/reader/Reader.h"
 #include "amqp/src/serialiser/reader/CompositeReader.h"
@@ -25,6 +34,16 @@
 #include "amqp/src/schema/restricted-types/List.h"
 #include "amqp/src/schema/restricted-types/Enum.h"
 #include "amqp/src/schema/restricted-types/Array.h"
+
+/******************************************************************************/
+
+/**
+ *
+ * YES, this global is bad and should be injected into the framework. It
+ * will be, right now this is a hack
+ *
+ */
+amqp::internal::serialiser::serialisers::SerialisersFactory g_sf;
 
 /******************************************************************************/
 
@@ -89,24 +108,24 @@ CompositeFactory::process (const amqp::schema::ISchema & schema_) {
     for (const auto & i : dynamic_cast<const schema::Schema &>(schema_)) {
         for (const auto & j : i) {
             process (*j);
-            m_readersByDescriptor[j->descriptor()] = m_readersByType[j->name()];
+            m_serialisersByDescriptor[j->descriptor()] = m_serialisersByType[j->name()];
         }
     }
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::process (
     const amqp::internal::schema::AMQPTypeNotation & schema_)
 {
     DBG ("process::" << schema_.name() << std::endl); // NOLINT
 
-    return computeIfAbsent<serialiser::reader::Reader> (
-        m_readersByType,
+    return computeIfAbsent<amqp::serialiser::ISerialiser> (
+        m_serialisersByType,
         schema_.name(),
-        [& schema_, this] () -> std::shared_ptr<serialiser::reader::Reader> {
+        [& schema_, this] () -> std::shared_ptr<amqp::serialiser::ISerialiser> {
             switch (schema_.type()) {
                 case schema::AMQPTypeNotation::composite_t : {
                     return processComposite (schema_);
@@ -120,13 +139,13 @@ CompositeFactory::process (
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processComposite (
         const amqp::internal::schema::AMQPTypeNotation & type_
 ) {
     DBG ("processComposite - " << type_.name() << std::endl); // NOLINT
-    std::vector<std::weak_ptr<serialiser::reader::Reader>> readers;
+    std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> readers;
 
     const auto & fields = dynamic_cast<const schema::Composite &> (
             type_).fields();
@@ -138,64 +157,65 @@ CompositeFactory::processComposite (
             << "\" {" << field->resolvedType() << "} "
             << field->fieldType() << std::endl); // NOLINT
 
-       decltype (m_readersByType)::mapped_type reader;
+        decltype (m_serialisersByType)::mapped_type serialiser;
 
         if (field->primitive()) {
-            reader = computeIfAbsent<serialiser::reader::Reader> (
-                    m_readersByType,
+            serialiser = computeIfAbsent<amqp::serialiser::ISerialiser> (
+                    m_serialisersByType,
                     field->resolvedType(),
-                    [&field]() -> std::shared_ptr<serialiser::reader::PropertyReader> {
-                        return serialiser::reader::PropertyReader::make (field);
+                    [&field]() -> sPtr<amqp::serialiser::ISerialiser> {
+                        return g_sf.makePropertyReader (field->type());
                     });
         }
         else {
             // Insertion sorting ensures any type we depend on will have
             // already been created and thus exist in the map
-            reader = m_readersByType[field->resolvedType()];
+            serialiser = m_serialisersByType[field->resolvedType()];
         }
 
 
-        assert (reader);
-        readers.emplace_back (reader);
+        assert (serialiser);
+        readers.emplace_back (serialiser);
         assert (readers.back().lock());
     }
 
-    return std::make_shared<serialiser::reader::CompositeReader> (type_.name(), readers);
+    return std::make_shared<serialiser::CompositeSerialiser<serialiser::reader::CompositeReader>>(
+            type_.name(), readers);
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processEnum (
     const amqp::internal::schema::Enum & enum_
 ) {
     DBG ("Processing Enum - " << enum_.name() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::reader::EnumReader> (
+    return std::make_shared<serialiser::serialisers::EnumSerialiser<serialiser::reader::EnumReader>> (
         enum_.name(),
         enum_.makeChoices());
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::fetchReaderForRestricted (const std::string & type_) {
-    decltype(m_readersByType)::mapped_type rtn;
+    decltype(m_serialisersByType)::mapped_type rtn;
 
     DBG ("fetchReaderForRestricted - " << type_ << std::endl); // NOLINT
 
     if (schema::Field::typeIsPrimitive(type_)) {
         DBG ("It's primitive" << std::endl); // NOLINT
-        rtn = computeIfAbsent<serialiser::reader::Reader>(
-                m_readersByType,
+        rtn = computeIfAbsent<amqp::serialiser::ISerialiser> (
+                m_serialisersByType,
                 type_,
-                [& type_]() -> std::shared_ptr<serialiser::reader::PropertyReader> {
-                    return serialiser::reader::PropertyReader::make (type_);
+                [& type_]() -> sPtr<amqp::serialiser::ISerialiser> {
+                    return g_sf.makePropertyReader (type_);
                 });
     } else {
-        rtn = m_readersByType[type_];
+        rtn = m_serialisersByType[type_];
     }
 
     if (!rtn) {
@@ -207,7 +227,7 @@ CompositeFactory::fetchReaderForRestricted (const std::string & type_) {
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processMap (
     const amqp::internal::schema::Map & map_
@@ -218,7 +238,7 @@ CompositeFactory::processMap (
 
     const auto types = map_.mapOf();
 
-    return std::make_shared<serialiser::reader::MapReader> (
+    return std::make_shared<serialiser::serialisers::MapSerialiser<serialiser::reader::MapReader>> (
             map_.name(),
             fetchReaderForRestricted (types.first),
             fetchReaderForRestricted (types.second));
@@ -226,35 +246,35 @@ CompositeFactory::processMap (
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processList (
     const amqp::internal::schema::List & list_
 ) {
     DBG ("Processing List - " << list_.listOf() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::reader::ListReader> (
+    return std::make_shared<serialiser::serialisers::ListSerialiser<serialiser::reader::ListReader>> (
             list_.name(),
             fetchReaderForRestricted (list_.listOf()));
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processArray (
         const amqp::internal::schema::Array & array_
 ) {
     DBG ("Processing Array - " << array_.name() << " " << array_.arrayOf() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::reader::ArrayReader> (
+    return std::make_shared<serialiser::serialisers::ArraySerialiser<serialiser::reader::ArrayReader>> (
             array_.name(),
             fetchReaderForRestricted (array_.arrayOf()));
 }
 
 /******************************************************************************/
 
-std::shared_ptr<amqp::internal::serialiser::reader::Reader>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::processRestricted (
         const amqp::internal::schema::AMQPTypeNotation & type_)
@@ -289,22 +309,22 @@ CompositeFactory::processRestricted (
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::serialiser::reader::IReader>
+const sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byType (const std::string & type_) {
-    auto it = m_readersByType.find (type_);
+    auto it = m_serialisersByType.find (type_);
 
-    return (it == m_readersByType.end()) ? nullptr : it->second;
+    return (it == m_serialisersByType.end()) ? nullptr : it->second;
 }
 
 /******************************************************************************/
 
-const std::shared_ptr<amqp::serialiser::reader::IReader>
+const sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byDescriptor (const std::string & descriptor_) {
-    auto it = m_readersByDescriptor.find (descriptor_);
+    auto it = m_serialisersByDescriptor.find (descriptor_);
 
-    return (it == m_readersByDescriptor.end()) ? nullptr : it->second;
+    return (it == m_serialisersByDescriptor.end()) ? nullptr : it->second;
 }
 
 /******************************************************************************/

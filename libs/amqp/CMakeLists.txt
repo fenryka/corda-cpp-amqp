@@ -1,3 +1,6 @@
+# Make it OK to convert relatvie paths when adding interface sources to targets
+CMAKE_POLICY (SET CMP0076 NEW)
+
 set (libName amqp)
 
 include_directories (include)
@@ -42,11 +45,12 @@ set (amqp_assembler_sources
         src/assembler/CompositeFactory.cxx
      )
 
+set (amqp_serialiser_sources
+        )
+
 set (amqp_reader_sources
         src/serialiser/reader/Reader.cxx
-        src/serialiser/reader/property-readers/PropertyReader.cxx
         src/serialiser/reader/CompositeReader.cxx
-        src/serialiser/reader/restricted-readers/RestrictedReader.cxx
         src/serialiser/reader/property-readers/IntPropertyReader.cxx
         src/serialiser/reader/property-readers/LongPropertyReader.cxx
         src/serialiser/reader/property-readers/BoolPropertyReader.cxx
@@ -58,11 +62,29 @@ set (amqp_reader_sources
         src/serialiser/reader/restricted-readers/EnumReader.cxx
         )
 
+set (amqp_serialiser_interface
+        src/serialiser/Serialiser.h
+        src/serialiser/serialisers/SerialiserFactory.h
+        src/serialiser/serialisers/CompositeSerialiser.h
+        src/serialiser/serialisers/restricted-serialisers/RestrictedSerialiser.h
+        src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h
+        src/serialiser/serialisers/restricted-serialisers/EnumSerialiser.h
+        src/serialiser/serialisers/restricted-serialisers/MapSerialiser.h
+        src/serialiser/serialisers/property-serialisers/PropertySerialiser.h
+        src/serialiser/serialisers/property-serialisers/BoolPropertySerialiser.h
+        src/serialiser/serialisers/property-serialisers/DoublePropertySerialiser.h
+        src/serialiser/serialisers/property-serialisers/IntPropertySerialiser.h
+        src/serialiser/serialisers/property-serialisers/LongPropertySerialiser.h
+        src/serialiser/serialisers/property-serialisers/StringPropertySerialiser.h
+        )
+
 set (amqp_sources
         src/AMQPBlob.cxx
         src/CordaBytes.cxx)
 
-ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_reader_sources} ${amqp_schema_sources} ${amqp_assembler_sources})
+ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_serialiser_sources} ${amqp_reader_sources} ${amqp_schema_sources} ${amqp_assembler_sources} )
+
+TARGET_SOURCES ( ${libName} INTERFACE ${amqp_serialiser_interface} )
 
 SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
 SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)

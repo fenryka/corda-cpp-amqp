@@ -1,5 +1,7 @@
 #include "ListReader.h"
 
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h"
+
 #include "proton-wrapper/include/proton_wrapper.h"
 
 /******************************************************************************
@@ -63,8 +65,11 @@ ListReader::dump_(
         {
             proton::auto_list_enter ale (data_, true);
 
+            auto reader = dynamic_cast<const serialisers::ListSerialiser<ListReader> *>(this)->serialiser().lock();
+
             for (size_t i { 0 } ; i < ale.elements() ; ++i) {
-                read.emplace_back (m_reader.lock()->dump (data_, schema_));
+                // This feels a bit like a hack... but we do know this is what we actually are so it might be ok
+                read.emplace_back (reader->dump (data_, schema_));
             }
         }
     }

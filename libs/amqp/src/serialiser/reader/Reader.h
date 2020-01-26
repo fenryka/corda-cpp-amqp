@@ -251,9 +251,6 @@ namespace amqp::internal::serialiser::reader  {
         public :
             ~Reader() override = default;
 
-            const std::string & name() const override = 0;
-            const std::string & type() const override = 0;
-
             std::any read (struct pn_data_t *) const override = 0;
             std::string readString (struct pn_data_t *) const override = 0;
 
@@ -270,4 +267,3 @@ namespace amqp::internal::serialiser::reader  {
 }
 
 /******************************************************************************/
-
