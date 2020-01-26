@@ -3,17 +3,17 @@
 /******************************************************************************/
 
 #include "PropertySerialiser.h"
+#include "BoolPropertySerialiserBase.h"
 
 /******************************************************************************/
 
 namespace amqp::internal::serialiser::serialisers {
 
-    template <class Reader>
-    class BoolPropertySerialiser : public PropertySerialiser<Reader> {
-        private :
-            static const std::string m_name;
-            static const std::string m_type;
-
+    template <class Reader, class Writer>
+    class BoolPropertySerialiser
+            : public PropertySerialiser<Reader, Writer>
+            , public BoolPropertySerialiserBase
+    {
         public :
             const std::string & name() const override { return m_name; }
             const std::string & type() const override { return m_type; }
@@ -23,16 +23,3 @@ namespace amqp::internal::serialiser::serialisers {
 
 /******************************************************************************/
 
-template<typename Reader>
-const std::string
-amqp::internal::serialiser::serialisers::BoolPropertySerialiser<Reader>::m_name { // NOLINT
-        "Boolean Serialiser"
-};
-
-template<typename Reader>
-const std::string
-amqp::internal::serialiser::serialisers::BoolPropertySerialiser<Reader>::m_type { // NOLINT
-        "bool"
-};
-
-/******************************************************************************/

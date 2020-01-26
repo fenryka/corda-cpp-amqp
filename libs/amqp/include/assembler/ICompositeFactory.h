@@ -18,10 +18,10 @@ namespace amqp {
 
             virtual ~ICompositeFactory() = default;
 
-            virtual void process (const amqp::schema::ISchema &) = 0;
+            virtual void process (const schema::ISchema &) = 0;
 
-            virtual const std::shared_ptr<amqp::serialiser::ISerialiser> byType (const std::string &) = 0;
-            virtual const std::shared_ptr<amqp::serialiser::ISerialiser> byDescriptor (const std::string &) = 0;
+            virtual const std::shared_ptr<serialiser::ISerialiser> byType (const std::string &) = 0;
+            virtual const std::shared_ptr<serialiser::ISerialiser> byDescriptor (const std::string &) = 0;
     };
 
 }

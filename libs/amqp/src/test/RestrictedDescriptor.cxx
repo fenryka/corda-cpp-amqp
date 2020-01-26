@@ -13,11 +13,11 @@ TEST (RestrictedDescriptor, makePrim2) { // NOLINT
 }
 
 TEST (RestrictedDescriptor, makePrim3) { // NOLINT
-    EXPECT_EQ ("java.lang.integer", RestrictedDescriptor::makePrim ("int"));
+    EXPECT_EQ ("int", RestrictedDescriptor::makePrim ("java.lang.Integer"));
 }
 
 TEST (RestrictedDescriptor, makePrim4) { // NOLINT
-    EXPECT_EQ ("java.lang.integer[]", RestrictedDescriptor::makePrim ("int[]"));
+    EXPECT_EQ ("int[]", RestrictedDescriptor::makePrim ("java.lang.Integer[]"));
 }
 
 TEST (RestrictedDescriptor, makePrim5) { // NOLINT§

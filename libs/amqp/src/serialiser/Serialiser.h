@@ -8,11 +8,21 @@
 
 namespace amqp::internal::serialiser {
 
-    template<class Reader>
-    class Serialiser : public amqp::serialiser::ISerialiser, public Reader {
+    template<class Reader, class Writer>
+    class Serialiser
+            : public amqp::serialiser::ISerialiser
+            , public Reader
+            , public Writer
+     {
         public :
             const std::string & name() const override = 0;
             const std::string & type() const override = 0;
+
+            /******************************************************************
+             *
+             * Reader Interface
+             *
+             ******************************************************************/
 
             std::any read (pn_data_t * data_) const override  {
                 return Reader::read (data_);
@@ -36,8 +46,19 @@ namespace amqp::internal::serialiser {
             ) const override {
                 return Reader::dump (data_, schema_);
             }
+
+            /******************************************************************
+             *
+             * Writer Interface
+             *
+             ******************************************************************/
+
+            void write (std::any val_, pn_data_t * data_) const override {
+                Writer::write (val_, data_);
+            }
     };
 
 }
 
 /******************************************************************************/
+

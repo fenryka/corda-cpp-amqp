@@ -5,6 +5,7 @@
 #include <string>
 
 #include "reader/IReader.h"
+#include "writer/IWriter.h"
 
 /******************************************************************************/
 
@@ -15,10 +16,21 @@ namespace amqp::serialiser {
      * from a stream encapsulated by the serailser. This should let us plug various readers
      * and writers into the same generic mechanism
      */
-    class ISerialiser : public reader::IReader {
+    class ISerialiser : public reader::IReader, public writer::IWriter {
+        private :
+            static const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> m_empty;
+
         public :
             virtual const std::string & name() const = 0;
             virtual const std::string & type() const = 0;
+
+            /*
+             * Non primitive serializers have sub elements, this should return a reference
+             * to those
+             */
+            virtual const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> & serialisers() const {
+                return m_empty;
+            }
 
             /*
              * Redeclare the IReader interface
@@ -34,6 +46,11 @@ namespace amqp::serialiser {
             std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 pn_data_t *,
                 const schema::ISchema &) const override = 0;
+
+            /*
+             * Redeclare the IWriter interface
+             */
+            void write (std::any, pn_data_t *) const override = 0;
     };
 
 }

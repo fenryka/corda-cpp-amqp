@@ -19,8 +19,10 @@
 #include "serialiser/reader/IReader.h"
 #include "amqp/src/serialiser/reader/property-readers/PropertyReader.h"
 
-#include "amqp/src/serialiser/serialisers/SerialiserFactory.h"
+#include "amqp/src/serialiser/SerialiserFactory.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/PropertySerialiser.h"
+
+#include "amqp/src/serialiser/writer/Writer.h"
 
 #include "amqp/src/serialiser/reader/Reader.h"
 #include "amqp/src/serialiser/reader/CompositeReader.h"
@@ -179,8 +181,10 @@ CompositeFactory::processComposite (
         assert (readers.back().lock());
     }
 
-    return std::make_shared<serialiser::serialisers::CompositeSerialiser<serialiser::reader::CompositeReader>>(
-            type_.name(), readers);
+    return std::make_shared<serialiser::serialisers::CompositeSerialiser<
+            serialiser::reader::CompositeReader,
+            serialiser::writer::Writer>
+    > (type_.name(), readers);
 }
 
 /******************************************************************************/
@@ -192,9 +196,11 @@ CompositeFactory::processEnum (
 ) {
     DBG ("Processing Enum - " << enum_.name() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::serialisers::EnumSerialiser<serialiser::reader::EnumReader>> (
-        enum_.name(),
-        enum_.makeChoices());
+    return std::make_shared<serialiser::serialisers::EnumSerialiser<
+            serialiser::reader::EnumReader,
+            serialiser::writer::Writer>
+    > (enum_.name(),
+       enum_.makeChoices());
 }
 
 /******************************************************************************/
@@ -238,10 +244,12 @@ CompositeFactory::processMap (
 
     const auto types = map_.mapOf();
 
-    return std::make_shared<serialiser::serialisers::MapSerialiser<serialiser::reader::MapReader>> (
-            map_.name(),
-            fetchReaderForRestricted (types.first),
-            fetchReaderForRestricted (types.second));
+    return std::make_shared<serialiser::serialisers::MapSerialiser<
+            serialiser::reader::MapReader,
+            serialiser::writer::Writer>
+    > (map_.name(),
+       fetchReaderForRestricted (types.first),
+       fetchReaderForRestricted (types.second));
 }
 
 /******************************************************************************/
@@ -253,9 +261,11 @@ CompositeFactory::processList (
 ) {
     DBG ("Processing List - " << list_.listOf() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::serialisers::ListSerialiser<serialiser::reader::ListReader>> (
-            list_.name(),
-            fetchReaderForRestricted (list_.listOf()));
+    return std::make_shared<serialiser::serialisers::ListSerialiser<
+            serialiser::reader::ListReader,
+            serialiser::writer::Writer>
+     > (list_.name(),
+        fetchReaderForRestricted (list_.listOf()));
 }
 
 /******************************************************************************/
@@ -267,9 +277,11 @@ CompositeFactory::processArray (
 ) {
     DBG ("Processing Array - " << array_.name() << " " << array_.arrayOf() << std::endl); // NOLINT
 
-    return std::make_shared<serialiser::serialisers::ArraySerialiser<serialiser::reader::ArrayReader>> (
-            array_.name(),
-            fetchReaderForRestricted (array_.arrayOf()));
+    return std::make_shared<serialiser::serialisers::ArraySerialiser<
+            serialiser::reader::ArrayReader,
+            serialiser::writer::Writer>
+     > (array_.name(),
+        fetchReaderForRestricted (array_.arrayOf()));
 }
 
 /******************************************************************************/

@@ -9,8 +9,8 @@
 
 namespace amqp::internal::serialiser::serialisers {
 
-    template <class Reader>
-    class RestrictedSerialiser : public Serialiser<Reader> {
+    template <class Reader, class Writer>
+    class RestrictedSerialiser : public Serialiser<Reader, Writer> {
         private :
             static const std::string m_name;
             std::string m_type;
@@ -31,9 +31,9 @@ namespace amqp::internal::serialiser::serialisers {
 
 /******************************************************************************/
 
-template<typename Reader>
+template<class Reader, class Writer>
 const std::string
-amqp::internal::serialiser::serialisers::RestrictedSerialiser<Reader>::m_name { // NOLINT
+amqp::internal::serialiser::serialisers::RestrictedSerialiser<Reader, Writer>::m_name { // NOLINT
         "Restricted Serialiser"
 };
 

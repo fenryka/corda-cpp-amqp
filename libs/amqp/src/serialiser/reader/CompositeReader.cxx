@@ -57,7 +57,7 @@ CompositeReader::_dump (
     auto & fields = dynamic_cast<const schema::Composite &> (
             it).fields();
 
-    auto parent = dynamic_cast<const amqp::internal::serialiser::serialisers::CompositeSerialiser<CompositeReader> *>(this);
+    auto parent = dynamic_cast<const amqp::serialiser::ISerialiser *>(this);
 
     assert (fields.size() == parent->serialisers().size());
 

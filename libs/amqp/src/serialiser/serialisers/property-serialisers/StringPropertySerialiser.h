@@ -3,17 +3,17 @@
 /******************************************************************************/
 
 #include "PropertySerialiser.h"
+#include "StringPropertySerialiserBase.h"
 
 /******************************************************************************/
 
 namespace amqp::internal::serialiser::serialisers {
 
-    template <class Reader>
-    class StringPropertySerialiser : public PropertySerialiser<Reader> {
-        private :
-            static const std::string m_name;
-            static const std::string m_type;
-
+    template <class Reader, class Writer>
+    class StringPropertySerialiser
+            : public PropertySerialiser<Reader, Writer>
+            , public StringPropertySerialiserBase
+    {
         public :
             const std::string & name() const override {
                 return m_name;
@@ -28,16 +28,3 @@ namespace amqp::internal::serialiser::serialisers {
 
 /******************************************************************************/
 
-template<typename Reader>
-const std::string
-amqp::internal::serialiser::serialisers::StringPropertySerialiser<Reader>::m_name { // NOLINT
-    "String Serialiser"
-};
-
-template<typename Reader>
-const std::string
-amqp::internal::serialiser::serialisers::StringPropertySerialiser<Reader>::m_type { // NOLINT
-    "string"
-};
-
-/******************************************************************************/

@@ -65,7 +65,7 @@ ListReader::dump_(
         {
             proton::auto_list_enter ale (data_, true);
 
-            auto reader = dynamic_cast<const serialisers::ListSerialiser<ListReader> *>(this)->serialiser().lock();
+            auto reader = dynamic_cast<const amqp::serialiser::ISerialiser *>(this)->serialisers()[0].lock();
 
             for (size_t i { 0 } ; i < ale.elements() ; ++i) {
                 // This feels a bit like a hack... but we do know this is what we actually are so it might be ok

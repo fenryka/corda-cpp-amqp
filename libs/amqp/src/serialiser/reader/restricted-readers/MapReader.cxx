@@ -38,8 +38,10 @@ MapReader::dump_(
         decltype (dump_(data_, schema_)) rtn;
         rtn.reserve (am.elements() / 2);
 
-        auto keyReader = dynamic_cast<const serialisers::MapSerialiser<MapReader> *>(this)->keySerialiser().lock();
-        auto valueReader = dynamic_cast<const serialisers::MapSerialiser<MapReader> *>(this)->valueSerialiser().lock();
+        auto serialisers = (dynamic_cast<const amqp::serialiser::ISerialiser *>(this))->serialisers();
+
+        auto keyReader = serialisers[0].lock();
+        auto valueReader = serialisers[0].lock();
 
         for (int i {0} ; i < am.elements() ; i += 2) {
             rtn.emplace_back (

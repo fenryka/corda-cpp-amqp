@@ -65,7 +65,7 @@ ArrayReader::dump_(
         {
             proton::auto_list_enter ale (data_, true);
 
-            auto reader = dynamic_cast<const serialisers::ArraySerialiser<ArrayReader> *>(this)->serialiser().lock();
+            auto reader = dynamic_cast<const amqp::serialiser::ISerialiser *>(this)->serialisers()[0].lock();
 
             for (size_t i { 0 } ; i < ale.elements() ; ++i) {
                 read.emplace_back (reader->dump (data_, schema_));

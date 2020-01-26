@@ -8,8 +8,8 @@
 
 namespace amqp::internal::serialiser::serialisers {
 
-    template <class Reader>
-    class CompositeSerialiser : public Serialiser<Reader> {
+    template <class Reader, class Writer>
+    class CompositeSerialiser : public Serialiser<Reader, Writer> {
         private :
             static const std::string m_name;
             std::string m_type;
@@ -32,16 +32,16 @@ namespace amqp::internal::serialiser::serialisers {
                 return m_type;
             }
 
-            const decltype (m_serialisers) & serialisers() const { return m_serialisers; }
+            const decltype (m_serialisers) & serialisers() const override { return m_serialisers; }
     };
 
 }
 
 /******************************************************************************/
 
-template<typename Reader>
+template<class Reader, class Writer>
 const std::string
-amqp::internal::serialiser::serialisers::CompositeSerialiser<Reader>::m_name { // NOLINT
+amqp::internal::serialiser::serialisers::CompositeSerialiser<Reader, Writer>::m_name { // NOLINT
     "Composite Serialiser"
 };
 

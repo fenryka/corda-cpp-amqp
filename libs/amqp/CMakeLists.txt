@@ -46,6 +46,12 @@ set (amqp_assembler_sources
      )
 
 set (amqp_serialiser_sources
+        src/serialiser/ISerialiser.cxx
+        src/serialiser/serialisers/property-serialisers/StringPropertySerialiserBase.cxx
+        src/serialiser/serialisers/property-serialisers/BoolPropertySerialiserBase.cxx
+        src/serialiser/serialisers/property-serialisers/DoublePropertySerialiserBase.cxx
+        src/serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.cxx
+        src/serialiser/serialisers/property-serialisers/LongPropertySerialiserBase.cxx
         )
 
 set (amqp_reader_sources
@@ -62,9 +68,13 @@ set (amqp_reader_sources
         src/serialiser/reader/restricted-readers/EnumReader.cxx
         )
 
+set (amqp_writer_sources
+        src/serialiser/writer/Writer.cxx
+        )
+
 set (amqp_serialiser_interface
         src/serialiser/Serialiser.h
-        src/serialiser/serialisers/SerialiserFactory.h
+        src/serialiser/SerialiserFactory.h
         src/serialiser/serialisers/CompositeSerialiser.h
         src/serialiser/serialisers/restricted-serialisers/RestrictedSerialiser.h
         src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h
@@ -82,7 +92,7 @@ set (amqp_sources
         src/AMQPBlob.cxx
         src/CordaBytes.cxx)
 
-ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_serialiser_sources} ${amqp_reader_sources} ${amqp_schema_sources} ${amqp_assembler_sources} )
+ADD_LIBRARY ( ${libName} SHARED ${amqp_sources} ${amqp_serialiser_sources} ${amqp_reader_sources} ${amqp_writer_sources} ${amqp_schema_sources} ${amqp_assembler_sources} )
 
 TARGET_SOURCES ( ${libName} INTERFACE ${amqp_serialiser_interface} )
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <amqp/src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h>
 #include <amqp/src/serialiser/reader/restricted-readers/ListReader.h>
+#include <amqp/src/serialiser/writer/Writer.h>
 
 #include "amqp/src/serialiser/Serialiser.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/IntPropertySerialiser.h"
@@ -29,15 +30,30 @@ namespace amqp::internal::serialiser::serialisers {
             std::shared_ptr<amqp::serialiser::ISerialiser>
             makePropertyReader (const std::string & type_) {
                 if (type_ == "int") {
-                    return std::make_shared<IntPropertySerialiser<reader::IntPropertyReader>>();
+                    return std::make_shared<
+                            IntPropertySerialiser<
+                                    reader::IntPropertyReader,
+                                    writer::Writer>>();
                 } else if (type_ == "long")  {
-                    return std::make_shared<LongPropertySerialiser<reader::LongPropertyReader>>();
+                    return std::make_shared<
+                            LongPropertySerialiser<
+                                    reader::LongPropertyReader,
+                                    writer::Writer>>();
                 } else if (type_ == "double")  {
-                    return std::make_shared<DoublePropertySerialiser<reader::DoublePropertyReader>>();
+                    return std::make_shared<
+                            DoublePropertySerialiser<
+                                    reader::DoublePropertyReader,
+                                    writer::Writer>>();
                 } else if (type_ == "bool")  {
-                    return std::make_shared<BoolPropertySerialiser<reader::BoolPropertyReader>>();
+                    return std::make_shared<
+                            BoolPropertySerialiser<
+                                    reader::BoolPropertyReader,
+                                    writer::Writer>>();
                 } else if (type_ == "string") {
-                    return std::make_shared<StringPropertySerialiser<reader::StringPropertyReader>>();
+                    return std::make_shared<
+                            StringPropertySerialiser<
+                                    reader::StringPropertyReader,
+                                    writer::Writer>>();
                 } else {
                     throw std::runtime_error ("THIS IS BAD");
                 }
@@ -45,7 +61,7 @@ namespace amqp::internal::serialiser::serialisers {
 
         std::shared_ptr<amqp::serialiser::ISerialiser>
         makeList (const std::string & type_, std::weak_ptr<amqp::serialiser::ISerialiser> serialser_) {
-            return std::make_shared<ListSerialiser<reader::ListReader>> (type_, serialser_);
+            return std::make_shared<ListSerialiser<reader::ListReader, writer::Writer>> (type_, serialser_);
         }
     };
 
