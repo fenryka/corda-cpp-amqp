@@ -7,18 +7,6 @@
 
 /******************************************************************************/
 
-amqp::internal::serialiser::reader::
-EnumReader::EnumReader (
-    std::string type_,
-    std::vector<std::string> choices_
-) : RestrictedReader (std::move (type_))
-  , m_choices (std::move (choices_)
-) {
-
-}
-
-/******************************************************************************/
-
 namespace {
 
     std::string

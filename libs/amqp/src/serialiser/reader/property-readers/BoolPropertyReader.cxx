@@ -4,26 +4,6 @@
 
 /******************************************************************************
  *
- * BoolPropertyReader statics
- *
- ******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-BoolPropertyReader::m_name { // NOLINT
-        "Bool Reader"
-};
-
-/******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-BoolPropertyReader::m_type { // NOLINT
-        "bool"
-};
-
-/******************************************************************************
- *
  * BoolPropertyReader
  *
  ******************************************************************************/
@@ -70,18 +50,3 @@ BoolPropertyReader::dump (
 
 /******************************************************************************/
 
-const std::string &
-amqp::internal::serialiser::reader::
-BoolPropertyReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-BoolPropertyReader::type() const {
-    return m_type;
-}
-
-/******************************************************************************/

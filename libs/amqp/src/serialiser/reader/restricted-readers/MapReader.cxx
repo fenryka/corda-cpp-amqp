@@ -4,6 +4,8 @@
 #include "serialiser/reader/IReader.h"
 #include "proton-wrapper/include/proton_wrapper.h"
 
+#include "amqp/src/serialiser/serialisers/restricted-serialisers/MapSerialiser.h"
+
 /******************************************************************************/
 
 amqp::internal::schema::Restricted::RestrictedTypes
@@ -36,11 +38,14 @@ MapReader::dump_(
         decltype (dump_(data_, schema_)) rtn;
         rtn.reserve (am.elements() / 2);
 
+        auto keyReader = dynamic_cast<const serialisers::MapSerialiser<MapReader> *>(this)->keySerialiser().lock();
+        auto valueReader = dynamic_cast<const serialisers::MapSerialiser<MapReader> *>(this)->valueSerialiser().lock();
+
         for (int i {0} ; i < am.elements() ; i += 2) {
             rtn.emplace_back (
                 std::make_unique<ValuePair> (
-                    m_keyReader.lock()->dump (data_, schema_),
-                    m_valueReader.lock()->dump (data_, schema_)
+                    keyReader->dump (data_, schema_),
+                    valueReader->dump (data_, schema_)
                 )
             );
         }

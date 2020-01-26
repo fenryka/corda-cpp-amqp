@@ -5,10 +5,12 @@
 #include <map>
 #include <set>
 #include <memory>
+#include <amqp/src/serialiser/Serialiser.h>
 
 #include "corda-utils/include/types.h"
 
 #include "amqp/include/assembler/ICompositeFactory.h"
+#include "amqp/include/serialiser/ISerialiser.h"
 
 #include "amqp/src/serialiser/reader/CompositeReader.h"
 
@@ -29,43 +31,43 @@ namespace amqp::internal::assembler {
             using CompositePtr = uPtr<schema::Composite>;
             using EnvelopePtr  = uPtr<schema::Envelope>;
 
-            spStrMap_t<serialiser::reader::Reader> m_readersByType;
-            spStrMap_t<serialiser::reader::Reader> m_readersByDescriptor;
+            spStrMap_t<amqp::serialiser::ISerialiser> m_serialisersByType;
+            spStrMap_t<amqp::serialiser::ISerialiser> m_serialisersByDescriptor;
 
         public :
             CompositeFactory() = default;
 
             void process (const amqp::schema::ISchema &) override;
 
-            const std::shared_ptr<amqp::serialiser::reader::IReader> byType (
+            const sPtr<amqp::serialiser::ISerialiser> byType (
                     const std::string &) override;
 
-            const std::shared_ptr<amqp::serialiser::reader::IReader> byDescriptor (
+            const sPtr<amqp::serialiser::ISerialiser> byDescriptor (
                     const std::string &) override;
 
         private :
-            std::shared_ptr<serialiser::reader::Reader> process (
+            sPtr<amqp::serialiser::ISerialiser> process (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<serialiser::reader::Reader> processComposite (
+            sPtr<amqp::serialiser::ISerialiser> processComposite (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<serialiser::reader::Reader> processRestricted (
+            sPtr<amqp::serialiser::ISerialiser> processRestricted (
                     const schema::AMQPTypeNotation &);
 
-            std::shared_ptr<serialiser::reader::Reader> processList (
+            sPtr<amqp::serialiser::ISerialiser> processList (
                     const schema::List &);
 
-            std::shared_ptr<serialiser::reader::Reader> processEnum (
+            sPtr<amqp::serialiser::ISerialiser> processEnum (
                     const schema::Enum &);
 
-            std::shared_ptr<serialiser::reader::Reader> processMap (
+            sPtr<amqp::serialiser::ISerialiser> processMap (
                     const schema::Map &);
 
-            std::shared_ptr<serialiser::reader::Reader> processArray (
+            sPtr<amqp::serialiser::ISerialiser> processArray (
                     const schema::Array &);
 
-            decltype(m_readersByType)::mapped_type
+            decltype(m_serialisersByType)::mapped_type
             fetchReaderForRestricted (const std::string &);
     };
 

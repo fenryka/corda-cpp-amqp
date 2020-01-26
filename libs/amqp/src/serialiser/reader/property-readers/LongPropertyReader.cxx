@@ -4,26 +4,6 @@
 
 /******************************************************************************
  *
- * LongPropertyReader statics
- *
- ******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-LongPropertyReader::m_name { // NOLINT
-        "Long Reader"
-};
-
-/******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-LongPropertyReader::m_type { // NOLINT
-        "long"
-};
-
-/******************************************************************************
- *
  * LongPropertyReader
  *
  ******************************************************************************/
@@ -70,18 +50,3 @@ LongPropertyReader::dump (
 
 /******************************************************************************/
 
-const std::string &
-amqp::internal::serialiser::reader::
-LongPropertyReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-LongPropertyReader::type() const {
-    return m_type;
-}
-
-/******************************************************************************/

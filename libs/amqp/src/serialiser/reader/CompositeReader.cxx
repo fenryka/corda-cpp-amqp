@@ -6,57 +6,16 @@
 
 #include <proton/codec.h>
 #include <sstream>
+#include <amqp/src/serialiser/serialisers/CompositeSerialiser.h>
 #include "corda-utils/include/debug.h"
 #include "Reader.h"
 #include "serialiser/reader/IReader.h"
 #include "proton-wrapper/include/proton_wrapper.h"
 
-/******************************************************************************/
-
-const std::string
-amqp::internal::serialiser::reader::
-CompositeReader::m_name { // NOLINT
-    "Composite Reader"
-};
-
 /******************************************************************************
  *
  *
  ******************************************************************************/
-
-amqp::internal::serialiser::reader::
-CompositeReader::CompositeReader (
-        std::string type_,
-        sVec<std::weak_ptr<Reader>> & readers_
-) : m_readers (readers_)
-  , m_type (std::move (type_))
-{
-    DBG ("MAKE CompositeReader: " << m_type << ": " << m_readers.size() << std::endl); // NOLINT
-    for (auto const & reader : m_readers) {
-        assert (reader.lock());
-        if (auto r = reader.lock()) {
-            DBG ("  prop: " << r->name() << " " << r->type() << std::endl); // NOLINT
-        }
-    }
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-CompositeReader::name() const {
-    return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::serialiser::reader::
-CompositeReader::type() const  {
-    return m_type;
-}
-
-/******************************************************************************/
 
 std::any
 amqp::internal::serialiser::reader::
@@ -98,7 +57,9 @@ CompositeReader::_dump (
     auto & fields = dynamic_cast<const schema::Composite &> (
             it).fields();
 
-    assert (fields.size() == m_readers.size());
+    auto parent = dynamic_cast<const amqp::internal::serialiser::CompositeSerialiser<CompositeReader> *>(this);
+
+    assert (fields.size() == parent->serialisers().size());
 
     pn_data_next (data_);
 
@@ -109,8 +70,8 @@ CompositeReader::_dump (
     {
         proton::auto_enter ae2 { data_ };
 
-        for (size_t i (0) ; i < m_readers.size() ; ++i) {
-            if (auto l =  m_readers[i].lock()) {
+        for (size_t i (0) ; i < parent->serialisers().size() ; ++i) {
+            if (auto l =  parent->serialisers()[i].lock()) {
                 DBG (fields[i]->name() << " "
                     << (l ? "true" : "false") << std::endl); // NOLINT
 

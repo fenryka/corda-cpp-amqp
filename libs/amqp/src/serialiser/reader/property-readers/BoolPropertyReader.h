@@ -9,10 +9,6 @@
 namespace amqp::internal::serialiser::reader {
 
     class BoolPropertyReader : public PropertyReader {
-        private :
-            static const std::string m_name;
-            static const std::string m_type;
-
         public :
             std::string readString (pn_data_t *) const override;
 
@@ -28,9 +24,6 @@ namespace amqp::internal::serialiser::reader {
                 pn_data_t *,
                 const amqp::schema::ISchema &
             ) const override;
-
-            const std::string & name() const override;
-            const std::string & type() const override;
     };
 
 }
