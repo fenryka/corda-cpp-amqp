@@ -15,6 +15,7 @@
 #include "AMQPTypeNotation.h"
 
 #include <sstream>
+#include <cassert>
 
 /******************************************************************************/
 
