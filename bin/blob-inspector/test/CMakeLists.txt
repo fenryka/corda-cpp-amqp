@@ -22,8 +22,8 @@ endif()
 
 if (LINUX)
     target_link_libraries (${EXE} pthread qpid-proton proton)
-endif (UNIX)
+endif (LINUX)
 
 if (APPLE)
     target_link_libraries (${EXE} pthread qpid-proton)
-endif (UNIX)
+endif (APPLE)
