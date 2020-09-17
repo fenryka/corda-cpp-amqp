@@ -50,7 +50,7 @@ Google Test
  * cd /usr/src/googletest
  * sudo cmake .
  * sudo cmake --build . --target install
- 
+
  ### Windows
- 
+
  You're on your own. I have no idea how Windows works or how one builds code for it.

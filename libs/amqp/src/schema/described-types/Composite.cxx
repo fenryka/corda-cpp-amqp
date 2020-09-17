@@ -79,7 +79,6 @@ Composite::type() const {
  * type as the container elements, and returns true if the first argument is
  * considered to go before the second in the strict weak ordering it defines,
  * and false otherwise. ..."
-
  *
  * @param rhs
  * @return
@@ -117,7 +116,7 @@ Composite::dependsOnRHS (
     return 0;
 }
 
-/*********************************************************o*********************/
+/******************************************************************************/
 
 int
 amqp::internal::schema::

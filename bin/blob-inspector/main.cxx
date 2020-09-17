@@ -23,7 +23,7 @@ main (int argc, char **argv) {
     }
 
     amqp::CordaBytes cb (argv[1]);
-    
+
     if (cb.encoding() == amqp::DATA_AND_STOP) {
         BlobInspector blobInspector (cb);
         auto val = blobInspector.dump();
