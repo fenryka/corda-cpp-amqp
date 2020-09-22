@@ -106,7 +106,7 @@ Composite::dependsOnRHS (
     }
 
     // does the left hand side depend on us
-    for (const auto i : lhs_) {
+    for (const auto & i : lhs_) {
         DBG ("  C/R a) " << i << " == " << name() << std::endl); // NOLINT
         if (i == name()) {
             return 2;

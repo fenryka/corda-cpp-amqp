@@ -2,7 +2,7 @@
 
 #include <string>
 #include <iostream>
-#include <assert.h>
+#include <cassert>
 
 #include <proton/codec.h>
 #include <sstream>
@@ -43,9 +43,6 @@ CompositeReader::_dump (
         const amqp::schema::ISchema & schema_
 ) const {
     DBG ("Read Composite: "
-        << m_name
-        << " : "
-        << type()
         << std::endl); // NOLINT
 
     proton::is_described (data_);
