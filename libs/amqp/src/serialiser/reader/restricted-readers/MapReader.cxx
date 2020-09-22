@@ -65,6 +65,7 @@ MapReader::dump(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
 ) const {
+    DBG ("MapReader::dump " << name_ << std::endl);
     proton::auto_next an (data_);
 
     return std::make_unique<TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>>(
@@ -80,6 +81,8 @@ MapReader::dump(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
 ) const  {
+    DBG ("MapReader::dump no-name" << std::endl);
+
     proton::auto_next an (data_);
 
     return std::make_unique<TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>>(

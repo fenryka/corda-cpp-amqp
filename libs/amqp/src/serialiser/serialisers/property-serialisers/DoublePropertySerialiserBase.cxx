@@ -11,7 +11,7 @@ amqp::internal::serialiser::serialisers::DoublePropertySerialiserBase::m_name { 
 
 const std::string
 amqp::internal::serialiser::serialisers::DoublePropertySerialiserBase::m_type { // NOLINT
-        "Double"
+        "double"
 };
 
 /******************************************************************************/

@@ -12,7 +12,7 @@ namespace amqp::internal::serialiser::serialisers {
     template<class Reader, class Writer>
     class MapSerialiser : public RestrictedSerialiser<Reader, Writer> {
         private :
-            // How to serialiser the underlying types
+            // How to serialise the underlying types
             std::vector<std::weak_ptr <amqp::serialiser::ISerialiser>> m_serialisers;
 
         public :

@@ -42,8 +42,7 @@ CompositeReader::_dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
 ) const {
-    DBG ("Read Composite: "
-        << std::endl); // NOLINT
+    DBG ("Read Composite: " << std::endl); // NOLINT
 
     proton::is_described (data_);
     proton::auto_enter ae (data_);
