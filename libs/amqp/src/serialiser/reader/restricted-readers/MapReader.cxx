@@ -1,5 +1,7 @@
 #include "MapReader.h"
 
+#include <cassert>
+
 #include "Reader.h"
 #include "serialiser/reader/IReader.h"
 #include "proton-wrapper/include/proton_wrapper.h"
