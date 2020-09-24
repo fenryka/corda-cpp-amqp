@@ -33,6 +33,7 @@ StringPropertyReader::dump (
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const
 {
+    DBG ("StringPropertyReader::dump - " << name_ << std::endl);
     return std::make_unique<TypedPair<std::string>> (
             name_,
             "\"" + proton::readAndNext<std::string> (data_) + "\"");
@@ -46,6 +47,7 @@ StringPropertyReader::dump (
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_) const
 {
+    DBG ("StringPropertyReader::dump - no-name" << std::endl);
     return std::make_unique<TypedSingle<std::string>> (
             "\"" + proton::readAndNext<std::string> (data_) + "\"");
 }
