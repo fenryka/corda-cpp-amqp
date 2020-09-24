@@ -40,8 +40,10 @@ MapReader::dump_(
 
         auto serialisers = (dynamic_cast<const amqp::serialiser::ISerialiser *>(this))->serialisers();
 
+        assert (serialisers.size() == 2);
+
         auto keyReader = serialisers[0].lock();
-        auto valueReader = serialisers[0].lock();
+        auto valueReader = serialisers[1].lock();
 
         for (int i {0} ; i < am.elements() ; i += 2) {
             rtn.emplace_back (
