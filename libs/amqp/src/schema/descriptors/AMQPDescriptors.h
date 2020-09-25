@@ -32,16 +32,16 @@ namespace amqp::internal::schema::descriptors {
      */
     template<class T>
     uPtr <T>
-    dispatchDescribed(pn_data_t *data_) {
-        proton::is_described(data_);
-        proton::auto_enter p(data_);
-        proton::is_ulong(data_);
+    dispatchDescribed (pn_data_t *data_) {
+        proton::is_described (data_);
+        proton::auto_enter p (data_);
+        proton::is_ulong (data_);
 
-        auto id = pn_data_get_ulong(data_);
+        auto id = pn_data_get_ulong (data_);
 
-        return uPtr<T>(
-            static_cast<T *>(
-                AMQPDescriptorRegistory[id]->build(data_).release()));
+        return uPtr<T> (
+            static_cast<T *> (
+                AMQPDescriptorRegistory[id]->build (data_).release()));
     }
 }
 

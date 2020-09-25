@@ -5,7 +5,6 @@
 
 #include "amqp/src/schema/described-types/Envelope.h"
 #include "amqp/src/schema/descriptors/AMQPDescriptorRegistory.h"
-#include "amqp/include/assembler/ICompositeFactory.h"
 #include "amqp/src/assembler/CompositeFactory.h"
 
 #include "proton-wrapper/include/proton_wrapper.h"
@@ -26,15 +25,17 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
 
 /******************************************************************************/
 
-std::string
+auto
 amqp::
-AMQPBlob::dumpSchema(schema::DumpTarget target_) const {
+AMQPBlob::dumpSchema (schema::DumpTarget target_) const -> std::string {
     std::stringstream ss;
 
     if (pn_data_is_described (m_data)) {
         amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data,
                 ss,
                 target_);
+    } else {
+        throw std::invalid_argument("");
     }
 
     return ss.str();
@@ -42,6 +43,39 @@ AMQPBlob::dumpSchema(schema::DumpTarget target_) const {
 
 /******************************************************************************/
 
+/*
+ *
+ */
+auto
+amqp::
+AMQPBlob::dumpData() const -> std::string {
+    if (pn_data_is_described (m_data)) {
+        // move to the actual blob entry in the tree - ideally we'd have
+        // saved this on the Envelope but that's not easily doable as we
+        // can't grab an actual copy of our data pointer
+        proton::auto_enter p (m_data);
+        pn_data_next (m_data);
+        proton::is_list (m_data);
+
+        {
+            proton::auto_list_enter ale (m_data, true);
+
+            std::cout << m_data << std::endl;
+
+
+        }
+
+    }
+
+    return "";
+}
+
+/******************************************************************************/
+
+/*
+ * Read the contents of the blob out as a string matching data in the
+ * payload to elements from the schema
+ */
 std::string
 amqp::
 AMQPBlob::dumpContents() const {

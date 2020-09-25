@@ -1,12 +1,15 @@
 #include "SchemaUtils.h"
 
 #include <map>
-#include <string>
 
 /******************************************************************************/
 
 namespace {
 
+    /**
+     * Map Java boxed type names to the corresponding primitive
+     * C++ types
+     */
     std::map<std::string, std::string> boxedToUnboxed = { // NOLINT
             { "java.lang.Integer", "int" },
             { "java.lang.Boolean", "bool" },
@@ -18,6 +21,13 @@ namespace {
             { "java.lang.Double", "double" }
     };
 
+    /**
+     * The Corda serializer distinguishes between arrays of
+     * primitives and arrays of boxed types with the following
+     * markers.
+     *
+     * This isn't a concern in C++ given we don't have boxed types.
+     */
     const std::string array { "[]" }; // NOLINT
     const std::string primArray { "[p]" }; // NOLINT
 
@@ -95,8 +105,8 @@ isContainer (const std::string & type_) {
 /******************************************************************************/
 
 /**
- * Used to diferentiate between lists and arrays in the underlaying code
- * which the Corda serialisatoin scheme treats differently
+ * Used to differentiate between lists and arrays in the underlying code
+ * which the Corda serialisation scheme treats differently
  */
 bool
 amqp::internal::schema::types::
