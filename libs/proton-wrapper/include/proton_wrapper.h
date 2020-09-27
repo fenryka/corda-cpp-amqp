@@ -25,7 +25,9 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
-    void is_list(pn_data_t *);
+    void is_list (pn_data_t *, const std::string &, int);
+    void is_map (pn_data_t *, const std::string &, int);
+    bool is_primitive (pn_data_t *);
 
     void is_ulong(pn_data_t *);
 
@@ -33,8 +35,10 @@ namespace proton {
 
     void is_string(pn_data_t *, bool allowNull = false, const std::string & = __FILE__, int line = __LINE__);
 
-    void is_described(pn_data_t *);
+    void assert_described(pn_data_t *);
+    bool is_described(pn_data_t *);
 
+    std::string typeToString (pn_data_t *);
 }
 
 /******************************************************************************/
@@ -51,6 +55,7 @@ namespace proton {
 
     std::string get_symbol (pn_data_t *);
 
+    int get_int (pn_data_t *);
     bool get_boolean (pn_data_t *);
     std::string get_string (pn_data_t *, bool allowNull = false);
 
@@ -122,7 +127,7 @@ namespace proton {
 
     template<typename T>
     T
-    readAndNext (pn_data_t *, bool tolerateDeviance_ = false) {
+    readAndNext (pn_data_t *, [[maybe_unused]]bool tolerateDeviance_ = false) {
         return T{};
     }
 

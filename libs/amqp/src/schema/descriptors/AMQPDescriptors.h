@@ -33,7 +33,7 @@ namespace amqp::internal::schema::descriptors {
     template<class T>
     uPtr <T>
     dispatchDescribed (pn_data_t *data_) {
-        proton::is_described (data_);
+        proton::assert_described(data_);
         proton::auto_enter p (data_);
         proton::is_ulong (data_);
 

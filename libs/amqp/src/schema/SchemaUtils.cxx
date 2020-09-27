@@ -36,7 +36,7 @@ namespace {
 /******************************************************************************/
 
 /**
- * Java gas two types of primitive, boxed and unboxed, essentially actual
+ * Java has two types of primitive, boxed and unboxed, essentially actual
  * primitives and classes representing those primitives. Of course, we
  * don't care about that, so treat boxed primitives as their underlying
  * type.

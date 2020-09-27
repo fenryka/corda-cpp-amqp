@@ -108,7 +108,7 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
     auto name  = makePrim (proton::readAndNext<std::string>(data_));
     auto label = proton::readAndNext<std::string>(data_, true);
 
-    DBG ("  name: " << name << ", label: \"" << label << "\"" << std::endl);
+    DBG ("  name: " << name << ", label: \"" << label << "\"" << std::endl); // NOLINT
 
     std::vector<std::string> provides;
     {
@@ -116,7 +116,7 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
         while (pn_data_next(data_)) {
             provides.push_back (proton::get_string (data_));
 
-            DBG ("  provides: " << provides.back() << std::endl);
+            DBG ("  provides: " << provides.back() << std::endl); // NOLINT
         }
     }
 
@@ -124,13 +124,13 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
 
     auto source = proton::readAndNext<std::string> (data_);
 
-    DBG ("source: " << source << std::endl);
+    DBG ("source: " << source << std::endl); // NOLINT
 
     auto descriptor = descriptors::dispatchDescribed<schema::Descriptor> (data_);
 
     pn_data_next (data_);
 
-    DBG ("choices: " << data_ << std::endl);
+    DBG ("choices: " << data_ << std::endl); // NOLINT
 
     std::vector<std::unique_ptr<schema::Choice>> choices;
     {
@@ -139,11 +139,11 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
             choices.push_back (
                 descriptors::dispatchDescribed<schema::Choice> (data_));
 
-            DBG (" choice: " << choices.back()->choice() << std::endl);
+            DBG (" choice: " << choices.back()->choice() << std::endl); // NOLINT
         }
     }
 
-    DBG (data_ << std::endl);
+    DBG (data_ << std::endl); // NOLINT
 
     return schema::Restricted::make (
             std::move (descriptor),
@@ -163,7 +163,7 @@ RestrictedDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    proton::is_list (data_);
+    proton::is_list (data_, __FILE__, __LINE__);
     proton::auto_enter ae (data_);
     AutoIndent ai { ai_ };
 

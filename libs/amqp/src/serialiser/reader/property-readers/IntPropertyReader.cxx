@@ -36,7 +36,7 @@ IntPropertyReader::dump (
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const
 {
-    DBG ("IntPropertyReader::dump - " << name_ << std::endl);
+    DBG ("IntPropertyReader::dump - " << name_ << std::endl); // NOLINT
     return std::make_unique<TypedPair<std::string>> (
             name_,
             std::to_string (proton::readAndNext<int> (data_)));
@@ -50,7 +50,7 @@ IntPropertyReader::dump (
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_) const
 {
-    DBG ("IntPropertyReader::dump - no-name" << std::endl);
+    DBG ("IntPropertyReader::dump - no-name" << std::endl); // NOLINT
     return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<int> (data_)));
 }

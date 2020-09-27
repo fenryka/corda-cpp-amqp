@@ -68,14 +68,14 @@ SchemaDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    proton::is_list (data_);
+    proton::is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
         proton::auto_list_enter ale (data_);
 
         for (int i { 1 } ; pn_data_next (data_) ; ++i) {
-            proton::is_list (data_);
+            proton::is_list (data_, __FILE__, __LINE__);
             ss_ << ai << i << "/" << ale.elements() <<"]";
 
             AutoIndent ai2 { ai };
@@ -106,7 +106,7 @@ SchemaDescriptor::readAvro (
 ) const {
     DBG ("readAvro::Schema" << std::endl); // NOLINT
 
-    proton::is_list (data_);
+    proton::is_list (data_, __FILE__, __LINE__);
 
     {
         // schema wrapper, this list should always be 1, also move onto the

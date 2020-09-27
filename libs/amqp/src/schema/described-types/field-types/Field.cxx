@@ -44,7 +44,7 @@ Field::make (
         bool multiple_
 ) {
     if (typeIsPrimitive (type_)) {
-        DBG ("-> primitive" << std::endl);
+        DBG ("-> primitive" << std::endl); // NOLINT
         return std::make_unique<PrimitiveField>(
                 std::move (name_),
                 std::move (type_),
@@ -53,7 +53,7 @@ Field::make (
                 mandatory_,
                 multiple_);
     } else if (Array::isArrayType (type_)) {
-        DBG ("-> array" << std::endl);
+        DBG ("-> array" << std::endl); // NOLINT
         return std::make_unique<ArrayField>(
                 std::move (name_),
                 std::move (type_),
@@ -64,7 +64,7 @@ Field::make (
                 multiple_);
 
     } else if (type_ == "*") {
-        DBG ("-> restricted" << std::endl);
+        DBG ("-> restricted" << std::endl); // NOLINT
         return std::make_unique<RestrictedField>(
                 std::move (name_),
                 std::move (type_),
@@ -74,7 +74,7 @@ Field::make (
                 mandatory_,
                 multiple_);
     } else {
-        DBG ("-> composite" << std::endl);
+        DBG ("-> composite" << std::endl); // NOLINT
         return std::make_unique<CompositeField>(
                 std::move (name_),
                 std::move (type_),
@@ -110,7 +110,7 @@ Field::Field (
   , m_mandatory (mandatory_)
   , m_multiple (multiple_)
 {
-    DBG ("FIELD::FIELD - name: " << name() << ", type: " << type_ << std::endl);
+    DBG ("FIELD::FIELD - name: " << name() << ", type: " << type_ << std::endl); // NOLINT
 }
 
 /******************************************************************************/

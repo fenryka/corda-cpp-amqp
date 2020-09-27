@@ -89,7 +89,7 @@ AMQPDescriptor::readRaw (
                     <<  amqp::describedToString ((uint64_t)key)
                     << std::endl;
 
-                proton::is_list (data_);
+                proton::is_list (data_, __FILE__, __LINE__);
                 ss_ << ai << "list : entries: "
                     << pn_data_get_list(data_)
                     << std::endl;
@@ -141,7 +141,7 @@ AMQPDescriptor::readAvro (
             auto key = proton::readAndNext<u_long>(data_);
 
             // a described type really has to be describing something
-            proton::is_list(data_);
+            proton::is_list(data_, __FILE__, __LINE__);
 
             AMQPDescriptorRegistory[key]->readAvro (data_, ss_, ai_);
             break;

@@ -44,7 +44,7 @@ CompositeReader::_dump (
 ) const {
     DBG ("Read Composite: " << std::endl); // NOLINT
 
-    proton::is_described (data_);
+    proton::assert_described(data_);
     proton::auto_enter ae (data_);
 
     const auto & it = schema_.fromDescriptor (
@@ -62,7 +62,7 @@ CompositeReader::_dump (
     sVec<uPtr<amqp::serialiser::reader::IValue>> read;
     read.reserve (fields.size());
 
-    proton::is_list (data_);
+    proton::is_list (data_, __FILE__, __LINE__);
     {
         proton::auto_enter ae2 { data_ };
 

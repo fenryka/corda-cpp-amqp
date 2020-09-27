@@ -33,7 +33,7 @@ CompositeField::CompositeField (
         mandatory_,
         multiple_)
 {
-    DBG ("FIELD::FIELD - name: " << name() << ", type: " << type() << std::endl);
+    DBG ("FIELD::FIELD - name: " << name() << ", type: " << type() << std::endl); // NOLINT
 }
 
 /******************************************************************************/

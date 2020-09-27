@@ -24,7 +24,7 @@ MapReader::dump_(
     pn_data_t * data_,
     const amqp::schema::ISchema & schema_
 ) const {
-    proton::is_described (data_);
+    proton::assert_described(data_);
     proton::auto_enter ae (data_);
 
     // gloss over fetching the descriptor from the schema since
