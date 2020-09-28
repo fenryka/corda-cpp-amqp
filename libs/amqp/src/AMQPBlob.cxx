@@ -29,17 +29,26 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
 auto
 amqp::
 AMQPBlob::dumpSchema (schema::DumpTarget target_) const -> std::string {
+    proton::is_described (m_data);
+
     std::stringstream ss;
 
-    if (pn_data_is_described (m_data)) {
-        amqp::internal::AMQPDescriptorRegistory[22UL]->read (m_data,
-                ss,
-                target_);
-    } else {
-        throw std::invalid_argument("");
-    }
+    amqp::internal::AMQPDescriptorRegistory[PN_DESCRIBED]->read (
+       m_data,
+        ss,
+       target_);
 
+/**
+ * I have zero idea why clan things *this* line is an infinite loop, but it
+ * does and that's vexing so shut up the warning
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
     return ss.str();
+#pragma clang diagnostic pop
+#pragma clang diagnostic pop
 }
 
 /******************************************************************************/
