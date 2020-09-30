@@ -4,7 +4,7 @@
 
 #include <any>
 
-#include "Schema.h"
+#include "schema/ISchema.h"
 
 /******************************************************************************
  *
@@ -29,7 +29,7 @@ namespace amqp::serialiser::reader {
 
     class IValue {
         public :
-            virtual std::string dump() const = 0;
+            [[nodiscard]] virtual std::string dump() const = 0;
 
             virtual ~IValue() = default;
     };

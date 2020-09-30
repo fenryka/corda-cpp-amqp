@@ -30,3 +30,4 @@ if(APPLE)
 endif()
 
 ADD_SUBDIRECTORY (src)
+ADD_SUBDIRECTORY (include)

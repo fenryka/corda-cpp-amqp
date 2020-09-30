@@ -6,3 +6,5 @@ target_sources(amqp
 )
 
 ADD_SUBDIRECTORY (corda-descriptors)
+
+include_directories(corda-descriptors)

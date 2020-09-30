@@ -5,7 +5,7 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
-#include "field-types/Field.h"
+#include "described-types/field-types/Field.h"
 
 #include <sstream>
 #include "SchemaUtils.h"
