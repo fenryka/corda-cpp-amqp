@@ -4,4 +4,3 @@ ADD_SUBDIRECTORY (assembler)
 ADD_SUBDIRECTORY (schema)
 ADD_SUBDIRECTORY (serialiser)
 
-INCLUDE_DIRECTORIES(../schema)

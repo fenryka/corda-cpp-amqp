@@ -142,6 +142,14 @@ Field::type() const {
 
 /******************************************************************************/
 
+const std::string &
+amqp::internal::schema::
+Field::label() const {
+    return m_label;
+}
+
+/******************************************************************************/
+
 const std::list<std::string> &
 amqp::internal::schema::
 Field::requires() const {

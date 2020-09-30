@@ -7,8 +7,6 @@ include_directories (include)
 include_directories (src/serialiser)
 include_directories (src/schema)
 include_directories (src/schema/descriptors)
-#include_directories (src/schema/described-types)
-
 
 set (amqp_sources
         src/AMQPBlob.cxx
@@ -23,7 +21,7 @@ SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)
 
 #
 # So on Linux we don't need to add these static libraries to this dynamic library
-# target buton MacOS it appears we do
+# target but on MacOS it appears we do
 #
 if(APPLE)
     target_link_libraries (${libName} proton-wrapper qpid-proton)

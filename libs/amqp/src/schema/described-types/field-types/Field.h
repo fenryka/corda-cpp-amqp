@@ -41,8 +41,8 @@ namespace amqp::internal::schema {
             std::list<std::string> m_requires;
             std::string            m_default;
             std::string            m_label;
-            bool                   m_mandatory;
-            bool                   m_multiple;
+            [[maybe_unused]] bool  m_mandatory;
+            [[maybe_unused]] bool  m_multiple;
 
         protected :
             Field (std::string, std::string, std::list<std::string>,
@@ -51,6 +51,7 @@ namespace amqp::internal::schema {
         public :
             [[nodiscard]] const std::string & name() const;
             [[nodiscard]] const std::string & type() const;
+            [[nodiscard]] const std::string & label() const;
             [[nodiscard]] const std::list<std::string> & requires() const;
 
             [[nodiscard]] virtual bool primitive() const = 0;
