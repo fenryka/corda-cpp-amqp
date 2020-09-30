@@ -66,7 +66,7 @@ CompositeDescriptor::build (pn_data_t * data_) const {
 
     pn_data_next (data_);
 
-    /* fields: List<Described>*/
+    /* fields: List<Described> */
     std::vector<uPtr<schema::Field>> fields;
     fields.reserve (pn_data_get_list (data_));
     {
@@ -100,13 +100,13 @@ CompositeDescriptor::readRaw (
         AutoIndent ai { ai_ };
         proton::auto_enter p (data_);
 
-        proton::is_string (data_);
+        proton::attest_is_string (data_, __FILE__, __LINE__);
         ss_ << ai
             << "1] String: ClassName: "
             << proton::readAndNext<std::string>(data_)
             << std::endl;
 
-        proton::is_string (data_);
+        proton::attest_is_string (data_, __FILE__, __LINE__);
         ss_ << ai
             << "2] String: Label: \""
             << proton::readAndNext<std::string>(data_, true)
@@ -167,7 +167,7 @@ CompositeDescriptor::readAvro (
         AutoIndent ai { ai_ };
         proton::auto_enter p (data_);
 
-        proton::is_string (data_);
+        proton::attest_is_string (data_, __FILE__, __LINE__);
 
 
         ss_ << ai << R"("type" : "record",)" << std::endl;
@@ -179,7 +179,7 @@ CompositeDescriptor::readAvro (
 
 
         // skip the label
-        proton::is_string (data_, true);
+        proton::attest_is_string (data_, __FILE__, __LINE__, true);
         pn_data_next (data_);
 
         // skip provides

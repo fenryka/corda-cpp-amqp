@@ -51,16 +51,30 @@ AMQPBlob::dumpSchema (schema::DumpTarget target_) const -> std::string {
 #pragma clang diagnostic pop
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Helper functions for the pure data dumper. Doesn't seem much point
+ * adding them to the classes interface or externalising them
+ * beyond this modele
+ *
+ ******************************************************************************/
 
 namespace {
 
-using IValPtr = uPtr<amqp::serialiser::reader::IValue>;
-using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string>;
+    using IValPtr = uPtr<amqp::serialiser::reader::IValue>;
+    using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string>;
+    using SingleList = amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>;
+    using PairList = amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>;
+
+    /*
+     * Forward declarations
+     */
+    IValPtr dumpDescribed (pn_data_t *);
+    sList<IValPtr> dumpList (pn_data_t *);
+    sList<IValPtr> dumpMap (pn_data_t *);
 
     IValPtr
     dumpPrimitive (pn_data_t * data_) {
-
         switch (pn_data_type (data_)) {
             case PN_LONG :
                 return std::make_unique<SingleString> (std::to_string (pn_data_get_long (data_)));
@@ -81,36 +95,46 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
             case PN_SYMBOL :
                 return std::make_unique<SingleString> ("<<SYMBOL>>");
             default :
-                return std::make_unique<SingleString> ("<<UNKNOWN>>");
+                return std::make_unique<SingleString> (proton::typeToString(data_));
 
         }
     }
 
-    IValPtr dumpDescribed (pn_data_t *);
-    sList<IValPtr> dumpMap (pn_data_t *);
 
     sList<IValPtr>
     dumpList (pn_data_t * data_) {
-        std::cout << __FUNCTION__ << std::endl;
         proton::attest_is_list (data_, __FILE__, __LINE__);
         proton::auto_list_enter ale (data_, true);
 
         sList<IValPtr> list;
 
-        do {
-            auto type = pn_data_type (data_);
-            if ( type == PN_LIST) {
-                list.emplace_back (dumpList (data_));
-            } else if (type == PN_MAP) {
-                list.emplace_back (dumpMap (data_));
-            } else if (type == PN_DESCRIBED) {
-                list.emplace_back (dumpDescribed( data_));
-            } else {
-                list.emplace_back (dumpPrimitive (data_));
-            }
-        } while (pn_data_next (data_));
+        /*
+         * Cope with the list being empty
+         */
+        if (pn_data_type(data_) == PN_INVALID) {
+            list.emplace_back (
+                    std::make_unique<SingleString>("<<<Empty List>>>"));
 
-//        return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>>(std::move (list));
+            return list;
+        }
+
+        /*
+         * List isn't empty so iterate the contents
+         */
+        do {
+            auto type = pn_data_type(data_);
+
+            if (type == PN_LIST) {
+                list.emplace_back (std::make_unique<SingleList> (dumpList(data_)));
+            } else if (type == PN_MAP) {
+                list.emplace_back (std::make_unique<SingleList> (dumpMap(data_)));
+            } else if (type == PN_DESCRIBED) {
+                list.emplace_back (dumpDescribed(data_));
+            } else {
+                list.emplace_back (dumpPrimitive(data_));
+            }
+        } while (pn_data_next(data_));
+
         return list;
     }
 
@@ -122,29 +146,34 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
         {
             proton::auto_map_enter am (data_, true);
 
+            /*
+             * Cope with an empty map
+             */
+            if (pn_data_type(data_) == PN_INVALID) {
+                list.emplace_back (
+                        std::make_unique<SingleString>("<<<Empty Map>>>"));
+
+                return list;
+            }
+
+            /*
+             * Map isn't empty
+             */
             for (int i {0} ; i < am.elements() ; i += 2) {
                 IValPtr key, value;
 
-                auto keyType = pn_data_type (data_);
-                if ( keyType == PN_LIST) {
-                    key = dumpList (data_);
-                } else if (keyType == PN_MAP) {
-                    key = dumpMap (data_);
-                } else if (keyType == PN_DESCRIBED) {
-                    key = dumpDescribed( data_);
-                } else {
-                    key = dumpPrimitive (data_);
+                switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
+                    case PN_LIST : key = std::make_unique<SingleList>(dumpList (data_)); break;
+                    case PN_MAP  : key = std::make_unique<SingleList>(dumpMap (data_)); break;
+                    case PN_DESCRIBED : key = dumpDescribed (data_); break;
+                    default : key = dumpPrimitive (data_);
                 }
 
-                auto valueType = pn_data_type (data_);
-                if ( valueType == PN_LIST) {
-                    value = dumpList (data_);
-                } else if (valueType == PN_MAP) {
-                    value = dumpMap (data_);
-                } else if (valueType == PN_DESCRIBED) {
-                    value = dumpDescribed (data_);
-                } else {
-                    value = dumpPrimitive (data_);
+                switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
+                    case PN_LIST : value = std::make_unique<SingleList>(dumpList (data_)); break;
+                    case PN_MAP  : value = std::make_unique<SingleList>(dumpMap (data_)); break;
+                    case PN_DESCRIBED : value = dumpDescribed (data_); break;
+                    default : value = dumpPrimitive (data_);
                 }
 
                 list.emplace_back (
@@ -152,10 +181,11 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
                                 std::move (key), std::move (value)
                         )
                 );
+
+                pn_data_next (data_);
             }
         }
 
-        // return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>> (std::move (list));
         return list;
     }
 
@@ -168,21 +198,15 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
             proton::auto_enter p2(data_);
             auto fingerprint = proton::readAndNext<std::string>(data_);
 
-            std::cout << __FUNCTION__ << ": " << fingerprint << std::endl;
-
             auto type = pn_data_type (data_);
 
             if (type == PN_LIST) {
-                auto payload = dumpList (data_);
-                return std::make_unique<amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>> (fingerprint, std::move (payload));
+                return std::make_unique<PairList> (fingerprint, dumpList (data_));
             } else if (type == PN_MAP) {
-                auto payload = dumpMap (data_);
-                return std::make_unique<amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>> (fingerprint, std::move (payload));
+                return std::make_unique<PairList> (fingerprint, dumpMap (data_));
+            } else {
+                throw std::runtime_error ("Described data must be either a list or map");
             }
-
-//            return std::make_unique<amqp::internal::serialiser::reader::TypedPair<IValPtr>> (
-//                    fingerprint, std::move (payload));
-
         }
     }
 }
@@ -197,6 +221,8 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
 auto
 amqp::
 AMQPBlob::dumpData() const -> std::string {
+    IValPtr rtn;
+
     if (pn_data_is_described (m_data)) {
         // move to the actual blob entry in the tree - ideally we'd have
         // saved this on the Envelope but that's not easily doable as we
@@ -214,12 +240,10 @@ AMQPBlob::dumpData() const -> std::string {
         // first element in the list is the data (second the schema, third the transforms)
         proton::auto_list_enter ale (m_data, true);
         proton::assert_described (m_data);
-        auto val = dumpDescribed (m_data);
-
-        std::cout << val->dump() << std::endl;
+        rtn = dumpDescribed (m_data);
     }
 
-    return "";
+    return rtn->dump();
 }
 
 /******************************************************************************/

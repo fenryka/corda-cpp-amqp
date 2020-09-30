@@ -27,7 +27,7 @@ namespace amqp::internal::serialiser::serialisers {
 
     class SerialisersFactory {
         public :
-            std::shared_ptr<amqp::serialiser::ISerialiser>
+            static std::shared_ptr<amqp::serialiser::ISerialiser>
             makePropertyReader (const std::string & type_) {
                 if (type_ == "int") {
                     return std::make_shared<
@@ -59,7 +59,7 @@ namespace amqp::internal::serialiser::serialisers {
                 }
         }
 
-        std::shared_ptr<amqp::serialiser::ISerialiser>
+        static std::shared_ptr<amqp::serialiser::ISerialiser>
         makeList (const std::string & type_, std::weak_ptr<amqp::serialiser::ISerialiser> serialser_) {
             return std::make_shared<ListSerialiser<reader::ListReader, writer::Writer>> (type_, serialser_);
         }

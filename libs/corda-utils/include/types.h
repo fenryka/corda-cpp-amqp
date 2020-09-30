@@ -22,7 +22,7 @@ template<typename T>
 using sList = std::list<T>;
 
 template<typename T>
-using upStrMap_t = std::map<std::string, uPtr<T>>;
+using upStrMap_t [[maybe_unused]] = std::map<std::string, uPtr<T>>;
 
 template<typename T>
 using spStrMap_t = std::map<std::string, sPtr<T>>;

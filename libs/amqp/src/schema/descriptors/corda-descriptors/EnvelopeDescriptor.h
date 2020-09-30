@@ -21,7 +21,7 @@ struct pn_data_t;
 
 namespace amqp::internal::schema::descriptors {
 
-    class EnvelopeDescriptor : public AMQPDescriptor {
+    class EnvelopeDescriptor final : public AMQPDescriptor {
         public :
             EnvelopeDescriptor() = delete;
             EnvelopeDescriptor (std::string, int);

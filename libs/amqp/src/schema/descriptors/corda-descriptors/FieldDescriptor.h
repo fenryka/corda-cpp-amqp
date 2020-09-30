@@ -10,7 +10,7 @@
 
 namespace amqp::internal::schema::descriptors {
 
-    class FieldDescriptor : public AMQPDescriptor {
+    class FieldDescriptor final : public AMQPDescriptor {
         public :
             FieldDescriptor() = delete;
             FieldDescriptor (std::string, int);

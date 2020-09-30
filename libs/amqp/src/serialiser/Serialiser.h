@@ -15,8 +15,8 @@ namespace amqp::internal::serialiser {
             , public Writer
      {
         public :
-            const std::string & name() const override = 0;
-            const std::string & type() const override = 0;
+            [[nodiscard]] const std::string & name() const override = 0;
+            [[nodiscard]] const std::string & type() const override = 0;
 
             /******************************************************************
              *

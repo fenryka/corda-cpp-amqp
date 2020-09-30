@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# attempt tp not list all of the output by globbing it all together into a single list
-(find -E . -regex ".*/*.(cxx|h)" -print0 | xargs -0 cat) 
+# attempt to not list all of the output by globbing it all together into a single list
+(find -E . -regex ".*/*.(cxx|h)" -print0 | xargs -0 cat)
 #wc -l $(find -E . -regex ".*/*.(cxx|h)")

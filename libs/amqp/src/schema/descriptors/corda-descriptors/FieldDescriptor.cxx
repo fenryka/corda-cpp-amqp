@@ -119,7 +119,7 @@ FieldDescriptor::readRaw (
 
     pn_data_next (data_);
 
-    proton::is_string (data_, true);
+    proton::attest_is_string (data_, __FILE__, __LINE__, true);
 
     ss_ << ai << "4/7] String: Default: "
         << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)

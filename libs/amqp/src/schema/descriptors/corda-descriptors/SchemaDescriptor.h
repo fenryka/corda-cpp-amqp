@@ -10,7 +10,7 @@ struct pn_data_t;
 
 namespace amqp::internal::schema::descriptors {
 
-    class SchemaDescriptor : public AMQPDescriptor {
+    class SchemaDescriptor final : public AMQPDescriptor {
     public :
         SchemaDescriptor() = delete;
         SchemaDescriptor (std::string, int);

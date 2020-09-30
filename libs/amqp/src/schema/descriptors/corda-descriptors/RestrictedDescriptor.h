@@ -10,7 +10,7 @@
 
 namespace amqp::internal::schema::descriptors {
 
-    class RestrictedDescriptor : public AMQPDescriptor {
+    class RestrictedDescriptor final : public AMQPDescriptor {
         public :
             /**
              * This could just live as a stand alone function in the
