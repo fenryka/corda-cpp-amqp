@@ -7,7 +7,6 @@
 #include <iosfwd>
 #include <string>
 
-#include "field-types/Field.h"
 #include "described-types/Choice.h"
 #include "described-types/Descriptor.h"
 #include "AMQPTypeNotation.h"

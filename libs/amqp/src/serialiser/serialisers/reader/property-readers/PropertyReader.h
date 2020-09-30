@@ -4,16 +4,11 @@
 
 #include "serialisers/reader/Reader.h"
 
-#include "field-types/Field.h"
-
 /******************************************************************************/
 
 namespace amqp::internal::serialiser::reader {
 
     class PropertyReader : public Reader {
-        private :
-            using FieldPtr = uPtr<internal::schema::Field>;
-
         public :
             PropertyReader() = default;
             ~PropertyReader() override = default;

@@ -11,7 +11,7 @@
 
 #include "descriptors/AMQPDescriptors.h"
 
-#include "field-types/Field.h"
+#include "described-types/field-types/Field.h"
 #include "described-types/Composite.h"
 #include "described-types/Descriptor.h"
 

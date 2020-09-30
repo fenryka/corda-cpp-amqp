@@ -7,3 +7,5 @@ target_sources(amqp
 )
 
 ADD_SUBDIRECTORY (serialisers)
+
+INCLUDE_DIRECTORIES(src/schema)
