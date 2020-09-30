@@ -2,7 +2,7 @@
 
 /******************************************************************************/
 
-#include "PropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/PropertySerialiser.h"
 
 #include "LongPropertySerialiserBase.h"
 

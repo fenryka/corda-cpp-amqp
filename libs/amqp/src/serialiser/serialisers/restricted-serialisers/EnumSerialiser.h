@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "RestrictedSerialiser.h"
+#include "amqp/src/serialiser/serialisers/RestrictedSerialiser.h"
 
 /******************************************************************************/
 

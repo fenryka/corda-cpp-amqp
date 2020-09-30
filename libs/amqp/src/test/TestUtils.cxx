@@ -62,8 +62,6 @@ list (const std::string & of_) {
 
     std::vector<std::string> provides { };
 
-    std::cout << "FAKE LIST: " << of_ << std::endl;
-
     return std::make_unique<List> (
             std::move (desc),
             "java.util.List<" + of_ + ">",

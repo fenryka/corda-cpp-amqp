@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "Reader.h"
+#include "serialisers/reader/Reader.h"
 #include "serialiser/reader/IReader.h"
 #include "proton-wrapper/include/proton_wrapper.h"
 

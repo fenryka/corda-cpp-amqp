@@ -12,7 +12,7 @@
 #include "amqp/include/assembler/ICompositeFactory.h"
 #include "amqp/include/serialiser/ISerialiser.h"
 
-#include "amqp/src/serialiser/reader/CompositeReader.h"
+#include "amqp/src/serialiser/serialisers/reader/CompositeReader.h"
 
 #include "amqp/src/schema/described-types/Schema.h"
 #include "amqp/src/schema/described-types/Envelope.h"

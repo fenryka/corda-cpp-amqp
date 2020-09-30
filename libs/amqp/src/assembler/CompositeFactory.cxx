@@ -1,14 +1,11 @@
 #include "CompositeFactory.h"
 
-#include <set>
 #include <vector>
 #include <iostream>
-#include <algorithm>
 #include <functional>
 
-#include <assert.h>
+#include <cassert>
 #include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
-#include "amqp/src/serialiser/serialisers/restricted-serialisers/RestrictedSerialiser.h"
 #include "amqp/src/serialiser/serialisers/restricted-serialisers/ArraySerialiser.h"
 #include "amqp/src/serialiser/serialisers/restricted-serialisers/MapSerialiser.h"
 #include "amqp/src/serialiser/serialisers/restricted-serialisers/EnumSerialiser.h"
@@ -17,20 +14,16 @@
 #include "corda-utils/include/debug.h"
 
 #include "serialiser/reader/IReader.h"
-#include "amqp/src/serialiser/reader/property-readers/PropertyReader.h"
 
 #include "amqp/src/serialiser/SerialiserFactory.h"
-#include "amqp/src/serialiser/serialisers/property-serialisers/PropertySerialiser.h"
 
-#include "amqp/src/serialiser/writer/Writer.h"
+#include "amqp/src/serialiser/serialisers/writer/Writer.h"
 
-#include "amqp/src/serialiser/reader/Reader.h"
-#include "amqp/src/serialiser/reader/CompositeReader.h"
-#include "amqp/src/serialiser/reader/restricted-readers/RestrictedReader.h"
-#include "amqp/src/serialiser/reader/restricted-readers/MapReader.h"
-#include "amqp/src/serialiser/reader/restricted-readers/ListReader.h"
-#include "amqp/src/serialiser/reader/restricted-readers/ArrayReader.h"
-#include "amqp/src/serialiser/reader/restricted-readers/EnumReader.h"
+#include "amqp/src/serialiser/serialisers/reader/CompositeReader.h"
+#include "amqp/src/serialiser/serialisers/reader/restricted-readers/MapReader.h"
+#include "amqp/src/serialiser/serialisers/reader/restricted-readers/ListReader.h"
+#include "amqp/src/serialiser/serialisers/reader/restricted-readers/ArrayReader.h"
+#include "amqp/src/serialiser/serialisers/reader/restricted-readers/EnumReader.h"
 
 #include "amqp/src/schema/restricted-types/Map.h"
 #include "amqp/src/schema/restricted-types/List.h"

@@ -4,7 +4,7 @@ CMAKE_POLICY (SET CMP0076 NEW)
 set (libName amqp)
 
 include_directories (include)
-include_directories (src/serialiser/reader)
+include_directories (src/serialiser)
 include_directories (src/schema)
 include_directories (src/schema/descriptors)
 include_directories (src/schema/described-types/field-types)
@@ -55,32 +55,32 @@ set (amqp_serialiser_sources
         )
 
 set (amqp_reader_sources
-        src/serialiser/reader/Reader.cxx
-        src/serialiser/reader/CompositeReader.cxx
-        src/serialiser/reader/property-readers/IntPropertyReader.cxx
-        src/serialiser/reader/property-readers/LongPropertyReader.cxx
-        src/serialiser/reader/property-readers/BoolPropertyReader.cxx
-        src/serialiser/reader/property-readers/DoublePropertyReader.cxx
-        src/serialiser/reader/property-readers/StringPropertyReader.cxx
-        src/serialiser/reader/restricted-readers/MapReader.cxx
-        src/serialiser/reader/restricted-readers/ListReader.cxx
-        src/serialiser/reader/restricted-readers/ArrayReader.cxx
-        src/serialiser/reader/restricted-readers/EnumReader.cxx
+        src/serialiser/serialisers/reader/Reader.cxx
+        src/serialiser/serialisers/reader/CompositeReader.cxx
+        src/serialiser/serialisers/reader/property-readers/IntPropertyReader.cxx
+        src/serialiser/serialisers/reader/property-readers/LongPropertyReader.cxx
+        src/serialiser/serialisers/reader/property-readers/BoolPropertyReader.cxx
+        src/serialiser/serialisers/reader/property-readers/DoublePropertyReader.cxx
+        src/serialiser/serialisers/reader/property-readers/StringPropertyReader.cxx
+        src/serialiser/serialisers/reader/restricted-readers/MapReader.cxx
+        src/serialiser/serialisers/reader/restricted-readers/ListReader.cxx
+        src/serialiser/serialisers/reader/restricted-readers/ArrayReader.cxx
+        src/serialiser/serialisers/reader/restricted-readers/EnumReader.cxx
         )
 
 set (amqp_writer_sources
-        src/serialiser/writer/Writer.cxx
+        src/serialiser/serialisers/writer/Writer.cxx
         )
 
 set (amqp_serialiser_interface
         src/serialiser/Serialiser.h
         src/serialiser/SerialiserFactory.h
         src/serialiser/serialisers/CompositeSerialiser.h
-        src/serialiser/serialisers/restricted-serialisers/RestrictedSerialiser.h
+        src/serialiser/serialisers/RestrictedSerialiser.h
         src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h
         src/serialiser/serialisers/restricted-serialisers/EnumSerialiser.h
         src/serialiser/serialisers/restricted-serialisers/MapSerialiser.h
-        src/serialiser/serialisers/property-serialisers/PropertySerialiser.h
+        src/serialiser/serialisers/PropertySerialiser.h
         src/serialiser/serialisers/property-serialisers/BoolPropertySerialiser.h
         src/serialiser/serialisers/property-serialisers/DoublePropertySerialiser.h
         src/serialiser/serialisers/property-serialisers/IntPropertySerialiser.h
