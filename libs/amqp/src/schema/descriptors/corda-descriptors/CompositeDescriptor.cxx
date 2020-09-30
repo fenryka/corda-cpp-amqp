@@ -94,7 +94,7 @@ CompositeDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
@@ -112,7 +112,7 @@ CompositeDescriptor::readRaw (
             << proton::readAndNext<std::string>(data_, true)
             << "\"" << std::endl;
 
-        proton::is_list (data_, __FILE__, __LINE__);
+        proton::attest_is_list (data_, __FILE__, __LINE__);
 
         ss_ << ai << "3] List: Provides: [ ";
         {
@@ -161,7 +161,7 @@ CompositeDescriptor::readAvro (
 
     ss_ << "{" << std::endl;
 
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
@@ -183,7 +183,7 @@ CompositeDescriptor::readAvro (
         pn_data_next (data_);
 
         // skip provides
-        proton::is_list (data_, __FILE__, __LINE__);
+        proton::attest_is_list (data_, __FILE__, __LINE__);
         pn_data_next (data_);
 
         // make the fingerprint an alias

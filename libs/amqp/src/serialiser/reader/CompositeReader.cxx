@@ -62,7 +62,7 @@ CompositeReader::_dump (
     sVec<uPtr<amqp::serialiser::reader::IValue>> read;
     read.reserve (fields.size());
 
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
     {
         proton::auto_enter ae2 { data_ };
 

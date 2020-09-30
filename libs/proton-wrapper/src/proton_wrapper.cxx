@@ -160,7 +160,7 @@ proton::is_symbol (pn_data_t * data_) {
 
 void
 proton::
-is_list (pn_data_t * data_, const std::string & file_, int line_) {
+attest_is_list (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type(data_) != PN_LIST) {
         std::stringstream ss;
 

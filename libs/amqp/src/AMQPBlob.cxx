@@ -86,13 +86,13 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
         }
     }
 
-    IValPtr dumpComposite (pn_data_t *);
-    IValPtr dumpMap (pn_data_t *);
+    IValPtr dumpDescribed (pn_data_t *);
+    sList<IValPtr> dumpMap (pn_data_t *);
 
-    IValPtr
+    sList<IValPtr>
     dumpList (pn_data_t * data_) {
         std::cout << __FUNCTION__ << std::endl;
-        proton::is_list (data_, __FILE__, __LINE__);
+        proton::attest_is_list (data_, __FILE__, __LINE__);
         proton::auto_list_enter ale (data_, true);
 
         sList<IValPtr> list;
@@ -104,17 +104,18 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
             } else if (type == PN_MAP) {
                 list.emplace_back (dumpMap (data_));
             } else if (type == PN_DESCRIBED) {
-                list.emplace_back (dumpComposite (data_));
+                list.emplace_back (dumpDescribed( data_));
             } else {
                 list.emplace_back (dumpPrimitive (data_));
             }
         } while (pn_data_next (data_));
 
-        return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>>(std::move (list));
+//        return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>>(std::move (list));
+        return list;
     }
 
 
-    IValPtr
+    sList<IValPtr>
     dumpMap (pn_data_t * data_) {
         proton::is_map (data_, __FILE__, __LINE__);
         sList<IValPtr> list;
@@ -130,7 +131,7 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
                 } else if (keyType == PN_MAP) {
                     key = dumpMap (data_);
                 } else if (keyType == PN_DESCRIBED) {
-                    key = dumpComposite (data_);
+                    key = dumpDescribed( data_);
                 } else {
                     key = dumpPrimitive (data_);
                 }
@@ -141,7 +142,7 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
                 } else if (valueType == PN_MAP) {
                     value = dumpMap (data_);
                 } else if (valueType == PN_DESCRIBED) {
-                    value = dumpComposite (data_);
+                    value = dumpDescribed (data_);
                 } else {
                     value = dumpPrimitive (data_);
                 }
@@ -154,11 +155,13 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
             }
         }
 
-        return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>> (std::move (list));
+        // return std::make_unique<amqp::internal::serialiser::reader::TypedSingle<sList<IValPtr>>> (std::move (list));
+        return list;
     }
 
+
     IValPtr
-    dumpComposite (pn_data_t * data_) {
+    dumpDescribed (pn_data_t * data_) {
         proton::assert_described (data_);
 
         {
@@ -167,32 +170,21 @@ using SingleString = amqp::internal::serialiser::reader::TypedSingle<std::string
 
             std::cout << __FUNCTION__ << ": " << fingerprint << std::endl;
 
-            proton::is_list (data_, __FILE__, __LINE__);
-            proton::auto_list_enter ale (data_, true);
+            auto type = pn_data_type (data_);
 
-            sList<IValPtr> list;
+            if (type == PN_LIST) {
+                auto payload = dumpList (data_);
+                return std::make_unique<amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>> (fingerprint, std::move (payload));
+            } else if (type == PN_MAP) {
+                auto payload = dumpMap (data_);
+                return std::make_unique<amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>> (fingerprint, std::move (payload));
+            }
 
-            do {
-                auto type = pn_data_type (data_);
-
-                if ( type == PN_LIST) {
-                    list.emplace_back (dumpList (data_));
-                } else if (type == PN_MAP) {
-                    list.emplace_back (dumpMap (data_));
-                } else if (type == PN_DESCRIBED) {
-                    list.emplace_back (dumpComposite (data_));
-                } else {
-                    list.emplace_back (dumpPrimitive (data_));
-                }
-            } while (pn_data_next (data_));
-
-            return std::make_unique<amqp::internal::serialiser::reader::TypedPair<sList<IValPtr>>> (
-                    fingerprint,
-                    std::move (list));
+//            return std::make_unique<amqp::internal::serialiser::reader::TypedPair<IValPtr>> (
+//                    fingerprint, std::move (payload));
 
         }
     }
-
 }
 
 /******************************************************************************/
@@ -209,7 +201,7 @@ AMQPBlob::dumpData() const -> std::string {
         // move to the actual blob entry in the tree - ideally we'd have
         // saved this on the Envelope but that's not easily doable as we
         // can't grab an actual copy of our data pointer
-        proton::assert_described(m_data);
+        proton::assert_described (m_data);
         {
             proton::auto_enter p (m_data);
             uint64_t key = proton::readAndNext<u_long>(m_data);
@@ -217,11 +209,12 @@ AMQPBlob::dumpData() const -> std::string {
         }
 
         proton::auto_enter p (m_data, true);
-        proton::is_list (m_data, __FILE__, __LINE__);
+        proton::attest_is_list (m_data, __FILE__, __LINE__);
 
         // first element in the list is the data (second the schema, third the transforms)
         proton::auto_list_enter ale (m_data, true);
-        auto val = dumpComposite (m_data);
+        proton::assert_described (m_data);
+        auto val = dumpDescribed (m_data);
 
         std::cout << val->dump() << std::endl;
     }
@@ -262,7 +255,7 @@ AMQPBlob::dumpContents() const {
         // saved this on the Envelope but that's not easily doable as we
         // can't grab an actual copy of our data pointer
         proton::auto_enter p (m_data, true);
-        proton::is_list (m_data, __FILE__, __LINE__);
+        proton::attest_is_list (m_data, __FILE__, __LINE__);
         assert (pn_data_get_list (m_data) == 3);
 
         {

@@ -163,7 +163,7 @@ RestrictedDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
     proton::auto_enter ae (data_);
     AutoIndent ai { ai_ };
 

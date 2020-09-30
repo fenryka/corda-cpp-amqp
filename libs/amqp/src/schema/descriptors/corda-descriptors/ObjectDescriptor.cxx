@@ -49,7 +49,7 @@ ObjectDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const  {
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
@@ -75,7 +75,7 @@ ObjectDescriptor::readAvro (
         const AutoIndent & ai_
 ) const  {
     DBG ("readAvro::Object" << std::endl); // NOLINT
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         proton::auto_list_enter ale (data_);

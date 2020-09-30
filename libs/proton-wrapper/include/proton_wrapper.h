@@ -25,7 +25,7 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
-    void is_list (pn_data_t *, const std::string &, int);
+    void attest_is_list (pn_data_t *, const std::string &, int);
     void is_map (pn_data_t *, const std::string &, int);
     bool is_primitive (pn_data_t *);
 

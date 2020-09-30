@@ -46,7 +46,7 @@ EnvelopeDescriptor::readRaw (
     const AutoIndent & ai_
 ) const {
     // lets just make sure we haven't entered this already
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
@@ -75,7 +75,7 @@ EnvelopeDescriptor::readAvro (
     DBG ("readAvro::Envelope" << std::endl); // NOLINT
 
     // lets just make sure we haven't entered this already
-    proton::is_list (data_, __FILE__, __LINE__);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         // skip the first element of the envelope as that's the data
