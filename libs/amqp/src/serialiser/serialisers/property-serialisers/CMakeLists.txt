@@ -1,0 +1,13 @@
+target_sources(amqp
+    PRIVATE
+        StringPropertySerialiserBase.cxx
+        BoolPropertySerialiserBase.cxx
+        DoublePropertySerialiserBase.cxx
+        IntPropertySerialiserBase.cxx
+        LongPropertySerialiserBase.cxx
+        BoolPropertySerialiser.h
+        DoublePropertySerialiser.h
+        IntPropertySerialiser.h
+        LongPropertySerialiser.h
+        StringPropertySerialiser.h
+)
