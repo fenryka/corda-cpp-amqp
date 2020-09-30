@@ -6,6 +6,8 @@ target_sources(amqp
         PUBLIC
 )
 
+INCLUDE_DIRECTORIES(descriptors)
+
 ADD_SUBDIRECTORY (restricted-types)
 ADD_SUBDIRECTORY (described-types)
 ADD_SUBDIRECTORY (descriptors)
