@@ -198,7 +198,7 @@ is_primitive (pn_data_t * data_) {
 
 void
 proton::
-is_string (pn_data_t * data_, bool allowNull, const std::string & file_, int line_) {
+attest_is_string (pn_data_t * data_, const std::string & file_, int line_, bool allowNull) {
     if (pn_data_type(data_) != PN_STRING) {
         if (allowNull && pn_data_type(data_) != PN_NULL) {
             std::stringstream ss;

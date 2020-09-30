@@ -26,6 +26,8 @@ namespace proton {
     bool pn_data_enter(pn_data_t *);
 
     void attest_is_list (pn_data_t *, const std::string &, int);
+    void attest_is_string(pn_data_t *, const std::string &, int, bool = false);
+
     void is_map (pn_data_t *, const std::string &, int);
     bool is_primitive (pn_data_t *);
 
@@ -33,7 +35,6 @@ namespace proton {
 
     void is_symbol(pn_data_t *);
 
-    void is_string(pn_data_t *, bool allowNull = false, const std::string & = __FILE__, int line = __LINE__);
 
     void assert_described(pn_data_t *);
     bool is_described(pn_data_t *);
