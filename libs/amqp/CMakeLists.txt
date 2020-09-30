@@ -7,8 +7,7 @@ include_directories (include)
 include_directories (src/serialiser)
 include_directories (src/schema)
 include_directories (src/schema/descriptors)
-include_directories (src/schema/described-types/field-types)
-include_directories (src/schema/described-types)
+#include_directories (src/schema/described-types)
 
 
 set (amqp_sources
