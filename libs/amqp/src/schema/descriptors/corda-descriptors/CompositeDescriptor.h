@@ -6,7 +6,7 @@
 
 namespace amqp::internal::schema::descriptors {
 
-    class CompositeDescriptor : public AMQPDescriptor {
+    class CompositeDescriptor final : public AMQPDescriptor {
         public :
             CompositeDescriptor() = delete;
             CompositeDescriptor (std::string, int);

@@ -51,14 +51,12 @@ namespace amqp::internal::schema {
               , m_descriptor (std::move (descriptor_))
             { }
 
-            const std::string & descriptor() const;
+            [[nodiscard]] const std::string & descriptor() const;
+            [[nodiscard]] const std::string & name() const;
+            [[nodiscard]] virtual Type type() const = 0;
 
-            const std::string & name() const;
-
-            virtual Type type() const = 0;
-
-            virtual int dependsOnRHS (const Restricted &) const = 0;
-            virtual int dependsOnRHS (const Composite &) const = 0;
+            [[nodiscard]] virtual int dependsOnRHS (const Restricted &) const = 0;
+            [[nodiscard]] virtual int dependsOnRHS (const Composite &) const = 0;
     };
 
 }

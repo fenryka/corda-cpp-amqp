@@ -32,16 +32,16 @@ namespace amqp::internal::schema::descriptors {
      */
     template<class T>
     uPtr <T>
-    dispatchDescribed(pn_data_t *data_) {
-        proton::is_described(data_);
-        proton::auto_enter p(data_);
-        proton::is_ulong(data_);
+    dispatchDescribed (pn_data_t *data_) {
+        proton::assert_described(data_);
+        proton::auto_enter p (data_);
+        proton::is_ulong (data_);
 
-        auto id = pn_data_get_ulong(data_);
+        auto id = pn_data_get_ulong (data_);
 
-        return uPtr<T>(
-            static_cast<T *>(
-                AMQPDescriptorRegistory[id]->build(data_).release()));
+        return uPtr<T> (
+            static_cast<T *> (
+                AMQPDescriptorRegistory[id]->build (data_).release()));
     }
 }
 
@@ -49,7 +49,7 @@ namespace amqp::internal::schema::descriptors {
 
 namespace amqp::internal::schema::descriptors {
 
-    class ReferencedObjectDescriptor : public AMQPDescriptor {
+    class ReferencedObjectDescriptor final : public AMQPDescriptor {
         public :
             ReferencedObjectDescriptor() : AMQPDescriptor() { }
 
@@ -68,7 +68,7 @@ namespace amqp::internal::schema::descriptors {
 
 namespace amqp::internal::schema::descriptors {
 
-    class TransformSchemaDescriptor : public AMQPDescriptor {
+    class TransformSchemaDescriptor final : public AMQPDescriptor {
         public :
             TransformSchemaDescriptor() : AMQPDescriptor() { }
 
@@ -87,7 +87,7 @@ namespace amqp::internal::schema::descriptors {
 
 namespace amqp::internal::schema::descriptors {
 
-    class TransformElementDescriptor : public AMQPDescriptor {
+    class TransformElementDescriptor final : public AMQPDescriptor {
         public :
             TransformElementDescriptor() : AMQPDescriptor() { }
 
@@ -106,7 +106,7 @@ namespace amqp::internal::schema::descriptors {
 
 namespace amqp::internal::schema::descriptors {
 
-    class TransformElementKeyDescriptor : public AMQPDescriptor {
+    class TransformElementKeyDescriptor final : public AMQPDescriptor {
         public :
             TransformElementKeyDescriptor() : AMQPDescriptor() { }
 

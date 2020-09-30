@@ -12,7 +12,7 @@ struct pn_data_t;
 
 namespace amqp::internal::schema::descriptors {
 
-    class ObjectDescriptor : public AMQPDescriptor {
+    class ObjectDescriptor final : public AMQPDescriptor {
     public :
         ObjectDescriptor() = delete;
 

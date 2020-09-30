@@ -54,7 +54,7 @@ ListReader::dump_(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
 ) const {
-    proton::is_described (data_);
+    proton::assert_described(data_);
 
     decltype (dump_(data_, schema_)) read;
 

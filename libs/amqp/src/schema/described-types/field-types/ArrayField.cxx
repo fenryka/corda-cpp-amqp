@@ -32,7 +32,7 @@ ArrayField::ArrayField (
         mandatory_,
         multiple_
 ) {
-    DBG ("ArrayField::ArrayField - name: " << name() << ", type: " << type() << std::endl);
+    DBG ("ArrayField::ArrayField - name: " << name() << ", type: " << type() << std::endl); // NOLINT
 }
 
 /******************************************************************************/

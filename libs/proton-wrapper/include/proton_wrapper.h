@@ -25,11 +25,26 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
-    void is_list (pn_data_t *);
-    void is_ulong (pn_data_t *);
-    void is_symbol (pn_data_t *);
-    void is_string (pn_data_t *, bool allowNull = false, const std::string & = __FILE__, int line = __LINE__);
-    void is_described (pn_data_t *);
+    void attest_is_list (pn_data_t *, const std::string &, int);
+    void attest_is_string(pn_data_t *, const std::string &, int, bool = false);
+
+    void is_map (pn_data_t *, const std::string &, int);
+    bool is_primitive (pn_data_t *);
+
+    void is_ulong(pn_data_t *);
+
+    void is_symbol(pn_data_t *);
+
+
+    void assert_described(pn_data_t *);
+    bool is_described(pn_data_t *);
+
+    std::string typeToString (pn_data_t *);
+}
+
+/******************************************************************************/
+
+namespace proton {
 
     /**
      * Specialised in the CXX file
@@ -41,9 +56,13 @@ namespace proton {
 
     std::string get_symbol (pn_data_t *);
 
+    int get_int (pn_data_t *);
     bool get_boolean (pn_data_t *);
     std::string get_string (pn_data_t *, bool allowNull = false);
 
+    /**
+     *
+     */
     class auto_enter {
         private :
             pn_data_t * m_data;
@@ -53,6 +72,9 @@ namespace proton {
             ~auto_enter();
     };
 
+    /**
+     *
+     */
     class auto_next {
         private :
             pn_data_t * m_data;
@@ -68,6 +90,9 @@ namespace proton {
             ~auto_next();
     };
 
+    /**
+     *
+     */
     class auto_list_enter {
         private :
             size_t      m_elements;
@@ -80,6 +105,9 @@ namespace proton {
             size_t elements() const;
     };
 
+    /**
+     *
+     */
     class auto_map_enter {
         private :
             size_t      m_elements;
@@ -100,7 +128,7 @@ namespace proton {
 
     template<typename T>
     T
-    readAndNext (pn_data_t *, bool tolerateDeviance_ = false) {
+    readAndNext (pn_data_t *, [[maybe_unused]]bool tolerateDeviance_ = false) {
         return T{};
     }
 

@@ -6,6 +6,54 @@
 
 #include <proton/types.h>
 #include <proton/codec.h>
+#include <map>
+#include <utility>
+
+/******************************************************************************/
+
+namespace {
+
+    enum protonTypeTypes {
+        COMPLEX,
+        PRIMITIVE
+
+    };
+
+    std::map<pn_type_t, std::pair<std::string, protonTypeTypes>> protonToString {
+            { PN_NULL, { "null", COMPLEX } },
+            { PN_BOOL, { "boolean", PRIMITIVE } },
+            { PN_UBYTE, { "unsigned byte", PRIMITIVE } },
+            { PN_BYTE, { "byte", PRIMITIVE } },
+            { PN_USHORT, { "unsigned short", PRIMITIVE } },
+            { PN_SHORT, { "short", PRIMITIVE } },
+            { PN_UINT, { "unsigned int", PRIMITIVE } },
+            { PN_INT, { "int", PRIMITIVE } },
+            { PN_CHAR, { "char", PRIMITIVE } },
+            { PN_ULONG, { "unsigned long", PRIMITIVE } },
+            { PN_LONG, { "long", PRIMITIVE } },
+            { PN_TIMESTAMP, { "timestamp", COMPLEX } },
+            { PN_FLOAT, { "float", PRIMITIVE } },
+            { PN_DOUBLE, { "double", PRIMITIVE } },
+            { PN_DECIMAL32, { "decimal-32", PRIMITIVE } },
+            { PN_DECIMAL64, { "decimal-64", PRIMITIVE } },
+            { PN_DECIMAL128, { "decimal-128", PRIMITIVE } },
+            { PN_UUID, { "uuid", PRIMITIVE } },
+            { PN_BINARY, { "binary", PRIMITIVE } },
+            { PN_STRING, { "string", PRIMITIVE } },
+            { PN_SYMBOL, { "symbol", PRIMITIVE } },
+            { PN_DESCRIBED, { "described",  COMPLEX } },
+            { PN_ARRAY, { "array", COMPLEX } },
+            { PN_LIST, { "list", COMPLEX } },
+            { PN_MAP, { "map", COMPLEX } },
+            { PN_INVALID, { "invalid", COMPLEX } }
+    };
+
+}
+
+std::string
+proton::typeToString (pn_data_t * data_) {
+    return protonToString[pn_data_type (data_)].first;
+}
 
 /******************************************************************************/
 
@@ -76,10 +124,15 @@ proton::pn_data_enter(pn_data_t * data_) {
 /******************************************************************************/
 
 void
-proton::is_described (pn_data_t * data_) {
-    if (pn_data_type(data_) != PN_DESCRIBED) {
+proton::assert_described (pn_data_t * data_) {
+    if (pn_data_type (data_) != PN_DESCRIBED) {
         throw std::runtime_error ("Expected a described type");
     }
+}
+
+bool
+proton::is_described (pn_data_t * data_) {
+    return pn_data_type (data_) == PN_DESCRIBED;
 }
 
 /******************************************************************************/
@@ -106,16 +159,46 @@ proton::is_symbol (pn_data_t * data_) {
 /******************************************************************************/
 
 void
-proton::is_list (pn_data_t * data_) {
+proton::
+attest_is_list (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type(data_) != PN_LIST) {
-        throw std::runtime_error ("Expected a list");
+        std::stringstream ss;
+
+        ss << "Expected a List, got " << protonToString[pn_data_type (data_)].first
+            << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
     }
 }
 
 /******************************************************************************/
 
 void
-proton::is_string (pn_data_t * data_, bool allowNull, const std::string & file_, int line_) {
+proton::
+is_map (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type(data_) != PN_MAP) {
+        std::stringstream ss;
+
+        ss << "Expected a Map, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+bool
+proton::
+is_primitive (pn_data_t * data_) {
+    return protonToString[pn_data_type(data_)].second == PRIMITIVE;
+}
+
+/******************************************************************************/
+
+void
+proton::
+attest_is_string (pn_data_t * data_, const std::string & file_, int line_, bool allowNull) {
     if (pn_data_type(data_) != PN_STRING) {
         if (allowNull && pn_data_type(data_) != PN_NULL) {
             std::stringstream ss;
@@ -168,6 +251,16 @@ proton::get_boolean (pn_data_t * data_) {
         return pn_data_get_bool (data_);
     }
     throw std::runtime_error ("Expected a boolean");
+}
+
+/******************************************************************************/
+
+int
+proton::get_int (pn_data_t * data_) {
+    if (pn_data_type(data_) == PN_INT) {
+        return pn_data_get_int (data_);
+    }
+    throw std::runtime_error ("Expected an Integer");
 }
 
 /******************************************************************************
@@ -285,7 +378,7 @@ int32_t
 proton::
 readAndNext<int32_t> (
     pn_data_t * data_,
-    bool tolerateDeviance_
+    [[maybe_unused]] bool tolerateDeviance_
 ) {
     int rtn = pn_data_get_int (data_);
     pn_data_next(data_);
@@ -325,7 +418,7 @@ bool
 proton::
 readAndNext<bool> (
     pn_data_t * data_,
-    bool tolerateDeviance_
+    [[maybe_unused]] bool tolerateDeviance_
 ) {
     bool rtn = pn_data_get_bool (data_);
     pn_data_next(data_);
@@ -339,7 +432,7 @@ double
 proton::
 readAndNext<double> (
     pn_data_t * data_,
-    bool tolerateDeviance_
+    [[maybe_unused]] bool tolerateDeviance_
 ) {
     auto_next an (data_);
     return pn_data_get_double (data_);
@@ -352,7 +445,7 @@ long
 proton::
 readAndNext<long> (
     pn_data_t * data_,
-    bool tolerateDeviance_
+    [[maybe_unused]] bool tolerateDeviance_
 ) {
     long rtn = pn_data_get_long (data_);
     pn_data_next (data_);
@@ -366,7 +459,7 @@ u_long
 proton::
 readAndNext<u_long > (
         pn_data_t * data_,
-        bool tolerateDeviance_
+        [[maybe_unused]] bool tolerateDeviance_
 ) {
     long rtn = pn_data_get_ulong (data_);
     pn_data_next (data_);

@@ -36,7 +36,7 @@ namespace amqp::internal::schema {
         public :
             virtual ~OrderedTypeNotation() = default;
 
-            virtual int dependsOn (const OrderedTypeNotation &) const = 0;
+            [[nodiscard]] virtual int dependsOn (const OrderedTypeNotation &) const = 0;
     };
 
 }
@@ -146,7 +146,7 @@ OrderedTypeNotations<T>::insert (
         uPtr<T> && ptr,
         amqp::internal::schema::OrderedTypeNotations<T>::iterator l_
 ) {
-    DBG ("Insert: " << ptr->name() << std::endl);
+    DBG ("Insert: " << ptr->name() << std::endl); // NOLINT
     /*
      * First we find where this element needs to be added
      */

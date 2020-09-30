@@ -24,15 +24,15 @@ namespace amqp::internal::serialiser::serialisers {
               , m_serialisers { std::move (serialisers_) }
             { }
 
-            const std::string & name() const override  {
+            [[nodiscard]] const std::string & name() const override  {
                 return m_name;
             }
 
-            const std::string & type() const  override {
+            [[nodiscard]] const std::string & type() const  override {
                 return m_type;
             }
 
-            const decltype (m_serialisers) & serialisers() const override { return m_serialisers; }
+            [[nodiscard]] const decltype (m_serialisers) & serialisers() const override { return m_serialisers; }
     };
 
 }

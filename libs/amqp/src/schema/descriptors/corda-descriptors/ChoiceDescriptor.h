@@ -10,7 +10,7 @@
 
 namespace amqp::internal::schema::descriptors {
 
-    class ChoiceDescriptor : public AMQPDescriptor {
+    class ChoiceDescriptor final : public AMQPDescriptor {
         public :
             ChoiceDescriptor() = delete;
 

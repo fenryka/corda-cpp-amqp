@@ -30,7 +30,7 @@ namespace amqp::internal::schema::descriptors {
         private :
             std::string indent;
         public :
-            AutoIndent() : indent { "" } { }
+            AutoIndent() = default;
 
             AutoIndent (const AutoIndent & ai_)
                 : indent { ai_.indent + "  "}
@@ -39,7 +39,7 @@ namespace amqp::internal::schema::descriptors {
             friend std::ostream &
             operator << (std::ostream & stream_, const AutoIndent & ai_);
 
-            decltype (indent.length()) length() const { return indent.length(); }
+            [[maybe_unused]] decltype (indent.length()) length() const { return indent.length(); }
         };
 }
 
@@ -69,7 +69,7 @@ namespace amqp::internal::schema::descriptors {
 
             virtual ~AMQPDescriptor() = default;
 
-            const std::string & symbol() const;
+            [[maybe_unused]] [[nodiscard]] const std::string & symbol() const;
 
             void validateAndNext (pn_data_t *) const;
 

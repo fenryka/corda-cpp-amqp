@@ -13,9 +13,9 @@
 
 namespace {
 
-    const std::string
+    std::string
     consumeBlob (pn_data_t * data_) {
-        proton::is_described (data_);
+        proton::assert_described(data_);
         proton::auto_enter p (data_);
         return proton::get_symbol<std::string> (data_);
     }
@@ -28,11 +28,15 @@ namespace {
  *
  ******************************************************************************/
 
-/*
+/**
  * Described types are a pair of a key and a list of elements. Having
  * parsed this as such a type we should be in the stack at the point
  * where we found the list and don't expect to have entered it before
  * calling this
+ *
+ * @param data_
+ * @param ss_
+ * @param ai_
  */
 void
 amqp::internal::schema::descriptors::
@@ -42,7 +46,7 @@ EnvelopeDescriptor::readRaw (
     const AutoIndent & ai_
 ) const {
     // lets just make sure we haven't entered this already
-    proton::is_list (data_);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         AutoIndent ai { ai_ };
@@ -68,10 +72,10 @@ EnvelopeDescriptor::readAvro (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const {
-    DBG ("readAvro::Envelope" << std::endl);
+    DBG ("readAvro::Envelope" << std::endl); // NOLINT
 
     // lets just make sure we haven't entered this already
-    proton::is_list (data_);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
         // skip the first element of the envelope as that's the data
@@ -100,32 +104,37 @@ amqp::internal::schema::descriptors::
 EnvelopeDescriptor::build (pn_data_t * data_) const {
     DBG ("ENVELOPE" << std::endl); // NOLINT
 
-    validateAndNext(data_);
+    validateAndNext (data_);
 
-    proton::auto_enter p (data_);
+    decltype (descriptors::dispatchDescribed<schema::Schema>(data_)) schema;
+    std::string outerType;
 
-    /*
-     * The actual blob... if this was java we would use the type symbols
-     * in the blob to look up serialisers in the cache... but we don't
-     * have any so we are actually going to need to use the schema
-     * which we parse *after* this to be able to read any data!
-     */
-    std::string outerType = consumeBlob(data_);
+    {
+        proton::auto_enter p(data_);
 
-    pn_data_next (data_);
+        /*
+         * The actual blob... if this was java we would use the type symbols
+         * in the blob to look up serializers in the cache... but we don't
+         * have any so we are actually going to need to use the schema
+         * which we parse *after* this to be able to read any data!
+         */
+        outerType = consumeBlob (data_);
 
-    /*
-     * The schema
-     */
-    auto schema = descriptors::dispatchDescribed<schema::Schema> (data_);
+        pn_data_next(data_);
 
-    pn_data_next(data_);
+        /*
+         * The schema
+         */
+        schema = descriptors::dispatchDescribed<schema::Schema>(data_);
 
-    /*
-     * The transforms schema
-     */
-    // Skip for now
-    // dispatchDescribed (data_);
+        pn_data_next(data_);
+
+        /*
+         * The transforms schema
+         */
+        // Skip for now
+        // dispatchDescribed (data_);
+    }
 
     return std::make_unique<schema::Envelope> (schema::Envelope (schema, outerType));
 }

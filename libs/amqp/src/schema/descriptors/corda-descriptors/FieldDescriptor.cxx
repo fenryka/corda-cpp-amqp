@@ -92,7 +92,7 @@ FieldDescriptor::readRaw (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const  {
-    proton::is_list (data_);
+    proton::attest_is_list  (data_, __FILE__, __LINE__);
 
     proton::auto_list_enter ale (data_, true);
     AutoIndent ai { ai_ };
@@ -119,7 +119,7 @@ FieldDescriptor::readRaw (
 
     pn_data_next (data_);
 
-    proton::is_string (data_, true);
+    proton::attest_is_string (data_, __FILE__, __LINE__, true);
 
     ss_ << ai << "4/7] String: Default: "
         << proton::get_string ((pn_data_t *)proton::auto_next (data_), true)
@@ -238,7 +238,7 @@ FieldDescriptor::readAvro (
         std::stringstream & ss_,
         const AutoIndent & ai_
 ) const  {
-    proton::is_list (data_);
+    proton::attest_is_list (data_, __FILE__, __LINE__);
 
     proton::auto_list_enter ale (data_, true);
     ss_ << ai_ << "{" << std::endl;
