@@ -1,7 +1,6 @@
 #include "Field.h"
 
 #include <sstream>
-#include <iostream>
 
 #include "corda-utils/include/debug.h"
 

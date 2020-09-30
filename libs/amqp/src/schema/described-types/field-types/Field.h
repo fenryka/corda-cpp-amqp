@@ -49,13 +49,13 @@ namespace amqp::internal::schema {
                std::string, std::string, bool, bool);
 
         public :
-            const std::string & name() const;
-            const std::string & type() const;
-            const std::list<std::string> & requires() const;
+            [[nodiscard]] const std::string & name() const;
+            [[nodiscard]] const std::string & type() const;
+            [[nodiscard]] const std::list<std::string> & requires() const;
 
-            virtual bool primitive() const = 0;
-            virtual const std::string & fieldType() const = 0;
-            virtual const std::string & resolvedType() const = 0;
+            [[nodiscard]] virtual bool primitive() const = 0;
+            [[nodiscard]] virtual const std::string & fieldType() const = 0;
+            [[nodiscard]] virtual const std::string & resolvedType() const = 0;
     };
 
 }

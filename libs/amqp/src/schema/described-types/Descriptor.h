@@ -20,7 +20,7 @@ namespace amqp::internal::schema {
         public :
             explicit Descriptor (std::string);
 
-            const std::string & name() const;
+            [[nodiscard]] const std::string & name() const;
     };
 
 }

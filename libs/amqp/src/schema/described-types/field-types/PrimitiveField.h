@@ -6,7 +6,7 @@
 
 namespace amqp::internal::schema {
 
-    class PrimitiveField : public Field {
+    class PrimitiveField final : public Field {
         private :
             static const std::string m_fieldType;
 
@@ -15,9 +15,9 @@ namespace amqp::internal::schema {
                 std::string, std::string, std::string,
                 std::string, bool, bool);
 
-            bool primitive() const override;
-            const std::string & fieldType() const override;
-            const std::string & resolvedType() const override;
+            [[nodiscard]] bool primitive() const override;
+            [[nodiscard]] const std::string & fieldType() const override;
+            [[nodiscard]] const std::string & resolvedType() const override;
     };
 
 }

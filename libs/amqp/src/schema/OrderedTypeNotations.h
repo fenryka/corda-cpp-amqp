@@ -56,7 +56,8 @@ namespace amqp::internal::schema {
         private:
             void insert (uPtr<T> &&, iterator);
             void insertNewList (uPtr<T> &&);
-            void insertNewList (
+
+        [[maybe_unused]] void insertNewList (
                     uPtr<T> &&,
                     typename std::list<std::list<uPtr<T>>>::iterator &);
 
@@ -113,11 +114,15 @@ OrderedTypeNotations<T>::insertNewList(uPtr<T> && ptr) {
 
 /**
  * This could be a bit more space efficient by checking the previous element
- * for dependendies again as its possible we are moving multiple elements "up"
+ * for dependencies again as its possible we are moving multiple elements "up"
  * but the extra checks probably don't make it worth it.
+ *
+ * **NOTE** Marked as maybe_unused to shut up a CLANG warning but this
+ * function is clearly used in insert below so not clear
+ * why we're getting the warning.
  */
 template<class T>
-void
+[[maybe_unused]] void
 amqp::internal::schema::
 OrderedTypeNotations<T>::insertNewList(
         uPtr<T> && ptr,

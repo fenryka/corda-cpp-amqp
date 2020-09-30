@@ -11,10 +11,10 @@ namespace amqp::internal::schema {
             std::vector<std::string> m_listOf;
             std::string m_source;
 
-            int dependsOnMap (const Map &) const override;
-            int dependsOnList (const List &) const override;
-            int dependsOnEnum (const Enum &) const override;
-            int dependsOnArray (const Array &) const override;
+            [[nodiscard]] int dependsOnMap (const Map &) const override;
+            [[nodiscard]] int dependsOnList (const List &) const override;
+            [[nodiscard]] int dependsOnEnum (const Enum &) const override;
+            [[nodiscard]] int dependsOnArray (const Array &) const override;
 
         public :
             List (
@@ -24,12 +24,12 @@ namespace amqp::internal::schema {
                 std::vector<std::string>,
                 std::string);
 
-            std::vector<std::string>::const_iterator begin() const override;
-            std::vector<std::string>::const_iterator end() const override;
+            [[nodiscard]] std::vector<std::string>::const_iterator begin() const override;
+            [[nodiscard]] std::vector<std::string>::const_iterator end() const override;
 
-            const std::string & listOf() const;
+            [[nodiscard]] const std::string & listOf() const;
 
-            int dependsOnRHS (const Composite &) const override;
+            [[nodiscard]] int dependsOnRHS (const Composite &) const override;
     };
 
 }

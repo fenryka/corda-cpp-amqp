@@ -29,7 +29,7 @@ namespace amqp::internal::schema {
 
 namespace amqp::internal::schema {
 
-    class Schema : public amqp::schema::ISchema, public amqp::schema::ISchemaElement {
+    class Schema final : public amqp::schema::ISchema, public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Schema &);
 
@@ -42,13 +42,13 @@ namespace amqp::internal::schema {
         public :
             explicit Schema (OrderedTypeNotations<AMQPTypeNotation>);
 
-            const OrderedTypeNotations<AMQPTypeNotation> & types() const;
+            [[nodiscard]] const OrderedTypeNotations<AMQPTypeNotation> & types() const;
 
-            const amqp::schema::ISchemaElement & fromType (const std::string &) const override;
-            const amqp::schema::ISchemaElement & fromDescriptor (const std::string &) const override;
+            [[nodiscard]] const amqp::schema::ISchemaElement & fromType (const std::string &) const override;
+            [[nodiscard]] const amqp::schema::ISchemaElement & fromDescriptor (const std::string &) const override;
 
-            decltype (m_types.begin()) begin() const { return m_types.begin(); }
-            decltype (m_types.end()) end() const { return m_types.end(); }
+            [[nodiscard]] decltype (m_types.begin()) begin() const { return m_types.begin(); }
+            [[nodiscard]] decltype (m_types.end()) end() const { return m_types.end(); }
     };
 
 }

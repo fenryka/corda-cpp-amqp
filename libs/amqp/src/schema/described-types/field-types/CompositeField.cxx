@@ -1,7 +1,5 @@
 #include "CompositeField.h"
 
-#include <iostream>
-
 #include "Field.h"
 
 #include "corda-utils/include/debug.h"

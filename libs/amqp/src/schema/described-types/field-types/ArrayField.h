@@ -6,7 +6,7 @@
 
 namespace amqp::internal::schema {
 
-    class ArrayField : public RestrictedField {
+    class ArrayField final : public RestrictedField {
         private :
             static const std::string m_fieldType;
 
@@ -15,8 +15,8 @@ namespace amqp::internal::schema {
                 std::string, std::string, std::list<std::string>,
                 std::string, std::string, bool, bool);
 
-            const std::string & fieldType() const override;
-            const std::string & resolvedType() const override;
+            [[nodiscard]] const std::string & fieldType() const override;
+            [[nodiscard]] const std::string & resolvedType() const override;
     };
 
 }

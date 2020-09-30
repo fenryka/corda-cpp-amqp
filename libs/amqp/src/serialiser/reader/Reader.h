@@ -17,7 +17,7 @@ namespace amqp::internal::serialiser::reader {
 
     class Value : public amqp::serialiser::reader::IValue {
         public :
-            std::string dump() const override = 0;
+            [[nodiscard]] std::string dump() const override = 0;
 
             ~Value() override = default;
     };
@@ -37,7 +37,7 @@ namespace amqp::internal::serialiser::reader {
      */
     class Single : public Value {
         public :
-            std::string dump() const override = 0;
+            [[nodiscard]] std::string dump() const override = 0;
 
             ~Single() override = default;
     };
@@ -63,11 +63,11 @@ namespace amqp::internal::serialiser::reader {
                 , m_value { std::move (value_.m_value) }
             { }
 
-            const T & value() const {
+            [[nodiscard]] const T & value() const {
                 return m_value;
             }
 
-            std::string dump() const override;
+            [[nodiscard]] std::string dump() const override;
     };
 
     /*
@@ -91,7 +91,7 @@ namespace amqp::internal::serialiser::reader {
                 : m_property (std::move (pair_.m_property))
             { }
 
-            std::string dump() const override = 0;
+            [[nodiscard]] std::string dump() const override = 0;
     };
 
 
@@ -116,11 +116,11 @@ namespace amqp::internal::serialiser::reader {
                 , m_value (std::move (pair_.m_value))
             { }
 
-            const T & value() const {
+            [[nodiscard]] const T & value() const {
                 return m_value;
             }
 
-            std::string dump() const override;
+            [[nodiscard]] std::string dump() const override;
     };
 
     /**
@@ -143,7 +143,7 @@ namespace amqp::internal::serialiser::reader {
               , m_value (std::move (value_))
         { }
 
-        std::string dump() const override;
+        [[nodiscard]] std::string dump() const override;
     };
 
 }
@@ -244,7 +244,7 @@ namespace amqp::internal::serialiser::reader  {
      * from reflection of the type definitions.
      *
      * In other words, when encountering a graph of nodes with values, an
-     * instance of [Reader] will give a sub tree of that graph contextual
+     * instance of [Reader] will give a sub tree of that graph's contextual
      * meaning.
      */
     class Reader : public amqp::serialiser::reader::IReader {

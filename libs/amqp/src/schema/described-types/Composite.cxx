@@ -123,11 +123,11 @@ amqp::internal::schema::
 Composite::dependsOnRHS (
         const amqp::internal::schema::Composite & lhs_
 ) const {
-    DBG (name() << " ?Depends on " << lhs_.name() << std::endl);
+    DBG (name() << " ?Depends on " << lhs_.name() << std::endl); // NOLINT
 
     // do we depend on the lhs
     for (const auto & field : m_fields) {
-        DBG ("FIELD - " << name() << "::" << type() << std::endl);
+        DBG ("FIELD - " << name() << "::" << type() << std::endl); // NOLINT
         DBG ("  C/C a) " << field->resolvedType() << " == " << lhs_.name() << std::endl); // NOLINT
 
         if (field->resolvedType() == lhs_.name()) {
@@ -137,7 +137,7 @@ Composite::dependsOnRHS (
 
     // does it depend on us
     for (auto const & field : lhs_) {
-        DBG ("FIELD - " << name() << "::" << type() << std::endl);
+        DBG ("FIELD - " << name() << "::" << type() << std::endl); // NOLINT
         DBG ("  C/C b) " << field->resolvedType() << " == " << name() << std::endl); // NOLINT
         if (field->resolvedType() == name()) {
             return 2;

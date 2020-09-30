@@ -63,7 +63,7 @@ Array::Array (
   , m_arrayOf { types::unbox (arrayType (name())) }
   , m_source { std::move (source_) }
 {
-    DBG ("ARRAY OF::" << arrayOf() << ", name::" << name() <<  std::endl);
+    DBG ("ARRAY OF::" << arrayOf() << ", name::" << name() <<  std::endl); // NOLINT
 }
 
 /******************************************************************************/

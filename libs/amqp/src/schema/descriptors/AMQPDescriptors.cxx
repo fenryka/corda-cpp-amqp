@@ -3,23 +3,12 @@
 #include "Descriptors.h"
 
 #include <string>
-#include <iostream>
-#include <proton/types.h>
+
 #include <proton/codec.h>
 
-#include "corda-utils/include/colours.h"
 #include "corda-utils/include/debug.h"
 
-#include "proton-wrapper/include/proton_wrapper.h"
-
 #include "field-types/Field.h"
-#include "described-types/Schema.h"
-#include "described-types/Envelope.h"
-#include "described-types/Composite.h"
-#include "restricted-types/Restricted.h"
-#include "OrderedTypeNotations.h"
-
-#include "AMQPDescriptorRegistory.h"
 
 /******************************************************************************
  *

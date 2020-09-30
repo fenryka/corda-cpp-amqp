@@ -139,7 +139,7 @@ TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
 
 /******************************************************************************
  *
- *
+ * amqp::internal::serialiser::reader::TypedSingle specialisations
  *
  ******************************************************************************/
 

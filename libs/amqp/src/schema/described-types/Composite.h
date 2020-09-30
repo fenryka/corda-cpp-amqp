@@ -53,7 +53,7 @@ namespace amqp::internal::schema {
             // we don't know about knowing the interfaces (java concept)
             // that this class implemented isn't al that useful but we'll
             // at least preserve the list
-            std::list<std::string> m_provides;
+            [[ maybe_unused ]] std::list<std::string> m_provides;
 
             /**
              * The properties of the Class
@@ -68,16 +68,16 @@ namespace amqp::internal::schema {
                 std::unique_ptr<Descriptor> descriptor_,
                 std::vector<std::unique_ptr<Field>> fields_);
 
-            const std::vector<std::unique_ptr<Field>> & fields() const;
+            [[nodiscard]] const std::vector<std::unique_ptr<Field>> & fields() const;
 
-            Type type() const override;
+            [[nodiscard]] Type type() const override;
 
-            int dependsOn (const OrderedTypeNotation &) const override;
-            int dependsOnRHS (const class Restricted &) const override;
-            int dependsOnRHS (const Composite &) const override;
+            [[nodiscard]] int dependsOn (const OrderedTypeNotation &) const override;
+            [[nodiscard]] int dependsOnRHS (const class Restricted &) const override;
+            [[nodiscard]] int dependsOnRHS (const Composite &) const override;
 
-            decltype(m_fields)::const_iterator begin() const { return m_fields.cbegin();}
-            decltype(m_fields)::const_iterator end() const { return m_fields.cend(); }
+            [[nodiscard]] decltype(m_fields)::const_iterator begin() const { return m_fields.cbegin();}
+            [[nodiscard]] decltype(m_fields)::const_iterator end() const { return m_fields.cend(); }
     };
 
 }

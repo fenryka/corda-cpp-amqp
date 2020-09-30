@@ -1,8 +1,6 @@
 #include <iostream>
 #include "AMQPTypeNotation.h"
 
-#include "corda-utils/include/colours.h"
-
 #include "described-types/Composite.h"
 #include "restricted-types/Restricted.h"
 

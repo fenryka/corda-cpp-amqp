@@ -10,7 +10,7 @@
 
 namespace amqp::internal::schema {
 
-    class Envelope : public amqp::schema::ISchemaElement {
+    class Envelope final : public amqp::schema::ISchemaElement {
         public :
             friend std::ostream & operator << (std::ostream &, const Envelope &);
 
@@ -25,9 +25,9 @@ namespace amqp::internal::schema {
                 std::unique_ptr<Schema> & schema_,
                 std::string descriptor_);
 
-            const amqp::schema::ISchema & schema() const;
+            [[nodiscard]] const amqp::schema::ISchema & schema() const;
 
-            const std::string & descriptor() const;
+            [[nodiscard]] const std::string & descriptor() const;
     };
 
 }

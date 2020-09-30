@@ -72,10 +72,10 @@ namespace amqp::internal::schema {
                 std::vector<std::string>,
                 RestrictedTypes);
 
-            virtual int dependsOnMap (const Map &) const = 0;
-            virtual int dependsOnList (const List &) const = 0;
-            virtual int dependsOnArray (const Array &) const = 0;
-            virtual int dependsOnEnum (const Enum &) const = 0;
+            [[nodiscard]] virtual int dependsOnMap (const Map &) const = 0;
+            [[nodiscard]] virtual int dependsOnList (const List &) const = 0;
+            [[nodiscard]] virtual int dependsOnArray (const Array &) const = 0;
+            [[nodiscard]] virtual int dependsOnEnum (const Enum &) const = 0;
 
         public :
             static std::unique_ptr<Restricted> make(
@@ -86,28 +86,28 @@ namespace amqp::internal::schema {
                     std::string,
                     std::vector<uPtr<Choice>>);
 
-            Restricted (Restricted&) = delete;
+            [[nodiscard]] Restricted (Restricted&) = delete;
 
-            Type type() const override;
+            [[nodiscard]] Type type() const override;
 
-            RestrictedTypes restrictedType() const;
+            [[nodiscard]] RestrictedTypes restrictedType() const;
 
             /**
              * @return an iterator over the types the restricted class represents.
              * In the case of a list, the element this is a list of, in the
              * case of a map the key and value types etc.
              */
-            virtual std::vector<std::string>::const_iterator begin() const = 0;
-            virtual std::vector<std::string>::const_iterator end() const = 0;
+            [[nodiscard]] virtual std::vector<std::string>::const_iterator begin() const = 0;
+            [[nodiscard]] virtual std::vector<std::string>::const_iterator end() const = 0;
 
-            int dependsOn (const OrderedTypeNotation &) const override;
-            int dependsOnRHS (const Restricted &) const override;
+            [[nodiscard]] int dependsOn (const OrderedTypeNotation &) const override;
+            [[nodiscard]] int dependsOnRHS (const Restricted &) const override;
 
-            int dependsOnRHS (const Composite &) const override = 0;
+            [[nodiscard]] int dependsOnRHS (const Composite &) const override = 0;
 
-            const decltype (m_provides) & provides() const { return m_provides; }
-            const decltype (m_label) & label() const { return m_label; }
-            const decltype (m_source) & source() const { return m_source; }
+            [[nodiscard]] const decltype (m_provides) & provides() const { return m_provides; }
+            [[nodiscard]] const decltype (m_label) & label() const { return m_label; }
+            [[nodiscard]] const decltype (m_source) & source() const { return m_source; }
     };
 
 

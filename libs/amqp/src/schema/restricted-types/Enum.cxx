@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "corda-utils/include/debug.h"
-
 #include "Map.h"
 #include "List.h"
 #include "described-types/Composite.h"

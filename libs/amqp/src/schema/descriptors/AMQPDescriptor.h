@@ -26,7 +26,7 @@ struct pn_data_t;
 
 namespace amqp::internal::schema::descriptors {
 
-    class AutoIndent {
+    class AutoIndent final {
         private :
             std::string indent;
         public :
@@ -36,10 +36,9 @@ namespace amqp::internal::schema::descriptors {
                 : indent { ai_.indent + "  "}
             { }
 
-            friend std::ostream &
-            operator << (std::ostream & stream_, const AutoIndent & ai_);
+            friend std::ostream & operator << (std::ostream &, const AutoIndent &);
 
-            [[maybe_unused]] decltype (indent.length()) length() const { return indent.length(); }
+            [[maybe_unused]] [[nodiscard]] decltype (indent.length()) length() const { return indent.length(); }
         };
 }
 
@@ -92,7 +91,7 @@ namespace amqp::internal::schema::descriptors {
 
             /**
              * So this method won't be perfect because we're not parsing the scema into
-             * a form we can then transofrm into acro. Rather, we're looking at the raw
+             * a form we can then transform into avro. Rather, we're looking at the raw
              * schema data in the packet and on the fly rendering it as an Avro schema.
              *
              * This is for the most part fine but there are complications and edge cases

@@ -15,9 +15,9 @@ namespace amqp::internal::schema {
                 std::string, std::string, std::list<std::string>,
                 std::string, std::string, bool, bool);
 
-            bool primitive() const override;
-            const std::string & fieldType() const override;
-            const std::string & resolvedType() const override;
+            [[nodiscard]] bool primitive() const override;
+            [[nodiscard]] const std::string & fieldType() const override;
+            [[nodiscard]] const std::string & resolvedType() const override;
     };
 
 }
