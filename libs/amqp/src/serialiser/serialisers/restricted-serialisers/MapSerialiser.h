@@ -2,7 +2,7 @@
 
 /******************************************************************************/
 
-#include "RestrictedSerialiser.h"
+#include "amqp/src/serialiser/serialisers/RestrictedSerialiser.h"
 #include "amqp/include/serialiser/ISerialiser.h"
 
 /******************************************************************************/

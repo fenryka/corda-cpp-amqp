@@ -5,8 +5,8 @@
 #include <map>
 #include <string>
 #include <amqp/src/serialiser/serialisers/restricted-serialisers/ListSerialiser.h>
-#include <amqp/src/serialiser/reader/restricted-readers/ListReader.h>
-#include <amqp/src/serialiser/writer/Writer.h>
+#include <amqp/src/serialiser/serialisers/reader/restricted-readers/ListReader.h>
+#include <amqp/src/serialiser/serialisers/writer/Writer.h>
 
 #include "amqp/src/serialiser/Serialiser.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/IntPropertySerialiser.h"
@@ -15,11 +15,11 @@
 #include "amqp/src/serialiser/serialisers/property-serialisers/BoolPropertySerialiser.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/StringPropertySerialiser.h"
 
-#include "amqp/src/serialiser/reader/property-readers/IntPropertyReader.h"
-#include "amqp/src/serialiser/reader/property-readers/DoublePropertyReader.h"
-#include "amqp/src/serialiser/reader/property-readers/LongPropertyReader.h"
-#include "amqp/src/serialiser/reader/property-readers/BoolPropertyReader.h"
-#include "amqp/src/serialiser/reader/property-readers/StringPropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/IntPropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/DoublePropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/LongPropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/BoolPropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/StringPropertyReader.h"
 
 /******************************************************************************/
 
