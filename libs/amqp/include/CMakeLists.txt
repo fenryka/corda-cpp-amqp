@@ -1,4 +1,4 @@
-target_sources(amqp
+target_sources(${libName}
         PUBLIC
             AMQPBlob.h
             AMQPHeader.h
