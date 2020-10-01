@@ -1,9 +1,8 @@
 #pragma once
 
-
 #include <string>
 
-#include "AMQPDescriptors.h"
+#include "amqp/src/schema/descriptors/AMQPDescriptors.h"
 
 /******************************************************************************
  *
