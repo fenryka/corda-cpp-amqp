@@ -3,7 +3,7 @@
 #include "corda-utils/include/types.h"
 #include "corda-utils/include/debug.h"
 
-#include "AMQPDescriptor.h"
+#include "amqp/src/schema/descriptors/AMQPDescriptor.h"
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
