@@ -3,5 +3,5 @@ target_sources(${libName}
         CompositeFactory.cxx
         CompositeFactory.h
     PUBLIC
-        SerialiserFactory.cxx
+        SerialiserFactoryInternal.cxx
 )

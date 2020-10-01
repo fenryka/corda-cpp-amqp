@@ -23,8 +23,6 @@ namespace amqp::serializable {
         private :
             std::string m_fingerprint;
 
-            [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build() const = 0;
-
         public :
             Serializable() = delete;
 
@@ -34,6 +32,12 @@ namespace amqp::serializable {
 
             [[nodiscard]] uPtr<AMQPBlob> serialize (
                     const amqp::assembler::SerialiserFactory &) const;
+
+            [[nodiscard]] const std::string & fingerprint() const {
+                return m_fingerprint;
+            }
+
+            [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build() const = 0;
     };
 
 }

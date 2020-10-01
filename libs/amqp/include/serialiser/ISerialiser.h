@@ -21,14 +21,14 @@ namespace amqp::serialiser {
             static const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> m_empty;
 
         public :
-            virtual const std::string & name() const = 0;
-            virtual const std::string & type() const = 0;
+            [[nodiscard]] virtual const std::string & name() const = 0;
+            [[nodiscard]] virtual const std::string & type() const = 0;
 
             /*
              * Non primitive serializers have sub elements, this should return a reference
              * to those
              */
-            virtual const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> & serialisers() const {
+            [[nodiscard]] virtual const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> & serialisers() const {
                 return m_empty;
             }
 

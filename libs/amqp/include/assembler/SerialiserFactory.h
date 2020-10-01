@@ -10,15 +10,17 @@
 
 namespace amqp::assembler {
 
+}
+
+namespace amqp::assembler {
+
     class SerialiserFactory {
-        private :
-
-            std::map<std::string, uPtr<serialiser::ISerialiser>> m_serialisers;
-
         public :
-            [[nodiscard]] uPtr<amqp::AMQPBlob> serialize (
-                    const amqp::serializable::Serializable &) const;
+            [[nodiscard]] virtual uPtr<amqp::AMQPBlob> serialize (
+                    const amqp::serializable::Serializable &) const = 0;
 
+            virtual bool registerType (
+                    const amqp::serializable::Serializable &) = 0;
     };
 
 }

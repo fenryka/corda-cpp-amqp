@@ -1,9 +1,6 @@
-#include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/corda-utils)
-#include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/proton-wrapper)
 include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/amqp)
 
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
-#link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/proton-wrapper)
 
 set (writer-test-1-srcs
         main.cxx SerialiseMe.cxx SerialiseMe.h)

@@ -11,10 +11,10 @@ class SerialiseMe : public amqp::serializable::Serializable {
     private :
         int m_val;
 
-        uPtr<amqp::serialiser::ISerialiser> build() const override;
+        [[nodiscard]] uPtr<amqp::serialiser::ISerialiser> build() const override;
 
 
-public :
+    public :
         explicit SerialiseMe (int val_)
             : Serializable ("123")
             , m_val (val_)

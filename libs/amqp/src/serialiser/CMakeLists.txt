@@ -3,7 +3,7 @@ target_sources(${libName}
         ISerialiser.cxx
     PUBLIC
         Serialiser.h
-        SerialiserFactory.h
+        SerialiserFactoryInternal.h
 )
 
 ADD_SUBDIRECTORY (serialisers)

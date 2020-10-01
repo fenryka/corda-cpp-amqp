@@ -1,7 +1,6 @@
 #include "CompositeFactory.h"
 
 #include <vector>
-#include <iostream>
 #include <functional>
 
 #include <cassert>
@@ -15,7 +14,7 @@
 
 #include "serialiser/reader/IReader.h"
 
-#include "amqp/src/serialiser/SerialiserFactory.h"
+#include "amqp/src/serialiser/SerialiserFactoryInternal.h"
 
 #include "amqp/src/serialiser/serialisers/writer/Writer.h"
 
