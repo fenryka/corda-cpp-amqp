@@ -3,4 +3,6 @@ target_sources(${libName}
             AMQPBlob.h
             AMQPHeader.h
             AMQPSectionId.h
+            serializable/Serializable.h
         )
+

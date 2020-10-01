@@ -1,12 +1,6 @@
 #include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <cstddef>
 
-#include <assert.h>
-#include <string.h>
-#include <proton/types.h>
-#include <proton/codec.h>
+#include <cassert>
 #include <sys/stat.h>
 
 #include "include/CordaBytes.h"
@@ -17,6 +11,10 @@
 int
 main (int argc, char **argv) {
     struct stat results { };
+
+    if (argc != 2)  {
+        return EXIT_FAILURE;
+    }
 
     if (stat(argv[1], &results) != 0) {
         return EXIT_FAILURE;

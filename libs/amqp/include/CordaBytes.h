@@ -23,13 +23,13 @@ namespace amqp {
             delete[] m_blob;
         }
 
-        const decltype (m_encoding) &encoding() const {
+        [[nodiscard]] const decltype (m_encoding) &encoding() const {
             return m_encoding;
         }
 
-        decltype (m_size) size() const { return m_size; }
+        [[nodiscard]] decltype (m_size) size() const { return m_size; }
 
-        const char * const bytes() const { return m_blob; }
+        [[nodiscard]] const char * const bytes() const { return m_blob; }
     };
 
 }

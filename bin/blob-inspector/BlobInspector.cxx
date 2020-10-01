@@ -2,7 +2,6 @@
 #include "include/CordaBytes.h"
 
 #include <iostream>
-#include <sstream>
 
 /******************************************************************************/
 

@@ -1,7 +1,16 @@
 #include <iostream>
 
+#include "SerialiseMe.h"
+
+/******************************************************************************/
+
 int
-main (int argc, char **argv) {
-    std::cout << "Hello World" << std::endl;
+main () {
+    SerialiseMe sme = SerialiseMe (100);
+    amqp::assembler::SerialiserFactory sf;
+
+    auto blob = sme.serialize(sf);
+
     return EXIT_SUCCESS;
 }
+/******************************************************************************/
