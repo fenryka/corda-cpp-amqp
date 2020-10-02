@@ -12,6 +12,17 @@
 
 /******************************************************************************/
 
+/**
+ * Should only be being invoked by Modifiable Blob
+ */
+amqp::AMQPBlob::AMQPBlob()
+    : m_data { pn_data (0) }
+{
+
+}
+
+/******************************************************************************/
+
 amqp::
 AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
     : m_data { pn_data (cb_.size()) }

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <amqp/src/serialiser/serialisers/reader/CompositeReader.h>
-#include <amqp/src/serialiser/serialisers/writer/Writer.h>
+#include "amqp/src/serialiser/serialisers/reader/CompositeReader.h"
+#include "amqp/src/serialiser/serialisers/writer/Writer.h"
 #include "amqp/include/assembler/SerialiserFactory.h"
 #include "amqp/src/serialiser/Serialiser.h"
 #include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
@@ -21,7 +21,8 @@ namespace amqp::internal::assembler {
             [[nodiscard]] uPtr<amqp::AMQPBlob>
             serialize(const amqp::serializable::Serializable &) const override;
 
-            bool registerType (const amqp::serializable::Serializable &) override;
+
+            void writeInt(int, const std::string &, ModifiableAMQPBlob &) const override;
     };
 
 }
@@ -35,11 +36,13 @@ SerialiserFactoryInternal::serialize(
     return nullptr;
 }
 
-bool
+void
 amqp::internal::assembler::
-SerialiserFactoryInternal::registerType (
-        const amqp::serializable::Serializable & clazz_)
-{
-    auto a = clazz_.build(*this);
-    return true;
+SerialiserFactoryInternal::writeInt(
+    int val_,
+    const std::string & name,
+    amqp::ModifiableAMQPBlob & blob_
+) const {
+
 }
+

@@ -8,8 +8,8 @@
 #include <vector>
 #include <memory>
 
-#include "described-types/Schema.h"
-#include "serialiser/reader/IReader.h"
+#include "amqp/src/schema/described-types/Schema.h"
+#include "amqp/include/serialiser/reader/IReader.h"
 
 /******************************************************************************/
 

@@ -10,24 +10,10 @@
 
 namespace amqp::assembler {
 
-    class FactorySchema {
-
-    };
-
-}
-
-
-namespace amqp::assembler {
-
     class SerialiserFactory {
         public :
-            [[nodiscard]] virtual uPtr<amqp::AMQPBlob> serialize (
-                    const amqp::serializable::Serializable &) const = 0;
-
-            virtual bool registerType (
-                    const amqp::serializable::Serializable &) = 0;
-
-
+            void writeComposite ();
+            virtual void writeInt(int, const std::string &, ModifiableAMQPBlob &) const = 0;
     };
 
 }

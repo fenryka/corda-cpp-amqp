@@ -313,7 +313,7 @@ CompositeFactory::processRestricted (
 
 /******************************************************************************/
 
-sPtr<amqp::serialiser::ISerialiser>
+const sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byType (const std::string & type_) {
     auto it = m_serialisersByType.find (type_);
@@ -323,7 +323,7 @@ CompositeFactory::byType (const std::string & type_) {
 
 /******************************************************************************/
 
-sPtr<amqp::serialiser::ISerialiser>
+const sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byDescriptor (const std::string & descriptor_) {
     auto it = m_serialisersByDescriptor.find (descriptor_);

@@ -12,7 +12,7 @@
 #include "field-types/Field.h"
 
 #include "Descriptor.h"
-#include "AMQPTypeNotation.h"
+#include "amqp/src/schema/AMQPTypeNotation.h"
 
 /******************************************************************************
  *

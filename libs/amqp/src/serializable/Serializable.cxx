@@ -3,10 +3,3 @@
 
 /******************************************************************************/
 
-uPtr<amqp::AMQPBlob>
-amqp::serializable::
-Serializable::serialize (const amqp::assembler::SerialiserFactory & sf_) const {
-    return sf_.serialize (*this);
-}
-
-/******************************************************************************/

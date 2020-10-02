@@ -10,7 +10,11 @@ include_directories (amqp)
 
 set (amqp_sources
         src/AMQPBlob.cxx
-        src/CordaBytes.cxx include/assembler/SerialiserFactory.h src/assembler/SerialiserFactoryInternal.cxx src/serializable/Serializable.cxx)
+        src/CordaBytes.cxx include/assembler/SerialiserFactory.h
+        src/assembler/SerialiserFactoryInternal.cxx
+        src/serializable/Serializable.cxx
+        include/ModifiableAMQPBlob.h
+        src/ModifiableAMQPBlob.cxx)
 
 ADD_LIBRARY ( ${libName} SHARED ${amqp_sources})
 
