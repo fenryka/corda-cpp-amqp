@@ -9,19 +9,26 @@
 
 class SerialiseMe : public amqp::serializable::Serializable {
     private :
-        int m_val;
+        int         m_val;
+        std::string m_val2;
 
-        [[nodiscard]] uPtr<amqp::serialiser::ISerialiser> build() const override;
-
+    [[nodiscard]] uPtr<amqp::serialiser::ISerialiser> build (
+                amqp::assembler::SerialiserFactory &
+                ) const override;
 
     public :
-        explicit SerialiseMe (int val_)
+        explicit SerialiseMe (int val_, std::string val2_)
             : Serializable ("123")
             , m_val (val_)
+            , m_val2 (std::move (val2_))
         { }
 
-        [[nodiscard]] int val() const {
+        [[maybe_unused]] [[nodiscard]] int val() const {
             return m_val;
+        }
+
+        [[maybe_unused]] [[nodiscard]] const std::string & val2() const {
+            return m_val2;
         }
 };
 

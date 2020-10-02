@@ -10,7 +10,12 @@
 
 namespace amqp::assembler {
 
+    class FactorySchema {
+
+    };
+
 }
+
 
 namespace amqp::assembler {
 
@@ -21,6 +26,8 @@ namespace amqp::assembler {
 
             virtual bool registerType (
                     const amqp::serializable::Serializable &) = 0;
+
+
     };
 
 }

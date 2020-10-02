@@ -28,9 +28,6 @@ namespace amqp::internal::assembler {
 
     class CompositeFactory : public ICompositeFactory {
         private :
-            using CompositePtr = uPtr<schema::Composite>;
-            using EnvelopePtr  = uPtr<schema::Envelope>;
-
             spStrMap_t<amqp::serialiser::ISerialiser> m_serialisersByType;
             spStrMap_t<amqp::serialiser::ISerialiser> m_serialisersByDescriptor;
 
@@ -58,7 +55,7 @@ namespace amqp::internal::assembler {
             sPtr<amqp::serialiser::ISerialiser> processList (
                     const schema::List &);
 
-            sPtr<amqp::serialiser::ISerialiser> processEnum (
+            static sPtr<amqp::serialiser::ISerialiser> processEnum (
                     const schema::Enum &);
 
             sPtr<amqp::serialiser::ISerialiser> processMap (

@@ -40,6 +40,6 @@ amqp::internal::assembler::
 SerialiserFactoryInternal::registerType (
         const amqp::serializable::Serializable & clazz_)
 {
-    m_serialisers[clazz_.fingerprint()] = clazz_.build();
+    auto a = clazz_.build(*this);
     return true;
 }

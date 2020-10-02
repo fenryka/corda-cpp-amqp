@@ -37,7 +37,8 @@ namespace amqp::serializable {
                 return m_fingerprint;
             }
 
-            [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build() const = 0;
+            [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build(
+                    amqp::assembler::SerialiserFactory &) const = 0;
     };
 
 }
