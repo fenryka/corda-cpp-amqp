@@ -10,6 +10,8 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
+#include "amqp/include/CordaBytes.h"
+
 /******************************************************************************/
 
 /**

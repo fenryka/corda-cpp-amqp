@@ -256,3 +256,30 @@ FieldDescriptor::readAvro (
 }
 
 /******************************************************************************/
+
+/*
+ * contents of a Field
+ *      name: String
+ *      type: String
+ *      requires: List<String>
+ *      default: String?
+ *      label: String?
+ *      mandatory: Boolean - copes with the Kotlin concept of nullability.
+ *          If something is mandatory then it cannot be null
+ *      multiple: Boolean
+ */
+pn_data_t *
+amqp::internal::schema::descriptors::
+FieldDescriptor::makeProton (
+    const std::string & name_,
+    const std::string & type_,
+    const std::vector<std::string> & requires_,
+    const std::string & default_,
+    const std::string & label_,
+    bool mandatory_,
+    bool muliple_
+) {
+    return nullptr;
+}
+
+/******************************************************************************/

@@ -1,8 +1,11 @@
-target_sources(${libName}
+target_sources (${libName}
+        PRIVATE
+        ../src/ModifiableAMQPBlob.cxx
         PUBLIC
             AMQPBlob.h
             AMQPHeader.h
             AMQPSectionId.h
-            serializable/Serializable.h
         )
+
+ADD_SUBDIRECTORY (serializable)
 

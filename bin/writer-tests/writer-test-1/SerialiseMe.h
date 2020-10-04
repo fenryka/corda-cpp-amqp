@@ -23,7 +23,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit SerialiseMe (int val_, std::string val2_)
-            : Serializable ("123", "net.test")
+            : Serializable ("fingerprint123", "net.test")
             , m_val (val_)
             , m_val2 (std::move (val2_))
         { }

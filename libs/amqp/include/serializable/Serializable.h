@@ -35,22 +35,15 @@ namespace amqp::serializable {
 
             explicit Serializable (
                     std::string fingerprint_,
-                    std::string namespace_
-            ) : m_fingerprint (std::move (fingerprint_))
-              , m_namespace (std::move (namespace_)
-            ) {
-
-            }
+                    std::string namespace_);
 
             [[nodiscard]] uPtr<AMQPBlob> serialise (
                     const amqp::assembler::SerialiserFactory & sf_
-            ) const {
-                return serialiseImpl(sf_, std::make_unique<amqp::ModifiableAMQPBlob>());
-            }
+            ) const;
 
-            [[nodiscard]] const std::string & fingerprint() const {
-                    return m_fingerprint;
-            }
+            [[nodiscard]] const std::string & fingerprint() const;
+
+            [[nodiscard]] const std::string & javaNamespace() const;
 
             [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build (
                     amqp::assembler::SerialiserFactory &) const = 0;

@@ -2,9 +2,18 @@
 
 /******************************************************************************/
 
-#include "amqp/include/AMQPBlob.h"
-#include "amqp/include/serializable/Serializable.h"
-#include "amqp/include/serialiser/ISerialiser.h"
+
+namespace amqp {
+
+    class ModifiableAMQPBlob;
+
+    namespace serializable {
+
+        class Serializable;
+
+    }
+
+}
 
 /******************************************************************************/
 
@@ -12,8 +21,15 @@ namespace amqp::assembler {
 
     class SerialiserFactory {
         public :
-            void writeComposite ();
-            virtual void writeInt(int, const std::string &, ModifiableAMQPBlob &) const = 0;
+            virtual void writeComposite (
+                    const amqp::serializable::Serializable &,
+                    ModifiableAMQPBlob &) const = 0;
+
+            virtual void writeInt(
+                    int,
+                    const std::string &,
+                    const amqp::serializable::Serializable &,
+                    ModifiableAMQPBlob &) const = 0;
     };
 
 }

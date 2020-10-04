@@ -3,10 +3,18 @@
 /******************************************************************************/
 
 #include <string>
-#include <proton/codec.h>
 
 #include "schema/SchemaDumpTargets.h"
-#include "CordaBytes.h"
+
+/******************************************************************************/
+
+struct pn_data_t;
+
+namespace amqp {
+
+    class CordaBytes;
+
+}
 
 /******************************************************************************/
 
@@ -27,14 +35,15 @@ namespace amqp {
         public :
             explicit AMQPBlob (CordaBytes &);
 
-        /*
-         *
-         */
+            /*
+             *
+             */
             [[nodiscard]] std::string dumpContents() const;
             [[nodiscard]] std::string dumpSchema (schema::DumpTarget) const;
             [[nodiscard]] std::string dumpData () const;
     };
 
 }
+
 /******************************************************************************/
 

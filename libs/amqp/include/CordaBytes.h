@@ -29,7 +29,7 @@ namespace amqp {
 
         [[nodiscard]] decltype (m_size) size() const { return m_size; }
 
-        [[nodiscard]] const char * const bytes() const { return m_blob; }
+        [[nodiscard]] const char * bytes() const { return m_blob; }
     };
 
 }

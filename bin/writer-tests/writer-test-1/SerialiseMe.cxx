@@ -23,6 +23,9 @@ SerialiseMe::serialiseImpl(
         const amqp::assembler::SerialiserFactory & sf_,
         uPtr<amqp::ModifiableAMQPBlob> blob_
 ) const {
+    sf_.writeComposite (*this, *blob_);
+    sf_.writeInt (m_val, *blob_, *this);
+
     return uPtr<amqp::AMQPBlob>();
 }
 
