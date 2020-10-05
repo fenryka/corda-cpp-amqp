@@ -22,6 +22,7 @@ namespace amqp::serializable {
 
     class Serializable {
         private :
+            std::string m_name;
             std::string m_fingerprint;
             std::string m_namespace;
 
@@ -40,6 +41,8 @@ namespace amqp::serializable {
             [[nodiscard]] uPtr<AMQPBlob> serialise (
                     const amqp::assembler::SerialiserFactory & sf_
             ) const;
+
+            [[nodiscard]] const std::string & name() const;
 
             [[nodiscard]] const std::string & fingerprint() const;
 

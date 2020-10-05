@@ -13,20 +13,19 @@ SerialiseMe::build (
 
 //    factory_.primSerialiser(m_val, "int")
 //    factory_.primSerialiser(m_val2, "string")
-
-
-
 }
 
+/******************************************************************************/
+
 uPtr<amqp::AMQPBlob>
-SerialiseMe::serialiseImpl(
-        const amqp::assembler::SerialiserFactory & sf_,
-        uPtr<amqp::ModifiableAMQPBlob> blob_
+SerialiseMe::serialiseImpl (
+    const amqp::assembler::SerialiserFactory & sf_,
+    uPtr<amqp::ModifiableAMQPBlob> blob_
 ) const {
     sf_.writeComposite (*this, *blob_);
-    sf_.writeInt (m_val, *blob_, *this);
+    sf_.writeInt (m_val, "m_val", *this, *blob_);
 
-    return uPtr<amqp::AMQPBlob>();
+    return blob_->toBlob();
 }
 
 /******************************************************************************/

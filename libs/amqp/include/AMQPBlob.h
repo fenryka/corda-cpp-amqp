@@ -34,13 +34,13 @@ namespace amqp {
 
         public :
             explicit AMQPBlob (CordaBytes &);
+            explicit AMQPBlob (pn_data_t *);
 
-            /*
-             *
-             */
             [[nodiscard]] std::string dumpContents() const;
             [[nodiscard]] std::string dumpSchema (schema::DumpTarget) const;
             [[nodiscard]] std::string dumpData () const;
+
+            pn_data_t * data() const;
     };
 
 }

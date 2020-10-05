@@ -13,7 +13,7 @@ namespace amqp::internal::serialiser::serialisers {
      * [IntPropertySerialiser] is a templated class
      */
     class IntPropertySerialiserBase {
-        protected:
+        public :
             static const std::string m_name;
             static const std::string m_type;
     };

@@ -12,6 +12,8 @@ SerialiserFactoryInternal::writeInt(
         const amqp::serializable::Serializable & clazz_,
         ModifiableAMQPBlob & blob_
 ) const {
+    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl);
+
     blob_.writeInt(propertyValue_, propertyName_, clazz_);
 }
 
@@ -23,7 +25,7 @@ SerialiserFactoryInternal::writeComposite (
         const amqp::serializable::Serializable & clazz_,
         ModifiableAMQPBlob & blob_
 ) const  {
-    std::cout << clazz_.fingerprint() << std::endl;
+    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl);
 
     blob_.startComposite (clazz_);
 }

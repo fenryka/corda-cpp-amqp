@@ -1,5 +1,6 @@
 #include "EnvelopeDescriptor.h"
 
+#include "amqp/src/schema/descriptors/Descriptors.h"
 #include "described-types/Schema.h"
 #include "described-types/Envelope.h"
 #include "proton-wrapper/include/proton_wrapper.h"
@@ -141,3 +142,28 @@ EnvelopeDescriptor::build (pn_data_t * data_) const {
 
 /******************************************************************************/
 
+pn_data_t *
+amqp::internal::schema::descriptors::
+EnvelopeDescriptor::makeProton (
+        pn_data_t * payload_,
+        pn_data_t * schema_
+) {
+    auto rtn = pn_data (0);
+
+    pn_data_put_described (rtn);
+    {
+        proton::auto_enter ae (rtn);
+        pn_data_put_ulong (rtn, descriptors_longs::ENVELOPE | descriptors::DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list (rtn);
+
+        {
+            proton::auto_enter ae2(rtn);
+            pn_data_append (rtn, payload_);
+            pn_data_append (rtn, schema_);
+        }
+    }
+
+    return rtn;
+}
+
+/******************************************************************************/

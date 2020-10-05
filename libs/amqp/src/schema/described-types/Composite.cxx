@@ -1,7 +1,6 @@
 #include "Composite.h"
 
 #include "corda-utils/include/debug.h"
-#include "corda-utils/include/colours.h"
 
 #include "restricted-types/Restricted.h"
 

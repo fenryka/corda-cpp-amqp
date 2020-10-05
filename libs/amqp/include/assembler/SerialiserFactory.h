@@ -30,6 +30,7 @@ namespace amqp::assembler {
                     const std::string &,
                     const amqp::serializable::Serializable &,
                     ModifiableAMQPBlob &) const = 0;
+
     };
 
 }

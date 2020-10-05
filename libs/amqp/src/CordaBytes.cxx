@@ -4,6 +4,7 @@
 #include <cstring>
 #include <sys/stat.h>
 #include <iostream>
+#include <proton/codec.h>
 
 #include "AMQPHeader.h"
 
@@ -62,3 +63,20 @@ CordaBytes::CordaBytes (const std::string & file_)
 
 /******************************************************************************/
 
+amqp::
+CordaBytes::CordaBytes (const AMQPBlob & bytes_) {
+    bytes_
+}
+
+/******************************************************************************/
+
+void
+amqp::
+CordaBytes::toFile (const std::string & fileName_) const {
+    std::ofstream file { fileName_, std::ios::out | std::ios::binary };
+    file.write (amqp::AMQP_HEADER.data(), 7);
+    file.write (0, 1);
+    file.write (m_blob, m_size);
+}
+
+/******************************************************************************/

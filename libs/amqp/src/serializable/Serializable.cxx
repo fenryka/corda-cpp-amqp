@@ -7,7 +7,8 @@ amqp::serializable::
 Serializable::Serializable (
     std::string fingerprint_,
     std::string namespace_
-) : m_fingerprint (std::move (fingerprint_))
+) : m_name (typeid(this).name())
+  , m_fingerprint (std::move (fingerprint_))
   , m_namespace (std::move (namespace_)
 ) {
 
@@ -21,6 +22,14 @@ Serializable::serialise (
         const amqp::assembler::SerialiserFactory & sf_
 ) const {
     return serialiseImpl (sf_, std::make_unique<amqp::ModifiableAMQPBlob>());
+}
+
+/******************************************************************************/
+
+const std::string &
+amqp::serializable::
+Serializable::name() const {
+    return m_name;
 }
 
 /******************************************************************************/

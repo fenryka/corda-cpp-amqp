@@ -16,8 +16,8 @@ namespace amqp::internal::serialiser::serialisers {
             , public IntPropertySerialiserBase
     {
         public :
-            const std::string & name() const override { return m_name; }
-            const std::string & type() const override { return m_type; }
+            [[nodiscard]] const std::string & name() const override { return m_name; }
+            [[nodiscard]] const std::string & type() const override { return m_type; }
     };
 
 }

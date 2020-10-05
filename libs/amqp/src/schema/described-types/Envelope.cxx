@@ -1,7 +1,5 @@
 #include "Envelope.h"
 
-#include <iostream>
-
 #include "Schema.h"
 #include "schema/ISchema.h"
 
@@ -9,14 +7,14 @@
 
 namespace amqp::internal::schema {
 
-std::ostream &
-operator << (
+    std::ostream &
+    operator << (
         std::ostream & stream_,
         const amqp::internal::schema::Envelope & e_
-) {
-    stream_ << *(e_.m_schema);
-    return stream_;
-}
+    ) {
+        stream_ << *(e_.m_schema);
+        return stream_;
+    }
 
 }
 

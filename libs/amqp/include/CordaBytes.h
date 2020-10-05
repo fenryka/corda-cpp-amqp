@@ -10,14 +10,23 @@
 
 namespace amqp {
 
+    class AMQPBlob;
+
+}
+
+/******************************************************************************/
+
+namespace amqp {
+
     class CordaBytes {
         private :
             amqp::amqp_section_id_t m_encoding;
-            size_t m_size;
-            char * m_blob;
+            size_t m_size{};
+            char * m_blob{};
 
     public :
         explicit CordaBytes (const std::string &);
+        explicit CordaBytes (const AMQPBlob &);
 
         ~CordaBytes() {
             delete[] m_blob;
@@ -30,6 +39,8 @@ namespace amqp {
         [[nodiscard]] decltype (m_size) size() const { return m_size; }
 
         [[nodiscard]] const char * bytes() const { return m_blob; }
+
+        void toFile (const std::string &) const;
     };
 
 }

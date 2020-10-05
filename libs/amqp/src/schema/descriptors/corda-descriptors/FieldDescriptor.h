@@ -29,14 +29,14 @@ namespace amqp::internal::schema::descriptors {
                 std::stringstream &,
                 const AutoIndent &) const override;
 
-            [[nodiscard]] static pn_data_t * makeProton(
+            [[nodiscard]] static pn_data_t * makeProton (
                     const std::string &,
                     const std::string &,
                     const std::vector<std::string> &,
-                    const std::string &,
-                    const std::string &,
-                    bool,
-                    bool
+                    const std::string & = "",
+                    const std::string & = "",
+                    bool = false,
+                    bool = false
             );
     };
 

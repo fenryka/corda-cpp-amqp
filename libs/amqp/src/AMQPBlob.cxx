@@ -39,6 +39,15 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
 
 /******************************************************************************/
 
+amqp::
+AMQPBlob::AMQPBlob (pn_data_t * bytes_)
+    : m_data (bytes_)
+{
+
+}
+
+/******************************************************************************/
+
 auto
 amqp::
 AMQPBlob::dumpSchema (schema::DumpTarget target_) const -> std::string {
@@ -308,6 +317,14 @@ AMQPBlob::dumpContents() const {
             return ss.str();
         }
     }
+}
+
+/******************************************************************************/
+
+pn_data_t *
+amqp::
+AMQPBlob::data() const {
+    return m_data;
 }
 
 /******************************************************************************/

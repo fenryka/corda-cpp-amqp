@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <amqp/src/schema/descriptors/Descriptors.h>
 
 #include "corda-utils/include/types.h"
 #include "corda-utils/include/debug.h"
@@ -215,3 +216,69 @@ CompositeDescriptor::readAvro (
 
 /******************************************************************************/
 
+/*
+ * Class Name - String
+ * Label Name - Nullable String
+ * provides: List<String>
+ * descriptor: Descriptor
+ * fields: List<Described>
+ */
+pn_data_t *
+amqp::internal::schema::descriptors::
+CompositeDescriptor::makeProton (
+    const std::string & name_,
+    const std::vector<std::string> & provides_,
+    const std::string & fingerprint_,
+    const std::vector<pn_data_t *> & fields_,
+    const std::string & label_
+) {
+    auto rtn = pn_data (0);
+
+    pn_data_put_described (rtn);
+    {
+        proton::auto_enter ae (rtn);
+        pn_data_put_ulong(rtn, descriptors_longs::COMPOSITE_TYPE | descriptors::DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list(rtn);
+
+        {
+            proton::auto_enter ae2 (rtn);
+
+            // name
+            pn_data_put_string(rtn, pn_bytes (name_.size(), name_.data()));
+
+            // label
+            pn_data_put_string (rtn, pn_bytes (label_.size(), label_.data()));
+
+            // provides
+            pn_data_put_list(rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                for (const auto & i : provides_) {
+                    pn_data_put_string (rtn, pn_bytes (i.size(), i.data()));
+                }
+            }
+
+            pn_data_put_described (rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                pn_data_put_ulong (rtn, descriptors_longs::OBJECT | descriptors::DESCRIPTOR_TOP_32BITS);
+                pn_data_put_list(rtn);
+                {
+                    proton::auto_enter ae4 (rtn);
+                    pn_data_put_symbol (rtn, pn_bytes (fingerprint_.size(), fingerprint_.data()));
+                    pn_data_put_null(rtn);
+                }
+            }
+
+            pn_data_put_list (rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                for (const auto & i : fields_) {
+                    pn_data_append (rtn, i);
+                }
+            }
+        }
+    }
+
+    return rtn;
+}
