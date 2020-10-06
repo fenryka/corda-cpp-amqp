@@ -9,8 +9,12 @@
 
 class SerialiseMe : public amqp::serializable::Serializable {
     private :
-        int         m_val;
+        int m_val;
 
+        /**
+         * Overriding this lets us actually specify how to serialise
+         * this class
+         */
         [[nodiscard]] uPtr<amqp::AMQPBlob> serialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             uPtr<amqp::ModifiableAMQPBlob>) const override;
