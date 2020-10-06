@@ -6,15 +6,9 @@ set (libName amqp)
 include_directories (include)
 include_directories (src/serialiser)
 include_directories (src/schema)
-#include_directories (src/schema/descriptors)
+include_directories (amqp)
 
-set (amqp_sources
-        src/AMQPBlob.cxx
-        src/CordaBytes.cxx)
-
-ADD_LIBRARY ( ${libName} SHARED ${amqp_sources})
-
-TARGET_SOURCES ( ${libName} INTERFACE ${amqp_serialiser_interface} )
+ADD_LIBRARY ( ${libName} SHARED "" )
 
 SET_TARGET_PROPERTIES (${libName} PROPERTIES VERSION ${PROJECT_VERSION})
 SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)

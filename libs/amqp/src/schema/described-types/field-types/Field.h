@@ -2,7 +2,7 @@
 
 /******************************************************************************/
 
-#include "described-types/Descriptor.h"
+#include "amqp/src/schema/described-types/Descriptor.h"
 
 #include "corda-utils/include/types.h"
 
@@ -32,8 +32,8 @@ namespace amqp::internal::schema {
             static bool typeIsPrimitive (const std::string &);
 
             static uPtr<Field> make (
-                    std::string, std::string, std::list<std::string>,
-                    std::string, std::string, bool, bool);
+                std::string, std::string, std::list<std::string>,
+                std::string, std::string, bool, bool);
 
         private :
             std::string            m_name;

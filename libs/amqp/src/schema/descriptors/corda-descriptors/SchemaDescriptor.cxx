@@ -16,6 +16,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <amqp/src/schema/descriptors/Descriptors.h>
 
 /******************************************************************************/
 
@@ -142,6 +143,35 @@ SchemaDescriptor::readAvro (
             }
         }
     }
+}
+
+/******************************************************************************/
+
+pn_data_t *
+amqp::internal::schema::descriptors::
+SchemaDescriptor::makeProton (
+    const std::vector<pn_data_t *> & schemaElements_
+) {
+    auto rtn = pn_data (0);
+
+    pn_data_put_described (rtn);
+    {
+        proton::auto_enter ae (rtn);
+        pn_data_put_ulong (rtn, descriptors_longs::SCHEMA | DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list (rtn);
+        {
+            proton::auto_enter ae2 (rtn);
+            pn_data_put_list (rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                for (const auto & e : schemaElements_) {
+                    pn_data_append (rtn, e);
+                }
+            }
+        }
+    }
+
+    return rtn;
 }
 
 /******************************************************************************/

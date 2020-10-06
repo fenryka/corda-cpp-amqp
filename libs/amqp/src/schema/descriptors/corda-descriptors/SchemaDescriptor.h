@@ -27,6 +27,9 @@ namespace amqp::internal::schema::descriptors {
                 pn_data_t *,
                 std::stringstream &,
                 const AutoIndent &) const override;
+
+        [[nodiscard]] static pn_data_t * makeProton (
+                const std::vector<pn_data_t *> &);
     };
 
 }

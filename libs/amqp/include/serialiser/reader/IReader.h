@@ -4,7 +4,7 @@
 
 #include <any>
 
-#include "schema/ISchema.h"
+#include "amqp/include/schema/ISchema.h"
 
 /******************************************************************************
  *

@@ -6,8 +6,6 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
-#include "corda-descriptors/EnvelopeDescriptor.h"
-
 #include "AMQPDescriptorRegistory.h"
 
 /******************************************************************************/
@@ -24,6 +22,7 @@ namespace amqp::internal::schema::descriptors {
 
 /******************************************************************************/
 
+[[maybe_unused]]
 const std::string &
 amqp::internal::schema::descriptors::
 AMQPDescriptor::symbol() const {
@@ -134,7 +133,7 @@ AMQPDescriptor::readAvro (
 ) const {
     proton::auto_enter p (data_);
 
-    DBG ("readAvro::Descriptor" << std::endl);
+    DBG ("readAvro::Descriptor" << std::endl); // NOLINT
 
     switch (pn_data_type (data_)) {
         case PN_ULONG : {

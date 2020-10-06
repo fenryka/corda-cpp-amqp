@@ -11,7 +11,6 @@
 #include "corda-descriptors/CompositeDescriptor.h"
 #include "corda-descriptors/RestrictedDescriptor.h"
 
-#include <limits>
 #include <climits>
 
 /******************************************************************************/
@@ -28,67 +27,67 @@ namespace amqp::internal {
             std::make_shared<internal::schema::descriptors::AMQPDescriptor> ("DESCRIBED", -1)
         },
         {
-            1UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::ENVELOPE | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::EnvelopeDescriptor> (
                     "ENVELOPE",
                     ::amqp::internal::schema::descriptors::ENVELOPE)
         },
         {
-            2UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::SCHEMA | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::SchemaDescriptor> (
                     "SCHEMA",
                     ::amqp::internal::schema::descriptors::SCHEMA)
         },
         {
-            3UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::OBJECT | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::ObjectDescriptor> (
                     "OBJECT_DESCRIPTOR",
                     ::amqp::internal::schema::descriptors::OBJECT)
         },
         {
-            4UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::FIELD | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::FieldDescriptor> (
                     "FIELD",
                     ::amqp::internal::schema::descriptors::FIELD)
         },
         {
-            5UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::COMPOSITE_TYPE | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::CompositeDescriptor> (
                     "COMPOSITE_TYPE",
                     ::amqp::internal::schema::descriptors::COMPOSITE_TYPE)
         },
         {
-            6UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::RESTRICTED_TYPE | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::RestrictedDescriptor> (
                     "RESTRICTED_TYPE",
                     ::amqp::internal::schema::descriptors::RESTRICTED_TYPE)
         },
         {
-            7UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::CHOICE | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::ChoiceDescriptor> (
                     "CHOICE",
                     ::amqp::internal::schema::descriptors::CHOICE)
         },
         {
-            8UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::REFERENCED_OBJECT | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::ReferencedObjectDescriptor> (
                     "REFERENCED_OBJECT",
                     ::amqp::internal::schema::descriptors::REFERENCED_OBJECT)
         },
         {
-            9UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::TRANSFORM_SCHEMA | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::TransformSchemaDescriptor> (
                     "TRANSFORM_SCHEMA",
                     ::amqp::internal::schema::descriptors::TRANSFORM_SCHEMA)
         },
         {
-            10UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::TRANSFORM_ELEMENT | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::TransformElementDescriptor> (
                     "TRANSFORM_ELEMENT",
                     ::amqp::internal::schema::descriptors::TRANSFORM_ELEMENT)
         },
         {
-            11UL | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
+            schema::descriptors_longs::TRANSFORM_ELEMENT_KEY | ::amqp::internal::schema::descriptors::DESCRIPTOR_TOP_32BITS,
             std::make_shared<internal::schema::descriptors::TransformElementKeyDescriptor> (
                     "TRANSFORM_ELEMENT_KEY",
                     ::amqp::internal::schema::descriptors::TRANSFORM_ELEMENT_KEY)

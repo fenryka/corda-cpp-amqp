@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "include/CordaBytes.h"
-#include "BlobInspector.h"
+#include "../BlobInspector.h"
 
 const std::string filepath ("../../test-files/"); // NOLINT
 

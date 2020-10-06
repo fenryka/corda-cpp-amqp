@@ -39,3 +39,21 @@ namespace amqp::internal::schema::descriptors {
 }
 
 /******************************************************************************/
+
+namespace amqp::internal::schema::descriptors_longs {
+
+    extern const unsigned long ENVELOPE;
+    extern const unsigned long SCHEMA;
+    extern const unsigned long OBJECT;
+    extern const unsigned long FIELD;
+    extern const unsigned long COMPOSITE_TYPE;
+    extern const unsigned long RESTRICTED_TYPE;
+    extern const unsigned long CHOICE;
+    extern const unsigned long REFERENCED_OBJECT;
+    extern const unsigned long TRANSFORM_SCHEMA;
+    extern const unsigned long TRANSFORM_ELEMENT;
+    extern const unsigned long TRANSFORM_ELEMENT_KEY;
+
+}
+
+/******************************************************************************/

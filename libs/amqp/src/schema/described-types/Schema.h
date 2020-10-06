@@ -10,11 +10,11 @@
 
 #include "Composite.h"
 #include "Descriptor.h"
-#include "OrderedTypeNotations.h"
+#include "amqp/src/schema/OrderedTypeNotations.h"
 
-#include "AMQPTypeNotation.h"
+#include "amqp/src/schema/AMQPTypeNotation.h"
 
-#include "schema/ISchema.h"
+#include "amqp/include/schema/ISchema.h"
 
 /******************************************************************************/
 

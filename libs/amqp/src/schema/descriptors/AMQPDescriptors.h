@@ -60,6 +60,7 @@ namespace amqp::internal::schema::descriptors {
             ~ReferencedObjectDescriptor() final = default;
 
             std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
+
     };
 
 }
@@ -79,6 +80,7 @@ namespace amqp::internal::schema::descriptors {
             ~TransformSchemaDescriptor() final = default;
 
             std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
+
     };
 
 }
@@ -98,6 +100,9 @@ namespace amqp::internal::schema::descriptors {
             ~TransformElementDescriptor() final = default;
 
             std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
+
+
+
     };
 
 }
@@ -117,6 +122,7 @@ namespace amqp::internal::schema::descriptors {
             ~TransformElementKeyDescriptor() final = default;
 
             std::unique_ptr<amqp::schema::ISchemaElement> build (pn_data_t *) const override;
+
     };
 
 }

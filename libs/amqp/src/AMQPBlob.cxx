@@ -10,6 +10,19 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
+#include "amqp/include/CordaBytes.h"
+
+/******************************************************************************/
+
+/**
+ * Should only be being invoked by Modifiable Blob
+ */
+amqp::AMQPBlob::AMQPBlob()
+    : m_data { pn_data (0) }
+{
+
+}
+
 /******************************************************************************/
 
 amqp::
@@ -22,6 +35,15 @@ AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
 
     auto rtn = pn_data_decode(m_data, cb_.bytes(), cb_.size());
     assert (static_cast<size_t>(rtn) == cb_.size());
+}
+
+/******************************************************************************/
+
+amqp::
+AMQPBlob::AMQPBlob (pn_data_t * bytes_)
+    : m_data (bytes_)
+{
+
 }
 
 /******************************************************************************/
@@ -295,6 +317,14 @@ AMQPBlob::dumpContents() const {
             return ss.str();
         }
     }
+}
+
+/******************************************************************************/
+
+pn_data_t *
+amqp::
+AMQPBlob::data() const {
+    return m_data;
 }
 
 /******************************************************************************/

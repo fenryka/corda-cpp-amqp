@@ -29,6 +29,7 @@ namespace amqp::internal::schema::descriptors {
     class AutoIndent final {
         private :
             std::string indent;
+
         public :
             AutoIndent() = default;
 
@@ -68,7 +69,7 @@ namespace amqp::internal::schema::descriptors {
 
             virtual ~AMQPDescriptor() = default;
 
-            [[maybe_unused]] [[nodiscard]] const std::string & symbol() const;
+            [[maybe_unused]] [[maybe_unused]] [[nodiscard]] const std::string & symbol() const;
 
             void validateAndNext (pn_data_t *) const;
 
@@ -90,7 +91,7 @@ namespace amqp::internal::schema::descriptors {
                 const AutoIndent &) const;
 
             /**
-             * So this method won't be perfect because we're not parsing the scema into
+             * So this method won't be perfect because we're not parsing the schema into
              * a form we can then transform into avro. Rather, we're looking at the raw
              * schema data in the packet and on the fly rendering it as an Avro schema.
              *

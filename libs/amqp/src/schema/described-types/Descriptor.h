@@ -4,7 +4,8 @@
 
 #include <iosfwd>
 #include <string>
-#include <amqp/include/schema/ISchema.h>
+
+#include "amqp/include/schema/ISchema.h"
 
 /******************************************************************************/
 

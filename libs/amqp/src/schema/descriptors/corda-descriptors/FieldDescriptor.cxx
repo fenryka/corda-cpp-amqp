@@ -8,6 +8,7 @@
 #include "described-types/field-types/Field.h"
 
 #include <sstream>
+#include <amqp/src/schema/descriptors/Descriptors.h>
 #include "SchemaUtils.h"
 
 /******************************************************************************
@@ -253,6 +254,63 @@ FieldDescriptor::readAvro (
 
     }
     ss_ << ai_ << "}";
+}
+
+/******************************************************************************/
+
+/*
+ * contents of a Field
+ *      name: String
+ *      type: String
+ *      requires: List<String>
+ *      default: String?
+ *      label: String?
+ *      mandatory: Boolean - copes with the Kotlin concept of nullability.
+ *          If something is mandatory then it cannot be null
+ *      multiple: Boolean
+ */
+pn_data_t *
+amqp::internal::schema::descriptors::
+FieldDescriptor::makeProton (
+    const std::string & name_,
+    const std::string & type_,
+    const std::vector<std::string> & requires_,
+    const std::string & default_,
+    const std::string & label_,
+    bool mandatory_,
+    bool multiple_
+) {
+    auto rtn = pn_data (0);
+
+    pn_data_put_described (rtn);
+    {
+        proton::auto_enter an (rtn);
+        pn_data_put_ulong(rtn, descriptors_longs::FIELD | DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list(rtn);
+        {
+            proton::auto_enter an2 (rtn);
+
+            // name
+            pn_data_put_string(rtn, pn_bytes(name_.size(), name_.data()));
+            // type
+            pn_data_put_string(rtn, pn_bytes(type_.size(), type_.data()));
+            pn_data_put_list(rtn);
+
+            {
+                proton::auto_enter an3 (rtn);
+                for (const auto &i : requires_) {
+                    pn_data_put_string(rtn, pn_bytes(i.size(), i.data()));
+                }
+            }
+
+            pn_data_put_string (rtn, pn_bytes(default_.size(), default_.data()));
+            pn_data_put_string (rtn, pn_bytes(label_.size(), label_.data()));
+            pn_data_put_bool (rtn, mandatory_);
+            pn_data_put_bool (rtn, multiple_);
+        }
+    }
+
+    return rtn;
 }
 
 /******************************************************************************/
