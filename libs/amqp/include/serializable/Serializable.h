@@ -27,26 +27,31 @@ namespace amqp::serializable {
             std::string m_namespace;
 
         protected :
-            [[nodiscard]] virtual uPtr<AMQPBlob> serialiseImpl (
+            virtual void serialiseImpl (
                 const amqp::assembler::SerialiserFactory &,
-                uPtr<ModifiableAMQPBlob>) const = 0;
+                ModifiableAMQPBlob &) const = 0;
 
         public :
             Serializable() = delete;
 
-            explicit Serializable (
-                    std::string fingerprint_,
-                    std::string namespace_);
+        void serialise (
+            const amqp::assembler::SerialiserFactory & sf_,
+            ModifiableAMQPBlob &) const;
 
-            [[nodiscard]] uPtr<AMQPBlob> serialise (
-                    const amqp::assembler::SerialiserFactory & sf_
-            ) const;
+        explicit Serializable (
+                std::string name_,
+                std::string fingerprint_,
+                std::string namespace_);
 
-            [[nodiscard]] const std::string & name() const;
+        [[nodiscard]] uPtr<AMQPBlob> serialise (
+            const amqp::assembler::SerialiserFactory & sf_
+        ) const;
 
-            [[nodiscard]] const std::string & fingerprint() const;
+        [[nodiscard]] const std::string & name() const;
 
-            [[nodiscard]] const std::string & javaNamespace() const;
+        [[nodiscard]] const std::string & fingerprint() const;
+
+        [[nodiscard]] const std::string & javaNamespace() const;
     };
 
 }

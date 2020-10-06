@@ -21,5 +21,5 @@ if(APPLE)
     target_link_libraries (${libName} proton-wrapper qpid-proton)
 endif()
 
-ADD_SUBDIRECTORY (src)
 ADD_SUBDIRECTORY (include)
+ADD_SUBDIRECTORY (src)

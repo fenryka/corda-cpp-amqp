@@ -1,5 +1,6 @@
-target_sources(amqp
+target_sources(${libName}
     PUBLIC
+        ArraySerialiser.h
         ListSerialiser.h
         EnumSerialiser.h
         MapSerialiser.h

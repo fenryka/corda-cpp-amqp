@@ -4,6 +4,9 @@ target_sources(${libName}
             Descriptors.cxx
             SchemaUtils.cxx
         PUBLIC
+            SchemaUtils.h
+            OrderedTypeNotations.h
+            AMQPTypeNotation.h
 )
 
 INCLUDE_DIRECTORIES(descriptors)

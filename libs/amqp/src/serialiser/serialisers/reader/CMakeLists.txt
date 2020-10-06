@@ -11,4 +11,8 @@ target_sources (amqp
         restricted-readers/ListReader.cxx
         restricted-readers/ArrayReader.cxx
         restricted-readers/EnumReader.cxx
+    PUBLIC
+        CompositeReader.h
+        Reader.h
+
 )

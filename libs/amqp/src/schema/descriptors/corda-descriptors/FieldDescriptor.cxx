@@ -6,10 +6,10 @@
 #include "proton-wrapper/include/proton_wrapper.h"
 
 #include "described-types/field-types/Field.h"
+#include "SchemaUtils.h"
 
 #include <sstream>
 #include <amqp/src/schema/descriptors/Descriptors.h>
-#include "SchemaUtils.h"
 
 /******************************************************************************
  *
@@ -96,7 +96,7 @@ FieldDescriptor::readRaw (
     proton::attest_is_list  (data_, __FILE__, __LINE__);
 
     proton::auto_list_enter ale (data_, true);
-    AutoIndent ai { ai_ };
+    AutoIndent ai { ai_ }; // NOLINT (performance-unnecessary-copy-initialization)
 
     ss_ << ai << "1/7] String: Name: "
         << proton::get_string ((pn_data_t *)proton::auto_next (data_))
@@ -111,7 +111,7 @@ FieldDescriptor::readRaw (
         ss_ << ai << "3/7] List: Requires: elements " << ale2.elements()
             << std::endl;
 
-        AutoIndent ai2 { ai };
+        AutoIndent ai2 { ai }; // NOLINT (performance-unnecessary-copy-initialization)
 
         while (pn_data_next(data_)) {
             ss_ << ai2 << proton::get_string (data_) << std::endl;
@@ -244,7 +244,8 @@ FieldDescriptor::readAvro (
     proton::auto_list_enter ale (data_, true);
     ss_ << ai_ << "{" << std::endl;
     {
-        AutoIndent ai (ai_);
+        AutoIndent ai (ai_); // NOLINT (performance-unnecessary-copy-initialization)
+
 
         ss_ << ai << R"("name" : ")"
             << proton::get_string ((pn_data_t *) proton::auto_next (data_))
@@ -280,6 +281,8 @@ FieldDescriptor::makeProton (
     bool mandatory_,
     bool multiple_
 ) {
+    DBG (__FUNCTION__ << " - " << name_ << std::endl); // NOLINT
+
     auto rtn = pn_data (0);
 
     pn_data_put_described (rtn);

@@ -8,7 +8,9 @@ TARGET_SOURCES(${libName}
         PRIVATE
             AMQPBlob.cxx
             CordaBytes.cxx
-            ModifiableAMQPBlob.cxx)
+            ModifiableAMQPBlobImpl.cxx
+        PUBLIC
+            ModifiableAMQPBlobImpl.h)
 
 
 

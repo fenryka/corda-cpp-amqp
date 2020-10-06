@@ -1,6 +1,10 @@
 #include "CompositeDescriptor.h"
 
 #include <string>
+
+/*
+ * CLion seems to think this include isn't used when it clearly is
+ */
 #include <sstream>
 #include <iostream>
 #include <amqp/src/schema/descriptors/Descriptors.h>
@@ -98,7 +102,7 @@ CompositeDescriptor::readRaw (
     proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
-        AutoIndent ai { ai_ };
+        AutoIndent ai { ai_ }; // NOLINT (performance-unnecessary-copy-initialization)
         proton::auto_enter p (data_);
 
         proton::attest_is_string (data_, __FILE__, __LINE__);
@@ -134,7 +138,7 @@ CompositeDescriptor::readRaw (
 
         ss_ << ai << "5] List: Fields: " << std::endl;
         {
-            AutoIndent ai2 { ai };
+            AutoIndent ai2 { ai }; // NOLINT (performance-unnecessary-copy-initialization)
 
             proton::auto_list_enter ale (data_);
             for (int i { 1 } ; pn_data_next (data_) ; ++i) {
@@ -165,7 +169,7 @@ CompositeDescriptor::readAvro (
     proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
-        AutoIndent ai { ai_ };
+        AutoIndent ai { ai_ }; // NOLINT (performance-unnecessary-copy-initialization)
         proton::auto_enter p (data_);
 
         proton::attest_is_string (data_, __FILE__, __LINE__);
@@ -194,7 +198,7 @@ CompositeDescriptor::readAvro (
 
         ss_ << ai << R"("fields" : [)" << std::endl;
         {
-            AutoIndent ai2 { ai };
+            AutoIndent ai2 { ai }; // NOLINT (performance-unnecessary-copy-initialization)
 
             proton::auto_list_enter ale (data_);
             for (int i { 1 } ; pn_data_next (data_) ; ++i) {
@@ -232,6 +236,8 @@ CompositeDescriptor::makeProton (
     const std::vector<pn_data_t *> & fields_,
     const std::string & label_
 ) {
+    DBG (__FUNCTION__ << " - " << name_ << " fields: #" << fields_.size() << std::endl);
+
     auto rtn = pn_data (0);
 
     pn_data_put_described (rtn);

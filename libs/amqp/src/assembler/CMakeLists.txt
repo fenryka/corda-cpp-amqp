@@ -1,7 +1,8 @@
 target_sources(${libName}
     PRIVATE
         CompositeFactory.cxx
-        CompositeFactory.h
-    PUBLIC
         SerialiserFactoryInternal.cxx
+    PUBLIC
+        SerialiserFactoryInternal.h
+        CompositeFactory.h
 )

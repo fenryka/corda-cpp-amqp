@@ -27,6 +27,7 @@ namespace amqp::internal::serialiser::serialisers {
             { }
 
 
+            [[nodiscard]]
             const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> &
             serialisers() const override {
                 return m_serialisers;
