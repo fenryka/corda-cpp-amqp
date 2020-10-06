@@ -101,11 +101,9 @@ ModifiableAMQPBlob::toBlob() const {
 
     auto schema = internal::schema::descriptors::SchemaDescriptor::makeProton(composites);
     auto envelope = internal::schema::descriptors::EnvelopeDescriptor::makeProton(
-            m_payload, schema)
+            m_payload, schema);
 
-
-
-
+    return std::make_unique<amqp::AMQPBlob>(envelope);
 }
 
 /******************************************************************************/

@@ -6,7 +6,10 @@
 #include <iostream>
 #include <proton/codec.h>
 
+#include "AMQPBlob.h"
 #include "AMQPHeader.h"
+
+#include "corda-utils/include/debug.h"
 
 /******************************************************************************/
 
@@ -65,7 +68,9 @@ CordaBytes::CordaBytes (const std::string & file_)
 
 amqp::
 CordaBytes::CordaBytes (const AMQPBlob & bytes_) {
-    bytes_
+    m_size = pn_data_encoded_size (bytes_.data());
+    m_blob = new char[m_size];
+    pn_data_encode (bytes_.data(), m_blob, m_size);
 }
 
 /******************************************************************************/
@@ -73,9 +78,12 @@ CordaBytes::CordaBytes (const AMQPBlob & bytes_) {
 void
 amqp::
 CordaBytes::toFile (const std::string & fileName_) const {
+    DBG (__FUNCTION__ << " - " << fileName_ << std::endl); // NOLINT
+
     std::ofstream file { fileName_, std::ios::out | std::ios::binary };
     file.write (amqp::AMQP_HEADER.data(), 7);
-    file.write (0, 1);
+    char encoding = 0;
+    file.write(&encoding, sizeof (encoding));
     file.write (m_blob, m_size);
 }
 

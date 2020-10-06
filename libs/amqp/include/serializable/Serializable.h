@@ -47,9 +47,6 @@ namespace amqp::serializable {
             [[nodiscard]] const std::string & fingerprint() const;
 
             [[nodiscard]] const std::string & javaNamespace() const;
-
-            [[nodiscard]] virtual uPtr<amqp::serialiser::ISerialiser> build (
-                    amqp::assembler::SerialiserFactory &) const = 0;
     };
 
 }

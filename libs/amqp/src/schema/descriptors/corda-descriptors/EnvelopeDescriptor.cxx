@@ -50,7 +50,7 @@ EnvelopeDescriptor::readRaw (
     proton::attest_is_list (data_, __FILE__, __LINE__);
 
     {
-        AutoIndent ai { ai_ };
+        AutoIndent ai { ai_ }; // NOLINT (performance-unnecessary-copy-initialization)
         proton::auto_enter p (data_);
 
         ss_ << ai << "1]" << std::endl;
@@ -160,6 +160,9 @@ EnvelopeDescriptor::makeProton (
             proton::auto_enter ae2(rtn);
             pn_data_append (rtn, payload_);
             pn_data_append (rtn, schema_);
+
+            //  We're not bothering with the transform elements
+            pn_data_put_null (rtn);
         }
     }
 
