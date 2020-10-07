@@ -34,7 +34,10 @@ namespace amqp::internal {
         public :
             ModifiableAMQPBlobImpl();
 
+            static std::pair<std::string, std::string> key (const amqp::serializable::Serializable &);
+
             void startComposite (const amqp::serializable::Serializable &);
+
             void writeComposite (
                 const std::string &,
                 const amqp::serializable::Serializable &,
@@ -73,9 +76,9 @@ ModifiableAMQPBlobImpl::writePrimitive (
         << "::"
         << propertyValue_ << std::endl); // NOLINT
 
-    auto key = std::make_pair (clazz_.name(), clazz_.fingerprint());
+    auto id = key (clazz_);
 
-    assert (m_schemas.find (key) != m_schemas.end());
+    assert (m_schemas.find (id) != m_schemas.end());
 
     DBG ("FOUND IT" << std::endl); // NOLINT
 
@@ -83,8 +86,8 @@ ModifiableAMQPBlobImpl::writePrimitive (
         std::remove_const_t<T>
     >::serialiser::m_type;
 
-    if (m_schemas[key].find (propertyName_) == m_schemas[key].end()) {
-        m_schemas[key][propertyName_] =
+    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
+        m_schemas[id][propertyName_] =
             internal::schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
                 type,

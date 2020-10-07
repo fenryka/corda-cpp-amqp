@@ -73,3 +73,11 @@ Serializable::javaNamespace() const {
 }
 
 /******************************************************************************/
+
+std::string
+amqp::serializable::
+Serializable::fullName () const {
+    return m_namespace + "." + m_name;
+}
+
+/******************************************************************************/

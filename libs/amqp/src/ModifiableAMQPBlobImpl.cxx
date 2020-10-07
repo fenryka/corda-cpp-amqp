@@ -21,6 +21,15 @@ ModifiableAMQPBlobImpl::ModifiableAMQPBlobImpl()
 
 /******************************************************************************/
 
+inline
+std::pair<std::string, std::string>
+amqp::internal::
+ModifiableAMQPBlobImpl::key (const amqp::serializable::Serializable & s_) {
+    return std::make_pair (s_.fullName(), s_.fingerprint());
+}
+
+/******************************************************************************/
+
 /*
  *
  * For now we're just going to accept that in recursive class definitions
@@ -31,7 +40,7 @@ ModifiableAMQPBlobImpl::ModifiableAMQPBlobImpl()
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startComposite (
-        const amqp::serializable::Serializable & composite_
+    const amqp::serializable::Serializable & composite_
 ) {
     DBG (__FUNCTION__
         << " - "
@@ -40,19 +49,19 @@ ModifiableAMQPBlobImpl::startComposite (
         << composite_.fingerprint()
         << std::endl); // NOLINT
 
-    auto key = std::make_pair (composite_.name(), composite_.fingerprint());
+    auto id = key (composite_);
 
     DBG ("    key = ["
-        << key.first
+        << id.first
         << ", "
-        << key.second
+        << id.second
         << "]"
         << std::endl); // NOLINT
 
-    auto it = m_schemas.find (key);
+    auto it = m_schemas.find (id);
 
     if (it == m_schemas.end()) {
-        m_schemas[key] = {};
+        m_schemas[id] = {};
 
         for (const auto &i : m_schemas) {
             DBG ("    * " << i.first.first << ": " << i.second.size() << std::endl);
@@ -76,6 +85,40 @@ ModifiableAMQPBlobImpl::startComposite (
 
 void
 amqp::internal::
+ModifiableAMQPBlobImpl::writeNull (
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_
+) {
+    DBG (__FUNCTION__
+             << "::"
+             << propertyName_
+             << "::"
+             << NULL << std::endl); // NOLINT
+
+    auto id = key (parent_);
+
+    assert (m_schemas.find (id) != m_schemas.end());
+
+    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
+        m_schemas[id][propertyName_] =
+            internal::schema::descriptors::FieldDescriptor::makeProton (
+                propertyName_,
+                "",
+                {},
+                "", "",
+                true,
+                false);
+    }
+
+    DBG ("WRITE IT" << std::endl); // NOLINT
+
+    pn_data_put_null (m_payload);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::
 ModifiableAMQPBlobImpl::writeComposite (
     const std::string & propertyName_,
     const amqp::serializable::Serializable & parent_,
@@ -88,30 +131,30 @@ ModifiableAMQPBlobImpl::writeComposite (
         << composite_.name()
         << std::endl); // NOLINT
 
-    auto key = std::make_pair (parent_.name(), parent_.fingerprint());
+    auto id = key (parent_);
 
-    assert (m_schemas.find (key) != m_schemas.end());
+    assert (m_schemas.find (id) != m_schemas.end());
 
     DBG ("FOUND IT ["
         << parent_.name()
         << ", "
         << parent_.fingerprint()
         << "] - m_schemas size - "
-        << m_schemas[key].size()
+        << m_schemas[id].size()
         << std::endl); // NOLINT
 
-    if (m_schemas[key].find(propertyName_) == m_schemas[key].end()) {
-        m_schemas[key][propertyName_] =
+    if (m_schemas[id].find(propertyName_) == m_schemas[id].end()) {
+        m_schemas[id][propertyName_] =
             schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
-                composite_.name (),
+                composite_.fullName(),
                 {});
     }
 
     DBG ("    schemas sz: "
         << m_schemas.size()
         << ", "
-        << m_schemas[key].size()
+        << m_schemas[id].size()
         << std::endl); // NOLINT
 }
 
@@ -136,17 +179,6 @@ ModifiableAMQPBlobImpl::toBlob() const {
             m_payload, schema);
 
     return std::make_unique<amqp::AMQPBlob>(envelope);
-}
-
-/******************************************************************************/
-
-void
-amqp::internal::
-ModifiableAMQPBlobImpl::writeNull (
-    const std::string &,
-    const amqp::serializable::Serializable &
-) {
-
 }
 
 /******************************************************************************/

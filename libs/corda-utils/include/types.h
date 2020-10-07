@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include <cxxabi.h>
 
 /******************************************************************************/
 
@@ -26,6 +27,17 @@ using upStrMap_t [[maybe_unused]] = std::map<std::string, uPtr<T>>;
 
 template<typename T>
 using spStrMap_t = std::map<std::string, sPtr<T>>;
+
+template<typename T>
+constexpr
+char *
+typeName (int & status) {
+    status = 0;
+    return abi::__cxa_demangle (
+        typeid (std::remove_pointer_t<T>).name (),
+        nullptr,
+        nullptr, &status);
+}
 
 /******************************************************************************/
 

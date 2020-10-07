@@ -22,7 +22,7 @@ class Recursive: public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit Recursive (int a_, const std::string & b_, Recursive * c_)
+        explicit Recursive (int a_, std::string b_, Recursive * c_)
             : Serializable ("Recursive", "fingerprint123", "net.test")
             , m_a (a_)
             , m_b (std::move (b_))
