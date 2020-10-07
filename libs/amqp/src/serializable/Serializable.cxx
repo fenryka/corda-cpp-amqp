@@ -30,6 +30,7 @@ Serializable::serialise (
         const amqp::assembler::SerialiserFactory & sf_
 ) const {
     auto blob = sf_.blob();
+    sf_.startComposite (*this, *blob);
     serialiseImpl (sf_, *blob);
     return blob->toBlob();
 }
@@ -43,6 +44,7 @@ Serializable::serialise (
     ModifiableAMQPBlob & blob_) const
 {
     DBG (__FUNCTION__ << "::" << m_name << std::endl);
+    sf_.startComposite (*this, blob_);
     serialiseImpl (sf_, blob_);
 }
 

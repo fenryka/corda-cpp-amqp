@@ -22,7 +22,12 @@ namespace amqp::internal::assembler {
         public :
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;
 
-            void writeComposite (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
+            void writeComposite (
+                const amqp::serializable::Serializable &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &) const override;
+
             void startComposite (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
 
             void writeInt(

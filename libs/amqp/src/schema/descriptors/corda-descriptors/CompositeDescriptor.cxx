@@ -243,8 +243,8 @@ CompositeDescriptor::makeProton (
     pn_data_put_described (rtn);
     {
         proton::auto_enter ae (rtn);
-        pn_data_put_ulong(rtn, descriptors_longs::COMPOSITE_TYPE | descriptors::DESCRIPTOR_TOP_32BITS);
-        pn_data_put_list(rtn);
+        pn_data_put_ulong (rtn, descriptors_longs::COMPOSITE_TYPE | descriptors::DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list (rtn);
 
         {
             proton::auto_enter ae2 (rtn);

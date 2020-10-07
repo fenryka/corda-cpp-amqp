@@ -12,6 +12,7 @@ int
 main (int argc, char ** argv) {
     if (argc != 2) {
         std::cerr << "ERROR: usage ./writer-test-1 <<filename>>" << std::endl;
+        return EXIT_FAILURE;
     }
 
     SerialiseMe sme = SerialiseMe (1, 2, 3);

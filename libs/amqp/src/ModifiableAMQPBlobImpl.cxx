@@ -6,8 +6,6 @@
 
 #include "amqp/include/serializable/Serializable.h"
 
-#include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
-
 #include "amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/SchemaDescriptor.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/EnvelopeDescriptor.h"
@@ -47,7 +45,12 @@ ModifiableAMQPBlobImpl::startComposite (
     auto it = m_schemas.find (key);
 
     if (it == m_schemas.end()) {
+        DBG ("    MAKE IT EMPTY" << std::endl);
         m_schemas[key] = {};
+
+        for (const auto &i : m_schemas) {
+            DBG ("    * " << i.first.first << ": " << i.second.size() << std::endl);
+        }
     }
 
     it = m_schemas.find (key);
@@ -56,7 +59,12 @@ ModifiableAMQPBlobImpl::startComposite (
     pn_data_put_described (m_payload);
 
     pn_data_enter (m_payload);
-    pn_data_put_symbol (m_payload, pn_bytes ( composite_.fingerprint().size(), composite_.fingerprint().data()));
+    pn_data_put_symbol (
+        m_payload,
+        pn_bytes (
+            composite_.fingerprint().size(),
+            composite_.fingerprint().data()));
+
     pn_data_put_list (m_payload);
     pn_data_enter (m_payload);
 }
@@ -66,21 +74,31 @@ ModifiableAMQPBlobImpl::startComposite (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::writeComposite (
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_,
     const amqp::serializable::Serializable & composite_
 ) {
-    DBG (__FUNCTION__ << "::" << composite_.name() << std::endl);
+    DBG (__FUNCTION__ << "::" << parent_.name() << "::" << composite_.name() << std::endl);
 
-    auto key = std::make_pair (composite_.name(), composite_.fingerprint());
+    auto key = std::make_pair (parent_.name(), parent_.fingerprint());
 
     assert (m_schemas.find (key) != m_schemas.end());
 
-    DBG ("FOUND IT" << std::endl); // NOLINT
+    DBG ("FOUND IT ["
+        << parent_.name()
+        << ", "
+        << parent_.fingerprint()
+        << "] - m_schemas size - "
+        << m_schemas[key].size()
+        << std::endl); // NOLINT
 
     m_schemas[key].emplace_back (
-        internal::schema::descriptors::FieldDescriptor::makeProton(
+        schema::descriptors::FieldDescriptor::makeProton (
+            propertyName_,
             composite_.name(),
-            composite_.fingerprint(),
             {}));
+
+    DBG ("    schemas sz: " << m_schemas.size() << ", " << m_schemas[key].size() << std::endl);
 }
 
 /******************************************************************************/
@@ -92,6 +110,8 @@ ModifiableAMQPBlobImpl::toBlob() const {
 
     std::vector<pn_data_t *> composites;
     for (const auto & schema : m_schemas) {
+        DBG ("    * " << schema.first.first << ": " << schema.second.size() << std::endl);
+
         composites.emplace_back (
             schema::descriptors::CompositeDescriptor::makeProton (
                 schema.first.first, {}, schema.first.second, schema.second));
@@ -102,6 +122,17 @@ ModifiableAMQPBlobImpl::toBlob() const {
             m_payload, schema);
 
     return std::make_unique<amqp::AMQPBlob>(envelope);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::dump() const {
+    std::cout << "  * BLOB-DUMP" << std::endl;
+    for (const auto &i: m_schemas) {
+        std::cout << "  *    [ " << i.first.first << ", " << i.first.second << "] : " << i.second.size() << std::endl;
+    }
 }
 
 /******************************************************************************/

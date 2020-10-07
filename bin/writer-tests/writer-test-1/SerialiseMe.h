@@ -15,13 +15,13 @@ class SerialiseMe : public amqp::serializable::Serializable {
          * Overriding this lets us actually specify how to serialise
          * this class
          */
-        [[nodiscard]] uPtr<amqp::AMQPBlob> serialiseImpl(
+        void serialiseImpl(
             const amqp::assembler::SerialiserFactory &,
-            uPtr<amqp::ModifiableAMQPBlob>) const override;
+            amqp::ModifiableAMQPBlob &) const override;
 
     public :
         explicit SerialiseMe (int val_)
-            : Serializable ("fingerprint123", "net.test")
+            : Serializable ("SerialiseMe", "fingerprint123", "net.test")
             , m_val (val_)
         { }
 

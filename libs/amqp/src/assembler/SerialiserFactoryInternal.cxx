@@ -24,7 +24,7 @@ SerialiserFactoryInternal::writeInt(
 ) const {
     DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
 
-    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitive<int> (propertyValue_, propertyName_, clazz_);
+    dynamic_cast<ModifiableAMQPBlobImpl &>(blob_).writePrimitive<int> (propertyValue_, propertyName_, clazz_);
 }
 
 /******************************************************************************/
@@ -39,7 +39,7 @@ SerialiserFactoryInternal::writeString(
 ) const {
     DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
 
-    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitive<std::string> (propertyValue_, propertyName_, clazz_);
+    dynamic_cast<ModifiableAMQPBlobImpl &>(blob_).writePrimitive<std::string> (propertyValue_, propertyName_, clazz_);
 }
 
 /******************************************************************************/
@@ -78,12 +78,16 @@ void
 amqp::internal::assembler::
 SerialiserFactoryInternal::writeComposite (
     const amqp::serializable::Serializable & clazz_,
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_,
     ModifiableAMQPBlob & blob_
 ) const  {
     DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
 
-    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startComposite (clazz_);
-    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writeComposite (clazz_);
+    auto & blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.writeComposite (propertyName_, parent_, clazz_);
+
     clazz_.serialise (*this, blob_);
 }
 
@@ -97,7 +101,11 @@ SerialiserFactoryInternal::startComposite (
 ) const  {
     DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
 
-    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startComposite (clazz_);
+    auto & blob = dynamic_cast<ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.dump();
+
+    blob.startComposite (clazz_);
 }
 
 /******************************************************************************/

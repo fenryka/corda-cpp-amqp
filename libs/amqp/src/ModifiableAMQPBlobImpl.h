@@ -24,13 +24,19 @@ namespace amqp::internal {
     class ModifiableAMQPBlobImpl : public amqp::ModifiableAMQPBlob {
         private :
             pn_data_t * m_payload;
-            std::map<std::pair<std::string, std::string>, std::vector<pn_data_t *>> m_schemas;
+
+            std::map<
+                std::pair<std::string, std::string>,
+                std::vector<pn_data_t *>> m_schemas;
 
         public :
             ModifiableAMQPBlobImpl();
 
             void startComposite (const amqp::serializable::Serializable &);
-            void writeComposite (const amqp::serializable::Serializable &);
+            void writeComposite (
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                const amqp::serializable::Serializable &);
 
             template<typename T>
             void writePrimitive(
@@ -38,7 +44,9 @@ namespace amqp::internal {
                 const std::string &,
                 const amqp::serializable::Serializable &);
 
-        [[nodiscard]] uPtr<AMQPBlob> toBlob() const override;
+            [[nodiscard]] uPtr<AMQPBlob> toBlob() const override;
+
+            void dump() const;
     };
 
 }
@@ -53,7 +61,11 @@ ModifiableAMQPBlobImpl::writePrimitive (
     const std::string & propertyName_,
     const amqp::serializable::Serializable & clazz_)
 {
-    DBG (__FUNCTION__ << "::" << propertyName_ << "::" << propertyValue_ << std::endl); // NOLINT
+    DBG (__FUNCTION__
+        << "::"
+        << propertyName_
+        << "::"
+        << propertyValue_ << std::endl); // NOLINT
 
     auto key = std::make_pair (clazz_.name(), clazz_.fingerprint());
 
@@ -64,10 +76,10 @@ ModifiableAMQPBlobImpl::writePrimitive (
     m_schemas[key].emplace_back (
         internal::schema::descriptors::FieldDescriptor::makeProton(
             propertyName_,
-            amqp::internal::serialiser::PrimToSerialiser<T>::serialiser::m_type,
+            serialiser::PrimToSerialiser<T>::serialiser::m_type,
             {}));
 
-    amqp::internal::serialiser::PrimToSerialiser<T>::put (propertyValue_, m_payload);
+    serialiser::PrimToSerialiser<T>::put (propertyValue_, m_payload);
 }
 
 /******************************************************************************/

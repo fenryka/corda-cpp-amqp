@@ -11,7 +11,6 @@ Inner::serialiseImpl (
 ) const {
     DBG (__FUNCTION__ << std::endl);
 
-    sf_.startComposite (*this, blob_);
     sf_.writeInt (m_a, "m_a", *this, blob_);
     sf_.writeString (m_b, "m_b", *this, blob_);
 }
@@ -25,8 +24,7 @@ Outer::serialiseImpl (
 ) const {
     DBG (__FUNCTION__ << std::endl);
 
-    sf_.startComposite (*this, blob_);
-    sf_.writeComposite (m_a, blob_);
+    sf_.writeComposite (m_a, "m_a", *this, blob_);
 }
 
 /******************************************************************************/
