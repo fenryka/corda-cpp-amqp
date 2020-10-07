@@ -3,6 +3,8 @@
 /******************************************************************************/
 
 #include "amqp/include/serialiser/ISerialiser.h"
+
+#include <sstream>
 #include <proton/codec.h>
 
 /******************************************************************************/
@@ -19,23 +21,53 @@ namespace amqp::internal::serialiser {
 
     template<typename prim> struct PrimToSerialiser {
         static void put(const prim &, pn_data_t *) {
-            throw std::runtime_error("");
+            std::stringstream ss;
+            ss << "NO MATCH FOR " << typeid(prim).name();
+            throw std::runtime_error(ss.str());
         }
     };
 
-    template<> struct PrimToSerialiser<int> {
+    template<>
+    struct PrimToSerialiser<int &> {
         typedef serialisers::IntPropertySerialiserBase serialiser;
 
-        static void put(const int & val_, pn_data_t * data_) {
+        static void put (const int & val_, pn_data_t * data_) {
             pn_data_put_int (data_, val_);
         }
     };
 
-    template<> struct PrimToSerialiser<std::string> {
+    template<>
+    struct PrimToSerialiser<int *> {
+        typedef serialisers::IntPropertySerialiserBase serialiser;
+
+        static void put (const int * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_int (data_, *val_);
+            } else {
+                pn_data_put_null (data_);
+            }
+        }
+    };
+
+    template<>
+    struct PrimToSerialiser<std::string &> {
         typedef serialisers::StringPropertySerialiserBase serialiser;
 
         static void put(const std::string & val_, pn_data_t * data_) {
             pn_data_put_string (data_, pn_bytes (val_.size(), val_.data()));
+        }
+    };
+
+    template<>
+    struct PrimToSerialiser<std::string *> {
+        typedef serialisers::StringPropertySerialiserBase serialiser;
+
+        static void put(const std::string * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_string (data_, pn_bytes (val_->size (), val_->data ()));
+            } else {
+                pn_data_put_null (data_);
+            }
         }
     };
 }

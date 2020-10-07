@@ -59,3 +59,9 @@ class Outer {
     Inner
 }
 ```
+
+## Writer Test 5
+
+Add recursive classes, that is where a class has a reference to an instance
+of itself. NOTE: this will not support cyclic refernces since the Corda
+framework itself doesn't

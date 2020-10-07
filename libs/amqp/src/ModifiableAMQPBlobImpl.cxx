@@ -21,6 +21,13 @@ ModifiableAMQPBlobImpl::ModifiableAMQPBlobImpl()
 
 /******************************************************************************/
 
+/*
+ *
+ * For now we're just going to accept that in recursive class definitions
+ * we're going to do some unneeded lifting in terms of looking
+ * in the map
+ *
+ */
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startComposite (
@@ -45,16 +52,12 @@ ModifiableAMQPBlobImpl::startComposite (
     auto it = m_schemas.find (key);
 
     if (it == m_schemas.end()) {
-        DBG ("    MAKE IT EMPTY" << std::endl);
         m_schemas[key] = {};
 
         for (const auto &i : m_schemas) {
             DBG ("    * " << i.first.first << ": " << i.second.size() << std::endl);
         }
     }
-
-    it = m_schemas.find (key);
-    assert (it != m_schemas.end());
 
     pn_data_put_described (m_payload);
 
@@ -78,7 +81,12 @@ ModifiableAMQPBlobImpl::writeComposite (
     const amqp::serializable::Serializable & parent_,
     const amqp::serializable::Serializable & composite_
 ) {
-    DBG (__FUNCTION__ << "::" << parent_.name() << "::" << composite_.name() << std::endl);
+    DBG (__FUNCTION__
+        << "::"
+        << parent_.name()
+        << "::"
+        << composite_.name()
+        << std::endl); // NOLINT
 
     auto key = std::make_pair (parent_.name(), parent_.fingerprint());
 
@@ -92,13 +100,19 @@ ModifiableAMQPBlobImpl::writeComposite (
         << m_schemas[key].size()
         << std::endl); // NOLINT
 
-    m_schemas[key].emplace_back (
-        schema::descriptors::FieldDescriptor::makeProton (
-            propertyName_,
-            composite_.name(),
-            {}));
+    if (m_schemas[key].find(propertyName_) == m_schemas[key].end()) {
+        m_schemas[key][propertyName_] =
+            schema::descriptors::FieldDescriptor::makeProton (
+                propertyName_,
+                composite_.name (),
+                {});
+    }
 
-    DBG ("    schemas sz: " << m_schemas.size() << ", " << m_schemas[key].size() << std::endl);
+    DBG ("    schemas sz: "
+        << m_schemas.size()
+        << ", "
+        << m_schemas[key].size()
+        << std::endl); // NOLINT
 }
 
 /******************************************************************************/
@@ -128,10 +142,25 @@ ModifiableAMQPBlobImpl::toBlob() const {
 
 void
 amqp::internal::
+ModifiableAMQPBlobImpl::writeNull (
+    const std::string &,
+    const amqp::serializable::Serializable &
+) {
+
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::
 ModifiableAMQPBlobImpl::dump() const {
     std::cout << "  * BLOB-DUMP" << std::endl;
     for (const auto &i: m_schemas) {
-        std::cout << "  *    [ " << i.first.first << ", " << i.first.second << "] : " << i.second.size() << std::endl;
+        std::cout << "  *    [ "
+                  << i.first.first
+                  << ", "
+                  << i.first.second
+                  << "] : " << i.second.size() << std::endl;
     }
 }
 

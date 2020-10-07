@@ -29,7 +29,7 @@ namespace amqp::internal::schema::descriptors {
                 const std::string &,
                 const std::vector<std::string> &,
                 const std::string &,
-                const std::vector<pn_data_t *> &,
+                const std::map<std::string, pn_data_t *> &,
                 const std::string & = "");
 
     };

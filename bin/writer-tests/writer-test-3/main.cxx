@@ -11,7 +11,7 @@
 int
 main (int argc, char ** argv) {
     if (argc != 2) {
-        std::cerr << "ERROR: usage ./writer-test-1 <<filename>>" << std::endl;
+        std::cerr << "ERROR: usage ./writer-test-3 <<filename>>" << std::endl;
         return EXIT_FAILURE;
     }
 

@@ -27,7 +27,9 @@ namespace amqp::internal {
 
             std::map<
                 std::pair<std::string, std::string>,
-                std::vector<pn_data_t *>> m_schemas;
+                std::map<
+                    std::string,
+                    pn_data_t *>> m_schemas;
 
         public :
             ModifiableAMQPBlobImpl();
@@ -40,7 +42,11 @@ namespace amqp::internal {
 
             template<typename T>
             void writePrimitive(
-                const T &,
+                T,
+                const std::string &,
+                const amqp::serializable::Serializable &);
+
+            void writeNull (
                 const std::string &,
                 const amqp::serializable::Serializable &);
 
@@ -57,7 +63,7 @@ template<typename T>
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::writePrimitive (
-    const T & propertyValue_,
+    T propertyValue_,
     const std::string & propertyName_,
     const amqp::serializable::Serializable & clazz_)
 {
@@ -73,13 +79,26 @@ ModifiableAMQPBlobImpl::writePrimitive (
 
     DBG ("FOUND IT" << std::endl); // NOLINT
 
-    m_schemas[key].emplace_back (
-        internal::schema::descriptors::FieldDescriptor::makeProton(
-            propertyName_,
-            serialiser::PrimToSerialiser<T>::serialiser::m_type,
-            {}));
+    std::string type = serialiser::PrimToSerialiser<
+        std::remove_const_t<T>
+    >::serialiser::m_type;
 
-    serialiser::PrimToSerialiser<T>::put (propertyValue_, m_payload);
+    if (m_schemas[key].find (propertyName_) == m_schemas[key].end()) {
+        m_schemas[key][propertyName_] =
+            internal::schema::descriptors::FieldDescriptor::makeProton (
+                propertyName_,
+                type,
+                {},
+                "", "",
+                std::is_pointer_v<T>,
+                false);
+    }
+
+    DBG ("WRITE IT" << std::endl); // NOLINT
+
+    serialiser::PrimToSerialiser<
+        std::remove_const_t<T>
+    >::put (propertyValue_, m_payload);
 }
 
 /******************************************************************************/

@@ -233,7 +233,7 @@ CompositeDescriptor::makeProton (
     const std::string & name_,
     const std::vector<std::string> & provides_,
     const std::string & fingerprint_,
-    const std::vector<pn_data_t *> & fields_,
+    const std::map<std::string, pn_data_t *> & fields_,
     const std::string & label_
 ) {
     DBG (__FUNCTION__ << " - " << name_ << " fields: #" << fields_.size() << std::endl);
@@ -280,7 +280,7 @@ CompositeDescriptor::makeProton (
             {
                 proton::auto_enter ae3 (rtn);
                 for (const auto & i : fields_) {
-                    pn_data_append (rtn, i);
+                    pn_data_append (rtn, i.second);
                 }
             }
         }
