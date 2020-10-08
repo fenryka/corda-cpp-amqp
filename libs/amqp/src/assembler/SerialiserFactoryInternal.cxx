@@ -138,6 +138,8 @@ SerialiserFactoryInternal::writeCompositePtr (
     const amqp::serializable::Serializable & parent_,
     ModifiableAMQPBlob & blob_
 ) const  {
+    DBG (__FUNCTION__ << "::" << type_ << std::endl); // NOLINT
+
     auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
 
     if (clazz_) {
