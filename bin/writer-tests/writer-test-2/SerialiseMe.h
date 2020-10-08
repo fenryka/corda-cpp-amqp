@@ -23,7 +23,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit SerialiseMe (int a_, int b_, int c_)
-            : Serializable ("SerialiseMe", "fingerprint123", "net.test")
+            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_a (a_)
             , m_b (b_)
             , m_c (c_)

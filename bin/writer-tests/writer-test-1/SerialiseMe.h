@@ -21,7 +21,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit SerialiseMe (int val_)
-            : Serializable ("SerialiseMe", "fingerprint123", "net.test")
+            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_val (val_)
         { }
 

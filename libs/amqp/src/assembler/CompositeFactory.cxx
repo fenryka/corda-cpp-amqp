@@ -1,6 +1,7 @@
 #include "CompositeFactory.h"
 
 #include <vector>
+#include <sstream>
 #include <functional>
 
 #include <cassert>
@@ -168,7 +169,11 @@ CompositeFactory::processComposite (
         }
 
 
-        assert (serialiser);
+        if (!serialiser) {
+            std::stringstream ss;
+            ss << __FILE__ << "::" << __FUNCTION__ << "::" << __LINE__ << ":: Can't find " << field->resolvedType();
+            throw std::runtime_error (ss.str());
+        }
         readers.emplace_back (serialiser);
         assert (readers.back().lock());
     }

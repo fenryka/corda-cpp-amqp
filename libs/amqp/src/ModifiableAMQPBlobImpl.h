@@ -40,6 +40,7 @@ namespace amqp::internal {
 
             void writeComposite (
                 const std::string &,
+                const std::string &,
                 const amqp::serializable::Serializable &,
                 const amqp::serializable::Serializable &);
 
@@ -50,6 +51,7 @@ namespace amqp::internal {
                 const amqp::serializable::Serializable &);
 
             void writeNull (
+                const std::string &,
                 const std::string &,
                 const amqp::serializable::Serializable &);
 

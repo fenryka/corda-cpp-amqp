@@ -25,7 +25,7 @@ inline
 std::pair<std::string, std::string>
 amqp::internal::
 ModifiableAMQPBlobImpl::key (const amqp::serializable::Serializable & s_) {
-    return std::make_pair (s_.fullName(), s_.fingerprint());
+    return std::make_pair (s_.name(), s_.fingerprint());
 }
 
 /******************************************************************************/
@@ -87,23 +87,27 @@ void
 amqp::internal::
 ModifiableAMQPBlobImpl::writeNull (
     const std::string & propertyName_,
+    const std::string & propertyType_,
     const amqp::serializable::Serializable & parent_
 ) {
     DBG (__FUNCTION__
              << "::"
              << propertyName_
              << "::"
-             << NULL << std::endl); // NOLINT
+             << NULL << " "
+             << "PAREMT: " << parent_.name()
+             << std::endl); // NOLINT
 
     auto id = key (parent_);
 
     assert (m_schemas.find (id) != m_schemas.end());
 
     if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
+        std::cout << propertyName_ << " missing :(" << std::endl;
         m_schemas[id][propertyName_] =
             internal::schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
-                "",
+                propertyType_,
                 {},
                 "", "",
                 true,
@@ -121,6 +125,7 @@ void
 amqp::internal::
 ModifiableAMQPBlobImpl::writeComposite (
     const std::string & propertyName_,
+    const std::string & propertyType_,
     const amqp::serializable::Serializable & parent_,
     const amqp::serializable::Serializable & composite_
 ) {
@@ -143,11 +148,11 @@ ModifiableAMQPBlobImpl::writeComposite (
         << m_schemas[id].size()
         << std::endl); // NOLINT
 
-    if (m_schemas[id].find(propertyName_) == m_schemas[id].end()) {
+    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
         m_schemas[id][propertyName_] =
             schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
-                composite_.fullName(),
+                propertyType_,
                 {});
     }
 

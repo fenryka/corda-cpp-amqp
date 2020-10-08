@@ -112,6 +112,27 @@ SerialiserFactoryInternal::writeBool (
 void
 amqp::internal::assembler::
 SerialiserFactoryInternal::writeComposite (
+    const std::string & type_,
+    const amqp::serializable::Serializable & clazz_,
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_,
+    ModifiableAMQPBlob & blob_
+) const  {
+    auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
+
+    blob.writeComposite (propertyName_, type_, parent_, clazz_);
+
+    clazz_.serialise (*this, blob_);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::assembler::
+SerialiserFactoryInternal::writeCompositePtr (
+    const std::string & type_,
     const amqp::serializable::Serializable * clazz_,
     const std::string & propertyName_,
     const amqp::serializable::Serializable & parent_,
@@ -122,17 +143,18 @@ SerialiserFactoryInternal::writeComposite (
     if (clazz_) {
         DBG (__FUNCTION__ << " - " << clazz_->name() << std::endl); // NOLINT
 
-        blob.writeComposite(propertyName_, parent_, *clazz_);
+        blob.writeComposite (type_, propertyName_, parent_, *clazz_);
 
         clazz_->serialise (*this, blob_);
     } else {
 
+        std::cout << "NULL!!!!!!!!!!!!!!!!" << std::endl;
         int status;
         std::cout << abi::__cxa_demangle (
             typeid(clazz_).name(),
             nullptr,
             nullptr, &status) << std::endl;
-        blob.writeNull (propertyName_, parent_);
+        blob.writeNull (propertyName_, type_, parent_);
     }
 }
 

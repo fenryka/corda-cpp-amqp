@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include <string>
 #include <cxxabi.h>
 
 /******************************************************************************/
@@ -32,12 +33,48 @@ template<typename T>
 constexpr
 char *
 typeName (int & status) {
+    typedef std::remove_pointer_t<T> T2;
+    typedef std::remove_pointer_t<T2> T3;
+
     status = 0;
     return abi::__cxa_demangle (
-        typeid (std::remove_pointer_t<T>).name (),
+        typeid (T3).name(),
         nullptr,
         nullptr, &status);
 }
 
 /******************************************************************************/
 
+template<typename T>
+constexpr
+char *
+typeName () {
+    typedef std::remove_pointer_t<T> T2;
+    typedef std::remove_pointer_t<T2> T3;
+
+    int status = 0;
+    return abi::__cxa_demangle (
+        typeid (T3).name(),
+        nullptr,
+        nullptr, &status);
+}
+
+/******************************************************************************/
+
+template<class T>
+std::string
+javaTypeName () {
+    const std::string find { "::" };
+    const std::string replace { "." };
+    std::string str { typeName<T>() };
+
+    size_t pos { 0 };
+    while ((pos = str.find(find, pos)) != std::string::npos) {
+        str.replace(pos, find.length(), replace);
+        pos += replace.length();
+    }
+
+    return str;
+}
+
+/******************************************************************************/

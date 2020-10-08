@@ -8,12 +8,10 @@
 amqp::serializable::
 Serializable::Serializable (
     std::string name_,
-    std::string fingerprint_,
-    std::string namespace_
+    std::string fingerprint_
 ) : m_name (std::move (name_))
   , m_fingerprint (std::move (fingerprint_))
-  , m_namespace (std::move (namespace_)
-) {
+{
 
 }
 
@@ -62,22 +60,6 @@ const std::string &
 amqp::serializable::
 Serializable::fingerprint() const {
     return m_fingerprint;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::serializable::
-Serializable::javaNamespace() const {
-    return m_namespace;
-}
-
-/******************************************************************************/
-
-std::string
-amqp::serializable::
-Serializable::fullName () const {
-    return m_namespace + "." + m_name;
 }
 
 /******************************************************************************/

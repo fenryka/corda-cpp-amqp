@@ -22,7 +22,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit SerialiseMe (std::string a_, std::string b_)
-            : Serializable ("SerialiseMe", "fingerprint123", "net.test")
+            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_a (std::move (a_))
             , m_b (std::move (b_))
         { }

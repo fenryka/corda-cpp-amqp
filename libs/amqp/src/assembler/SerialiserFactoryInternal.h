@@ -6,6 +6,14 @@
 #include "amqp/src/serialiser/Serialiser.h"
 #include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
 
+/******************************************************************************/
+
+#define writeCompositeM(__factory__, __type__, __parent__, __blob__) \
+    __factory__.writeCompositePtr ( \
+        javaTypeName<decltype (__type__)>(), __type__, #__type__, *this, __blob__);
+
+/******************************************************************************/
+
 namespace amqp::internal::assembler {
 
     class SerialiserFactoryInternal : public amqp::assembler::SerialiserFactory {
@@ -13,6 +21,14 @@ namespace amqp::internal::assembler {
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;
 
             void writeComposite (
+                const std::string & type,
+                const amqp::serializable::Serializable &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &) const override;
+
+            void writeCompositePtr (
+                const std::string & type,
                 const amqp::serializable::Serializable *,
                 const std::string &,
                 const amqp::serializable::Serializable &,
@@ -59,3 +75,4 @@ namespace amqp::internal::assembler {
 
 }
 
+/******************************************************************************/

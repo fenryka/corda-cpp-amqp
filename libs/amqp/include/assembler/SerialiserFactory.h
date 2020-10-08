@@ -28,6 +28,15 @@ namespace amqp::assembler {
             ) const = 0;
 
             virtual void writeComposite (
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &
+            ) const = 0;
+
+            virtual void writeCompositePtr (
+                const std::string & type,
                 const amqp::serializable::Serializable *,
                 const std::string &,
                 const amqp::serializable::Serializable &,
