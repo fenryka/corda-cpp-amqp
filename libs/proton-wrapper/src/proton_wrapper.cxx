@@ -123,13 +123,6 @@ proton::pn_data_enter(pn_data_t * data_) {
 
 /******************************************************************************/
 
-void
-proton::assert_described (pn_data_t * data_) {
-    if (pn_data_type (data_) != PN_DESCRIBED) {
-        throw std::runtime_error ("Expected a described type");
-    }
-}
-
 bool
 proton::is_described (pn_data_t * data_) {
     return pn_data_type (data_) == PN_DESCRIBED;
@@ -149,10 +142,38 @@ proton::is_ulong (pn_data_t * data_) {
 
 /******************************************************************************/
 
+bool
+proton::is_bool (pn_data_t * data_) {
+    return pn_data_type (data_) == PN_BOOL;
+}
+
+/******************************************************************************/
+
+bool
+proton::is_null (pn_data_t * data_) {
+    return pn_data_type (data_) == PN_NULL;
+}
+
+/******************************************************************************/
+
 void
 proton::is_symbol (pn_data_t * data_) {
     if (pn_data_type(data_) != PN_SYMBOL) {
         throw std::runtime_error ("Expected an unsigned long");
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
+attest_is_described (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_DESCRIBED) {
+        std::stringstream ss;
+        ss << "Expected a Described type, got " << protonToString[pn_data_type (data_)].first
+            << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
     }
 }
 

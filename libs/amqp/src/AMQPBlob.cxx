@@ -214,7 +214,7 @@ namespace {
 
     IValPtr
     dumpDescribed (pn_data_t * data_) {
-        proton::assert_described (data_);
+        proton::attest_is_described (data_, __FILE__, __LINE__);
 
         {
             proton::auto_enter p2(data_);
@@ -249,7 +249,7 @@ AMQPBlob::dumpData() const -> std::string {
         // move to the actual blob entry in the tree - ideally we'd have
         // saved this on the Envelope but that's not easily doable as we
         // can't grab an actual copy of our data pointer
-        proton::assert_described (m_data);
+        proton::attest_is_described (m_data, __FILE__, __LINE__);
         {
             proton::auto_enter p (m_data);
             uint64_t key = proton::readAndNext<u_long>(m_data);
@@ -261,7 +261,7 @@ AMQPBlob::dumpData() const -> std::string {
 
         // first element in the list is the data (second the schema, third the transforms)
         proton::auto_list_enter ale (m_data, true);
-        proton::assert_described (m_data);
+        proton::attest_is_described (m_data, __FILE__, __LINE__);
         rtn = dumpDescribed (m_data);
     }
 

@@ -140,11 +140,16 @@ CompositeFactory::processComposite (
         const amqp::internal::schema::AMQPTypeNotation & type_
 ) {
     DBG ("processComposite - " << type_.name() << std::endl); // NOLINT
-    std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> readers;
 
     const auto & fields = dynamic_cast<const schema::Composite &> (
             type_).fields();
 
+    auto rtn = std::make_shared<serialiser::serialisers::CompositeSerialiser<
+        serialiser::reader::CompositeReader,
+        serialiser::writer::Writer>
+    > (type_.name());
+
+    std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> readers;
     readers.reserve (fields.size());
 
     for (const auto & field : fields) {
@@ -161,27 +166,33 @@ CompositeFactory::processComposite (
                     [&field]() -> sPtr<amqp::serialiser::ISerialiser> {
                         return g_sf.makePropertyReader (field->type());
                     });
-        }
-        else {
+        } else if (field->resolvedType() == type_.name()) {
+            // Special case where a composite type has a property that
+            // is a reference to that type itself.
+            DBG ("IT ME!!!!" << std::endl);
+            serialiser = rtn;
+
+        } else {
             // Insertion sorting ensures any type we depend on will have
             // already been created and thus exist in the map
             serialiser = m_serialisersByType[field->resolvedType()];
         }
 
-
         if (!serialiser) {
             std::stringstream ss;
-            ss << __FILE__ << "::" << __FUNCTION__ << "::" << __LINE__ << ":: Can't find " << field->resolvedType();
+            ss << __FILE__ << "::"
+                << __FUNCTION__ << "::"
+                << __LINE__ << ":: "
+                << "Can't find " << field->resolvedType();
+
             throw std::runtime_error (ss.str());
         }
         readers.emplace_back (serialiser);
         assert (readers.back().lock());
     }
 
-    return std::make_shared<serialiser::serialisers::CompositeSerialiser<
-            serialiser::reader::CompositeReader,
-            serialiser::writer::Writer>
-    > (type_.name(), readers);
+    rtn->install (readers);
+    return rtn;
 }
 
 /******************************************************************************/

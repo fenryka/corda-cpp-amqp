@@ -24,7 +24,19 @@ namespace amqp::internal::serialiser::serialisers {
               , m_serialisers { std::move (serialisers_) }
             { }
 
-            [[nodiscard]] const std::string & name() const override  {
+            explicit CompositeSerialiser (
+                std::string type_
+            ) : m_type { std::move (type_) }
+            { }
+
+            void
+            install (
+                std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> serialisers_)
+            {
+                m_serialisers = std::move (serialisers_);
+            }
+
+                [[nodiscard]] const std::string & name() const override  {
                 return m_name;
             }
 

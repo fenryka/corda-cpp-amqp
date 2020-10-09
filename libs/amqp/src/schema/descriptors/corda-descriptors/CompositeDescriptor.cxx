@@ -129,7 +129,7 @@ CompositeDescriptor::readRaw (
         ss_ << "]" << std::endl;
 
         pn_data_next (data_);
-        proton::assert_described(data_);
+        proton::attest_is_described (data_, __FILE__, __LINE__);
 
         ss_ << ai << "4] Descriptor:" << std::endl;
 
@@ -192,7 +192,7 @@ CompositeDescriptor::readAvro (
         pn_data_next (data_);
 
         // make the fingerprint an alias
-        proton::assert_described(data_);
+        proton::attest_is_described (data_, __FILE__, __LINE__);
         AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
                 (pn_data_t *)proton::auto_next (data_), ss_, ai);
 

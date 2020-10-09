@@ -6,9 +6,9 @@
 
 #include "amqp/include/serializable/Serializable.h"
 
-#include "amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/SchemaDescriptor.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/EnvelopeDescriptor.h"
+#include "amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h"
 
 /******************************************************************************/
 
@@ -62,10 +62,6 @@ ModifiableAMQPBlobImpl::startComposite (
 
     if (it == m_schemas.end()) {
         m_schemas[id] = {};
-
-        for (const auto &i : m_schemas) {
-            DBG ("    * " << i.first.first << ": " << i.second.size() << std::endl);
-        }
     }
 
     pn_data_put_described (m_payload);
@@ -91,12 +87,9 @@ ModifiableAMQPBlobImpl::writeNull (
     const amqp::serializable::Serializable & parent_
 ) {
     DBG (__FUNCTION__
-             << "::"
-             << propertyName_
-             << "::"
-             << NULL << " "
-             << "PAREMT: " << parent_.name()
-             << std::endl); // NOLINT
+             << "::" << propertyName_
+             << "::" << NULL << " "
+             << "PARENT: " << parent_.name() << std::endl); // NOLINT
 
     auto id = key (parent_);
 
@@ -126,27 +119,16 @@ amqp::internal::
 ModifiableAMQPBlobImpl::writeComposite (
     const std::string & propertyName_,
     const std::string & propertyType_,
-    const amqp::serializable::Serializable & parent_,
     const amqp::serializable::Serializable & composite_
 ) {
     DBG (__FUNCTION__
         << "::"
-        << parent_.name()
-        << "::"
         << composite_.name()
         << std::endl); // NOLINT
 
-    auto id = key (parent_);
+    auto id = key (composite_);
 
     assert (m_schemas.find (id) != m_schemas.end());
-
-    DBG ("FOUND IT ["
-        << parent_.name()
-        << ", "
-        << parent_.fingerprint()
-        << "] - m_schemas size - "
-        << m_schemas[id].size()
-        << std::endl); // NOLINT
 
     if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
         m_schemas[id][propertyName_] =
@@ -172,7 +154,7 @@ ModifiableAMQPBlobImpl::toBlob() const {
 
     std::vector<pn_data_t *> composites;
     for (const auto & schema : m_schemas) {
-        DBG ("    * " << schema.first.first << ": " << schema.second.size() << std::endl);
+        DBG ("    * " << schema.first.first << ": " << schema.second.size() << std::endl); // NOLINT
 
         composites.emplace_back (
             schema::descriptors::CompositeDescriptor::makeProton (
@@ -191,7 +173,6 @@ ModifiableAMQPBlobImpl::toBlob() const {
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::dump() const {
-    std::cout << "  * BLOB-DUMP" << std::endl;
     for (const auto &i: m_schemas) {
         std::cout << "  *    [ "
                   << i.first.first

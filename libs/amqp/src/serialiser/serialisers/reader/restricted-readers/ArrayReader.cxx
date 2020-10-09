@@ -54,7 +54,7 @@ ArrayReader::dump_(
         pn_data_t * data_,
         const amqp::schema::ISchema & schema_
 ) const {
-    proton::assert_described(data_);
+    proton::attest_is_described (data_, __FILE__, __LINE__);
 
     decltype (dump_ (data_, schema_)) read;
 

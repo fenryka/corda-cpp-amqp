@@ -139,6 +139,30 @@ TypedPair<sList<uPtr<amqp::serialiser::reader::IValue>>>::dump() const {
 
 /******************************************************************************
  *
+ * amqp::internal::serialiser::reader::NullValuePair
+ *
+ ******************************************************************************/
+
+std::string
+amqp::internal::serialiser::reader::
+NullTypedPair::dump() const {
+    return m_property + " : <<NULL>>";
+}
+
+/******************************************************************************
+ *
+ * amqp::internal::serialiser::reader::NullValueSingle
+ *
+ ******************************************************************************/
+
+std::string
+amqp::internal::serialiser::reader::
+NullTypedSingle::dump() const {
+    return "<<NULL>>";
+}
+
+/******************************************************************************
+ *
  * amqp::internal::serialiser::reader::TypedSingle specialisations
  *
  ******************************************************************************/

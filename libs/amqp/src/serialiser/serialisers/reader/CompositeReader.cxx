@@ -44,7 +44,9 @@ CompositeReader::_dump (
 ) const {
     DBG ("Read Composite: " << std::endl); // NOLINT
 
-    proton::assert_described(data_);
+    sVec<uPtr<amqp::serialiser::reader::IValue>> read;
+
+    proton::attest_is_described (data_, __FILE__, __LINE__);
     proton::auto_enter ae (data_);
 
     const auto & it = schema_.fromDescriptor (
@@ -59,7 +61,6 @@ CompositeReader::_dump (
 
     pn_data_next (data_);
 
-    sVec<uPtr<amqp::serialiser::reader::IValue>> read;
     read.reserve (fields.size());
 
     proton::attest_is_list (data_, __FILE__, __LINE__);
@@ -94,9 +95,13 @@ CompositeReader::dump (
 {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
-        name_,
-        _dump(data_, schema_));
+    if (proton::is_null (data_)) {
+        return std::make_unique<NullTypedPair> (name_);
+    } else {
+        return std::make_unique<TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
+            name_,
+            _dump (data_, schema_));
+    }
 }
 
 /******************************************************************************/
@@ -112,8 +117,12 @@ CompositeReader::dump (
 {
     proton::auto_next an (data_);
 
-    return std::make_unique<TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
-        _dump (data_, schema_));
+    if (proton::is_null (data_)) {
+        return std::make_unique<NullTypedSingle>();
+    } else {
+        return std::make_unique<TypedSingle<sVec<uPtr<amqp::serialiser::reader::IValue>>>> (
+            _dump (data_, schema_));
+    }
 }
 
 /******************************************************************************/

@@ -11,7 +11,7 @@ namespace {
 
     std::string
     getValue (pn_data_t * data_) {
-        proton::assert_described(data_);
+        proton::attest_is_described (data_, __FILE__, __LINE__);
 
         {
             proton::auto_enter ae (data_);
@@ -58,7 +58,7 @@ EnumReader::dump (
         const amqp::schema::ISchema & schema_
 ) const {
     proton::auto_next an (data_);
-    proton::assert_described(data_);
+    proton::attest_is_described (data_, __FILE__, __LINE__);
 
     return std::make_unique<TypedPair<std::string>> (
             name_,
@@ -74,7 +74,7 @@ EnumReader::dump(
         const amqp::schema::ISchema & schema_
 ) const {
     proton::auto_next an (data_);
-    proton::assert_described(data_);
+    proton::attest_is_described (data_, __FILE__, __LINE__);
 
     return std::make_unique<TypedSingle<std::string>> (getValue(data_));
 }

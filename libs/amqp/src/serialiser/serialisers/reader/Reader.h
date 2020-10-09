@@ -42,6 +42,15 @@ namespace amqp::internal::serialiser::reader {
             ~Single() override = default;
     };
 
+    class NullTypedSingle : public Single {
+        public:
+            explicit NullTypedSingle()
+                : Single()
+            { }
+
+            [[nodiscard]] std::string dump() const override;
+    };
+
     template<typename T>
     class TypedSingle : public Single {
         private:
@@ -94,6 +103,14 @@ namespace amqp::internal::serialiser::reader {
             [[nodiscard]] std::string dump() const override = 0;
     };
 
+    class NullTypedPair : public Pair {
+        public:
+            explicit NullTypedPair (const std::string & property_)
+                : Pair (property_)
+            { }
+
+            [[nodiscard]] std::string dump() const override;
+    };
 
     template<typename T>
     class TypedPair : public Pair {

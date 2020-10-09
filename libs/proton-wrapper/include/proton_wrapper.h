@@ -27,17 +27,17 @@ namespace proton {
 
     void attest_is_list (pn_data_t *, const std::string &, int);
     void attest_is_string(pn_data_t *, const std::string &, int, bool = false);
+    void attest_is_described(pn_data_t *, const std::string &, int);
 
     void is_map (pn_data_t *, const std::string &, int);
     bool is_primitive (pn_data_t *);
 
     void is_ulong(pn_data_t *);
-
     void is_symbol(pn_data_t *);
 
-
-    void assert_described(pn_data_t *);
-    bool is_described(pn_data_t *);
+    bool is_described (pn_data_t *);
+    bool is_bool (pn_data_t *);
+    bool is_null (pn_data_t *);
 
     std::string typeToString (pn_data_t *);
 }

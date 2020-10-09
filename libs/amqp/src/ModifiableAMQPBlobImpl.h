@@ -5,11 +5,11 @@
 #include "corda-utils/include/types.h"
 #include "corda-utils/include/debug.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/FieldDescriptor.h"
-#include "amqp/src/serialiser/Serialiser.h"
 #include "amqp/include/serializable/Serializable.h"
 
-#include "amqp/src/serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.h"
-#include "amqp/src/serialiser/serialisers/property-serialisers/StringPropertySerialiserBase.h"
+#include "serialiser/Serialiser.h"
+#include "serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/StringPropertySerialiserBase.h"
 
 #include <map>
 
@@ -34,14 +34,14 @@ namespace amqp::internal {
         public :
             ModifiableAMQPBlobImpl();
 
-            static std::pair<std::string, std::string> key (const amqp::serializable::Serializable &);
+            static std::pair<std::string, std::string> key (
+                const amqp::serializable::Serializable &);
 
             void startComposite (const amqp::serializable::Serializable &);
 
             void writeComposite (
                 const std::string &,
                 const std::string &,
-                const amqp::serializable::Serializable &,
                 const amqp::serializable::Serializable &);
 
             template<typename T>

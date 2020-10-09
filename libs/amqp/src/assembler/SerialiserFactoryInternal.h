@@ -12,6 +12,10 @@
     __factory__.writeCompositePtr ( \
         javaTypeName<decltype (__type__)>(), __type__, #__type__, *this, __blob__);
 
+#define writeCompositePointer(__type__, __parent__, __blob__) \
+    writeCompositePtr ( \
+        javaTypeName<decltype (__type__)>(), __type__, #__type__, *this, __blob__);
+
 /******************************************************************************/
 
 namespace amqp::internal::assembler {
@@ -21,14 +25,14 @@ namespace amqp::internal::assembler {
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;
 
             void writeComposite (
-                const std::string & type,
+                const std::string &,
                 const amqp::serializable::Serializable &,
                 const std::string &,
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
             void writeCompositePtr (
-                const std::string & type,
+                const std::string &,
                 const amqp::serializable::Serializable *,
                 const std::string &,
                 const amqp::serializable::Serializable &,

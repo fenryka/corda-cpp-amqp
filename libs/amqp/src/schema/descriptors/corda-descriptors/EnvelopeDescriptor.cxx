@@ -16,7 +16,7 @@ namespace {
 
     std::string
     consumeBlob (pn_data_t * data_) {
-        proton::assert_described(data_);
+        proton::attest_is_described (data_, __FILE__, __LINE__);
         proton::auto_enter p (data_);
         return proton::get_symbol<std::string> (data_);
     }

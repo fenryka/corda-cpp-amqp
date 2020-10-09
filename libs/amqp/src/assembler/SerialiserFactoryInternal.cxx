@@ -122,7 +122,7 @@ SerialiserFactoryInternal::writeComposite (
 
     DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
 
-    blob.writeComposite (propertyName_, type_, parent_, clazz_);
+    blob.writeComposite (propertyName_, type_, parent_);
 
     clazz_.serialise (*this, blob_);
 }
@@ -142,20 +142,13 @@ SerialiserFactoryInternal::writeCompositePtr (
 
     auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
 
+    blob.writeComposite (propertyName_, type_, parent_);
+
     if (clazz_) {
         DBG (__FUNCTION__ << " - " << clazz_->name() << std::endl); // NOLINT
 
-        blob.writeComposite (type_, propertyName_, parent_, *clazz_);
-
         clazz_->serialise (*this, blob_);
     } else {
-
-        std::cout << "NULL!!!!!!!!!!!!!!!!" << std::endl;
-        int status;
-        std::cout << abi::__cxa_demangle (
-            typeid(clazz_).name(),
-            nullptr,
-            nullptr, &status) << std::endl;
         blob.writeNull (propertyName_, type_, parent_);
     }
 }
