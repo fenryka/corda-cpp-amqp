@@ -10,9 +10,10 @@
  *
  ******************************************************************************/
 
+[[maybe_unused]]
 amqp::internal::schema::Restricted::RestrictedTypes
 amqp::internal::serialiser::reader::
-ListReader::restrictedType() const {
+ListReader::restrictedType() {
     return internal::schema::Restricted::RestrictedTypes::list_t;
 }
 
@@ -51,8 +52,8 @@ ListReader::dump(
 sList<uPtr<amqp::serialiser::reader::IValue>>
 amqp::internal::serialiser::reader::
 ListReader::dump_(
-        pn_data_t * data_,
-        const amqp::schema::ISchema & schema_
+    pn_data_t * data_,
+    const amqp::schema::ISchema & schema_
 ) const {
     proton::attest_is_described (data_, __FILE__, __LINE__);
 

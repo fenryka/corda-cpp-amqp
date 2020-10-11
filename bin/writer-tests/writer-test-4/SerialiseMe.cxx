@@ -2,6 +2,8 @@
 
 #include "corda-utils/include/debug.h"
 
+#include "amqp/include/assembler/SerialiserFactory.h"
+
 /******************************************************************************/
 
 void
@@ -25,7 +27,7 @@ Outer::serialiseImpl (
     DBG (__FUNCTION__ << std::endl);
     DBG (javaTypeName<decltype(m_a)>() << std::endl);
 
-    sf_.writeComposite (javaTypeName<decltype(m_a)>(), m_a, "m_a", *this, blob_);
+    sf_.writeComposite (&m_a, "m_a", *this, blob_);
 }
 
 /******************************************************************************/

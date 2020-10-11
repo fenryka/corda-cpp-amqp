@@ -10,8 +10,8 @@ Serializable::Serializable (
     std::string name_,
     std::string fingerprint_
 ) : m_name (std::move (name_))
-  , m_fingerprint (std::move (fingerprint_))
-{
+  , m_fingerprint (std::move (fingerprint_)
+) {
 
 }
 
@@ -25,7 +25,7 @@ Serializable::Serializable (
 uPtr<amqp::AMQPBlob>
 amqp::serializable::
 Serializable::serialise (
-        const amqp::assembler::SerialiserFactory & sf_
+    const amqp::assembler::SerialiserFactory & sf_
 ) const {
     auto blob = sf_.blob();
     sf_.startComposite (*this, *blob);

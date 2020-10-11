@@ -37,9 +37,18 @@ namespace amqp::internal {
             static std::pair<std::string, std::string> key (
                 const amqp::serializable::Serializable &);
 
-            void startComposite (const amqp::serializable::Serializable &);
+            void startComposite (
+                const amqp::serializable::Serializable &);
 
-            void writeComposite (
+            void startRestricted (
+                const amqp::serializable::Serializable &);
+
+            void startList (
+                const std::string &,
+                const std::string &,
+                const amqp::serializable::Serializable &);
+
+            void writeComposite_ (
                 const std::string &,
                 const std::string &,
                 const amqp::serializable::Serializable &);
@@ -48,6 +57,11 @@ namespace amqp::internal {
             void writePrimitive(
                 T,
                 const std::string &,
+                const amqp::serializable::Serializable &);
+
+            template<typename T>
+            void writePrimitiveSingle(
+                T,
                 const amqp::serializable::Serializable &);
 
             void writeNull (
@@ -98,6 +112,36 @@ ModifiableAMQPBlobImpl::writePrimitive (
                 std::is_pointer_v<T>,
                 false);
     }
+
+    DBG ("WRITE IT" << std::endl); // NOLINT
+
+    serialiser::PrimToSerialiser<
+        std::remove_const_t<T>
+    >::put (propertyValue_, m_payload);
+}
+
+/******************************************************************************/
+
+template<typename T>
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::writePrimitiveSingle (
+    T propertyValue_,
+    const amqp::serializable::Serializable & clazz_)
+{
+    DBG (__FUNCTION__
+             << "::"
+             << propertyValue_ << std::endl); // NOLINT
+
+    auto id = key (clazz_);
+
+    assert (m_schemas.find (id) != m_schemas.end());
+
+    DBG ("FOUND IT" << std::endl); // NOLINT
+
+    std::string type = serialiser::PrimToSerialiser<
+        std::remove_const_t<T>
+    >::serialiser::m_type;
 
     DBG ("WRITE IT" << std::endl); // NOLINT
 

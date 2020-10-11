@@ -8,37 +8,35 @@
 
 /******************************************************************************/
 
-#define writeCompositeM(__factory__, __type__, __parent__, __blob__) \
-    __factory__.writeCompositePtr ( \
-        javaTypeName<decltype (__type__)>(), __type__, #__type__, *this, __blob__);
-
-#define writeCompositePointer(__type__, __parent__, __blob__) \
-    writeCompositePtr ( \
-        javaTypeName<decltype (__type__)>(), __type__, #__type__, *this, __blob__);
-
-/******************************************************************************/
-
 namespace amqp::internal::assembler {
 
     class SerialiserFactoryInternal : public amqp::assembler::SerialiserFactory {
         public :
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;
 
-            void writeComposite (
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeCompositePtr (
+            void writeComposite_ (
                 const std::string &,
                 const amqp::serializable::Serializable *,
                 const std::string &,
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
+            void writeRestricted_ (
+                const std::string &,
+                const amqp::serializable::Serializable *,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &) const override;
+
+            void startList (
+                const std::string &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob & blob_
+            ) const override;
+
             void startComposite (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
+            void startRestricted (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
 
             void writeInt(
                 int,
@@ -52,8 +50,13 @@ namespace amqp::internal::assembler {
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
-            void writeString(
+            void writeStringPair (
                 const std::string &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &) const override;
+
+            void writeStringSingle (
                 const std::string &,
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;

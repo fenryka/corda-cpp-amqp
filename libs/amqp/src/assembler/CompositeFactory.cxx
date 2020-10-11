@@ -38,7 +38,7 @@
  * will be, right now this is a hack
  *
  */
-amqp::internal::serialiser::serialisers::SerialisersFactory g_sf;
+static amqp::internal::serialiser::serialisers::SerialisersFactory g_sf;
 
 /******************************************************************************/
 
@@ -329,7 +329,7 @@ CompositeFactory::processRestricted (
 
 /******************************************************************************/
 
-const sPtr<amqp::serialiser::ISerialiser>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byType (const std::string & type_) {
     auto it = m_serialisersByType.find (type_);
@@ -339,7 +339,7 @@ CompositeFactory::byType (const std::string & type_) {
 
 /******************************************************************************/
 
-const sPtr<amqp::serialiser::ISerialiser>
+sPtr<amqp::serialiser::ISerialiser>
 amqp::internal::assembler::
 CompositeFactory::byDescriptor (const std::string & descriptor_) {
     auto it = m_serialisersByDescriptor.find (descriptor_);

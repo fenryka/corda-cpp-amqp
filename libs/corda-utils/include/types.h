@@ -7,7 +7,10 @@
 #include <vector>
 #include <memory>
 #include <string>
+
 #include <cxxabi.h>
+
+#include <iostream>
 
 /******************************************************************************/
 
@@ -63,9 +66,38 @@ typeName () {
 
 template<class T>
 std::string
+javaTypeName ();
+
+template<typename>
+struct is_std_vector : std::false_type {
+    static std::string fun() {
+        std::cout << "N" << std::endl;
+        return "";
+    }
+};
+
+template<typename T, typename A>
+struct is_std_vector<std::vector<T,A>> : std::true_type {
+    static std::string fun() {
+        return "java.util.List<" + javaTypeName<T>() + ">";
+    }
+
+};
+
+/******************************************************************************/
+
+template<class T>
+std::string
 javaTypeName () {
     const std::string find { "::" };
     const std::string replace { "." };
+
+    if (is_std_vector<T>::value) {
+        return is_std_vector<T>::fun();
+    } else {
+        //
+    }
+
     std::string str { typeName<T>() };
 
     size_t pos { 0 };

@@ -1,4 +1,3 @@
-#include <cxxabi.h>
 #include "SerialiserFactoryInternal.h"
 
 #include "amqp/include/serializable/Serializable.h"
@@ -49,7 +48,7 @@ SerialiserFactoryInternal::writeIntPtr(
 
 void
 amqp::internal::assembler::
-SerialiserFactoryInternal::writeString(
+SerialiserFactoryInternal::writeStringPair(
     const std::string & propertyValue_,
     const std::string & propertyName_,
     const amqp::serializable::Serializable & clazz_,
@@ -59,6 +58,21 @@ SerialiserFactoryInternal::writeString(
 
     dynamic_cast<ModifiableAMQPBlobImpl &>(blob_).writePrimitive<std::string &> (
         const_cast<std::string &>(propertyValue_), propertyName_, clazz_);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::assembler::
+SerialiserFactoryInternal::writeStringSingle(
+    const std::string & propertyValue_,
+    const amqp::serializable::Serializable & clazz_,
+    ModifiableAMQPBlob & blob_
+) const {
+    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
+
+    dynamic_cast<ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<std::string &> (
+        const_cast<std::string &>(propertyValue_), clazz_);
 }
 
 /******************************************************************************/
@@ -96,6 +110,23 @@ SerialiserFactoryInternal::writeLong(
 
 void
 amqp::internal::assembler::
+SerialiserFactoryInternal::startList (
+    const std::string & propertyName_,
+    const std::string & propertyType_,
+    const amqp::serializable::Serializable & clazz_,
+    ModifiableAMQPBlob & blob_
+) const {
+    DBG (__FUNCTION__ << std::endl); // NOLINT
+    auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.startList (propertyName_, propertyType_, clazz_);
+
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::assembler::
 SerialiserFactoryInternal::writeBool (
     bool propertyValue_,
     const std::string & propertyName_,
@@ -111,27 +142,7 @@ SerialiserFactoryInternal::writeBool (
 
 void
 amqp::internal::assembler::
-SerialiserFactoryInternal::writeComposite (
-    const std::string & type_,
-    const amqp::serializable::Serializable & clazz_,
-    const std::string & propertyName_,
-    const amqp::serializable::Serializable & parent_,
-    ModifiableAMQPBlob & blob_
-) const  {
-    auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
-
-    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
-
-    blob.writeComposite (propertyName_, type_, parent_);
-
-    clazz_.serialise (*this, blob_);
-}
-
-/******************************************************************************/
-
-void
-amqp::internal::assembler::
-SerialiserFactoryInternal::writeCompositePtr (
+SerialiserFactoryInternal::writeComposite_ (
     const std::string & type_,
     const amqp::serializable::Serializable * clazz_,
     const std::string & propertyName_,
@@ -142,7 +153,7 @@ SerialiserFactoryInternal::writeCompositePtr (
 
     auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
 
-    blob.writeComposite (propertyName_, type_, parent_);
+    blob.writeComposite_ (propertyName_, type_, parent_);
 
     if (clazz_) {
         DBG (__FUNCTION__ << " - " << clazz_->name() << std::endl); // NOLINT
@@ -171,3 +182,36 @@ SerialiserFactoryInternal::startComposite (
 }
 
 /******************************************************************************/
+
+void
+amqp::internal::assembler::
+SerialiserFactoryInternal::startRestricted (
+    const amqp::serializable::Serializable & clazz_,
+    ModifiableAMQPBlob & blob_
+) const  {
+    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
+    auto & blob = dynamic_cast<ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.dump();
+
+    blob.startRestricted (clazz_);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::assembler::
+SerialiserFactoryInternal::writeRestricted_ (
+    const std::string & type_,
+    const amqp::serializable::Serializable * clazz_,
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_,
+    ModifiableAMQPBlob & blob_
+) const {
+    DBG (__FUNCTION__ << std::endl);
+
+    clazz_->serialise (*this, blob_);
+}
+
+/******************************************************************************/
+

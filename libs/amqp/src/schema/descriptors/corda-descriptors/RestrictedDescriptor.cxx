@@ -85,15 +85,15 @@ RestrictedDescriptor::RestrictedDescriptor (
  * Restricted types represent lists and maps
  *
  * NOTE: The Corda serialization scheme doesn't support all container classes
- * as it has the requiremnt that iteration order be deterministic for purposes
+ * as it has the requirement that iteration order be deterministic for purposes
  * of signing over data.
  *
- *      name : String
- *      label : String?
- *      provides : List<String>
- *      source : String
+ *            name : String
+ *           label : String?
+ *        provides : List<String>
+ *          source : String
  *      descriptor : Descriptor
- *      choices : List<Choice>
+ *         choices : List<Choice>
  *
  ******************************************************************************/
 
@@ -191,7 +191,7 @@ RestrictedDescriptor::readRaw (
     ss_ << ai << "5] Descriptor:" << std::endl;
 
     AMQPDescriptorRegistory[pn_data_type(data_)]->readRaw (
-            (pn_data_t *)proton::auto_next(data_), ss_, AutoIndent { ai });
+        (pn_data_t *)proton::auto_next(data_), ss_, AutoIndent { ai });
 }
 
 /******************************************************************************/
@@ -199,9 +199,9 @@ RestrictedDescriptor::readRaw (
 void
 amqp::internal::schema::descriptors::
 RestrictedDescriptor::readAvro (
-        pn_data_t * data_,
-        std::stringstream & ss_,
-        const AutoIndent & ai_
+    pn_data_t * data_,
+    std::stringstream & ss_,
+    const AutoIndent & ai_
 ) const {
     /*
      * So Avro doesn't really have the concept of restricted types, so
@@ -211,3 +211,20 @@ RestrictedDescriptor::readAvro (
 
 /******************************************************************************/
 
+/*
+ *       name : String
+ *      label : String?
+ *   provides : List<String>
+ *     source : String
+ * descriptor : Descriptor
+ *    choices : List<Choice>
+ */
+pn_data_t *
+amqp::internal::schema::descriptors::
+RestrictedDescriptor::makeProton () {
+    auto rtn = pn_data (0);
+
+    return rtn;
+}
+
+/******************************************************************************/

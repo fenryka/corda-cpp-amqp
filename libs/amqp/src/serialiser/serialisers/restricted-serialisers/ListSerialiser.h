@@ -25,8 +25,9 @@ namespace amqp::internal::serialiser::serialisers {
             { }
 
 
-            const decltype (m_serialiser) & serialiser() const { return m_serialiser; }
+            [[nodiscard]] const decltype (m_serialiser) & serialiser() const { return m_serialiser; }
 
+            [[nodiscard]]
             const std::vector<std::weak_ptr<amqp::serialiser::ISerialiser>> &
             serialisers() const override {
                 return m_serialiser;

@@ -22,10 +22,8 @@ namespace net {
     };
 }
 
-namespace a {
-namespace b {
+namespace a::b {
     class C {};
-}
 }
 
 /******************************************************************************/
@@ -46,11 +44,20 @@ TEST (typeName, test1) {
 
 /******************************************************************************/
 
-TEST (typename, javaTypeName) {
+TEST (typeName, javaTypeName) {
     EXPECT_EQ ("A", javaTypeName<A>());
     EXPECT_EQ ("net.B", javaTypeName<net::B>());
     EXPECT_EQ ("a.b.C", javaTypeName<a::b::C>());
+}
 
+/******************************************************************************/
+
+TEST (typeName, vectors) {
+    typedef std::vector<int> V1;
+    typedef std::vector<a::b::C> V2;
+
+    EXPECT_EQ ("java.util.List<int>", javaTypeName<V1>());
+    EXPECT_EQ ("java.util.List<a.b.C>", javaTypeName<V2>());
 }
 
 /******************************************************************************/

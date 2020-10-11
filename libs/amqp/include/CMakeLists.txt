@@ -7,4 +7,4 @@ target_sources (${libName}
         )
 
 ADD_SUBDIRECTORY (serializable)
-
+ADD_SUBDIRECTORY (test)

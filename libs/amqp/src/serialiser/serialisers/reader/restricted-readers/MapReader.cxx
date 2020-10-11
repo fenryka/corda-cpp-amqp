@@ -12,7 +12,7 @@
 
 amqp::internal::schema::Restricted::RestrictedTypes
 amqp::internal::serialiser::reader::
-MapReader::restrictedType() const {
+MapReader::restrictedType() {
     return schema::Restricted::Restricted::map_t;
 }
 

@@ -18,7 +18,7 @@ namespace amqp::internal::serialiser::reader {
             MapReader() = default;
             ~MapReader() override = default;
 
-            [[nodiscard]] internal::schema::Restricted::RestrictedTypes restrictedType() const;
+            [[nodiscard]] static internal::schema::Restricted::RestrictedTypes restrictedType() ;
 
             std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 const std::string &,
