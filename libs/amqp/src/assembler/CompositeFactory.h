@@ -36,10 +36,10 @@ namespace amqp::internal::assembler {
 
             void process (const amqp::schema::ISchema &) override;
 
-            const sPtr<amqp::serialiser::ISerialiser> byType (
+            sPtr<amqp::serialiser::ISerialiser> byType (
                     const std::string &) override;
 
-            const sPtr<amqp::serialiser::ISerialiser> byDescriptor (
+            sPtr<amqp::serialiser::ISerialiser> byDescriptor (
                     const std::string &) override;
 
         private :

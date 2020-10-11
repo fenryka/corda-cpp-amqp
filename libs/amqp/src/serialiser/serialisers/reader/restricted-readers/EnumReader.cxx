@@ -24,10 +24,10 @@ namespace {
              */
             if (pn_data_type (data_) == PN_ULONG) {
                 if (amqp::stripCorda(pn_data_get_ulong(data_)) ==
-                amqp::internal::schema::descriptors::REFERENCED_OBJECT
-            ) {
+                    amqp::internal::schema::descriptors::REFERENCED_OBJECT
+                ) {
                     throw std::runtime_error (
-                            "Currently don't support referenced objects");
+                        "Currently don't support referenced objects");
                 }
             }
 
@@ -53,16 +53,16 @@ namespace {
 std::unique_ptr<amqp::serialiser::reader::IValue>
 amqp::internal::serialiser::reader::
 EnumReader::dump (
-        const std::string & name_,
-        pn_data_t * data_,
-        const amqp::schema::ISchema & schema_
+    const std::string & name_,
+    pn_data_t * data_,
+    const amqp::schema::ISchema & schema_
 ) const {
     proton::auto_next an (data_);
     proton::attest_is_described (data_, __FILE__, __LINE__);
 
     return std::make_unique<TypedPair<std::string>> (
-            name_,
-            getValue(data_));
+        name_,
+        getValue (data_));
 }
 
 /******************************************************************************/

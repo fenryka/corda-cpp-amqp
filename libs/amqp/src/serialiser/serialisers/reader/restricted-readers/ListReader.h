@@ -19,7 +19,7 @@ namespace amqp::internal::serialiser::reader {
             ListReader() = default;
             ~ListReader() override = default;
 
-            [[nodiscard]] internal::schema::Restricted::RestrictedTypes restrictedType() const;
+            [[maybe_unused]] [[nodiscard]] static internal::schema::Restricted::RestrictedTypes restrictedType() ;
 
             std::unique_ptr<amqp::serialiser::reader::IValue> dump(
                 const std::string &,

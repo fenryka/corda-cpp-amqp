@@ -2,11 +2,11 @@
 
 /******************************************************************************/
 
-#include "amqp/include/ModifiableAMQPBlob.h"
 #include "amqp/include/AMQPBlob.h"
+#include "amqp/include/ModifiableAMQPBlob.h"
+#include "amqp/include/serialiser/ISerialiser.h"
 
 #include "corda-utils/include/types.h"
-#include "amqp/include/serialiser/ISerialiser.h"
 
 /******************************************************************************/
 
@@ -33,17 +33,19 @@ namespace amqp::serializable {
         public :
             Serializable() = delete;
 
-        void serialise (
-            const amqp::assembler::SerialiserFactory & sf_,
-            ModifiableAMQPBlob &) const;
+            virtual void serialise (
+                const amqp::assembler::SerialiserFactory & sf_,
+                ModifiableAMQPBlob &) const;
+
+            [[nodiscard]]
+            virtual uPtr<AMQPBlob> serialise (
+                const amqp::assembler::SerialiserFactory & sf_
+            ) const;
 
             explicit Serializable (
                 std::string name_,
                 std::string fingerprint_);
 
-            [[nodiscard]] uPtr<AMQPBlob> serialise (
-                const amqp::assembler::SerialiserFactory & sf_
-            ) const;
 
             [[nodiscard]] const std::string & name() const;
 
@@ -51,4 +53,5 @@ namespace amqp::serializable {
     };
 
 }
+
 /******************************************************************************/

@@ -2,6 +2,16 @@
 
 /******************************************************************************/
 
+#define writeComposite(__type__, __name__, __parent__, __blob__) \
+    writeComposite_ ( \
+        javaTypeName<decltype (__type__)>(), __type__, __name__, *this, __blob__);
+
+#define writeRestricted(__type__, __name__, __parent__, __blob__) \
+    writeRestricted_ ( \
+        javaTypeName<decltype (__type__)>(), __type__, __name__, *this, __blob__);
+
+/******************************************************************************/
+
 namespace amqp {
 
     class ModifiableAMQPBlob;
@@ -27,16 +37,28 @@ namespace amqp::assembler {
                 ModifiableAMQPBlob &
             ) const = 0;
 
-            virtual void writeComposite (
-                const std::string &,
+            virtual void startRestricted (
                 const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &
+            ) const = 0;
+
+            virtual void startList (
+                const std::string &,
                 const std::string &,
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &
             ) const = 0;
 
-            virtual void writeCompositePtr (
-                const std::string & type,
+            virtual void writeComposite_ (
+                const std::string &,
+                const amqp::serializable::Serializable *,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &
+            ) const = 0;
+
+            virtual void writeRestricted_ (
+                const std::string &,
                 const amqp::serializable::Serializable *,
                 const std::string &,
                 const amqp::serializable::Serializable &,
@@ -57,8 +79,14 @@ namespace amqp::assembler {
                 ModifiableAMQPBlob &
             ) const = 0;
 
-            virtual void writeString (
+            virtual void writeStringPair (
                 const std::string &,
+                const std::string &,
+                const amqp::serializable::Serializable &,
+                ModifiableAMQPBlob &
+            ) const = 0;
+
+            virtual void writeStringSingle (
                 const std::string &,
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &

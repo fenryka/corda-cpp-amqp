@@ -1,12 +1,12 @@
 #include "CompositeReader.h"
 
 #include <string>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 #include <proton/codec.h>
-#include <sstream>
-#include <amqp/src/serialiser/serialisers/CompositeSerialiser.h>
+
+#include "amqp/src/serialiser/serialisers/CompositeSerialiser.h"
 #include "corda-utils/include/debug.h"
 #include "Reader.h"
 #include "serialiser/reader/IReader.h"
@@ -39,8 +39,8 @@ CompositeReader::readString (pn_data_t * data_) const {
 sVec<uPtr<amqp::serialiser::reader::IValue>>
 amqp::internal::serialiser::reader::
 CompositeReader::_dump (
-        pn_data_t * data_,
-        const amqp::schema::ISchema & schema_
+    pn_data_t * data_,
+    const amqp::schema::ISchema & schema_
 ) const {
     DBG ("Read Composite: " << std::endl); // NOLINT
 
@@ -50,10 +50,10 @@ CompositeReader::_dump (
     proton::auto_enter ae (data_);
 
     const auto & it = schema_.fromDescriptor (
-            proton::get_symbol<std::string>(data_));
+        proton::get_symbol<std::string>(data_));
 
     auto & fields = dynamic_cast<const schema::Composite &> (
-            it).fields();
+        it).fields();
 
     auto parent = dynamic_cast<const amqp::serialiser::ISerialiser *>(this);
 
