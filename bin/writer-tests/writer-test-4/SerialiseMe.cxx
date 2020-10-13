@@ -14,7 +14,7 @@ Inner::serialiseImpl (
     DBG (__FUNCTION__ << std::endl);
 
     sf_.writeInt (m_a, "m_a", *this, blob_);
-    sf_.writeString (m_b, "m_b", *this, blob_);
+    sf_.writeStringPair (m_b, "m_b", *this, blob_);
 }
 
 /******************************************************************************/
