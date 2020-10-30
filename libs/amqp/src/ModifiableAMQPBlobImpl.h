@@ -137,13 +137,7 @@ ModifiableAMQPBlobImpl::writePrimitiveSingle (
 
     assert (m_schemas.find (id) != m_schemas.end());
 
-    DBG ("FOUND IT" << std::endl); // NOLINT
-
-    std::string type = serialiser::PrimToSerialiser<
-        std::remove_const_t<T>
-    >::serialiser::m_type;
-
-    DBG ("WRITE IT" << std::endl); // NOLINT
+    DBG ("  => WRITE IT" << std::endl); // NOLINT
 
     serialiser::PrimToSerialiser<
         std::remove_const_t<T>
