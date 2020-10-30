@@ -12,6 +12,7 @@
 #include "serialiser/serialisers/property-serialisers/StringPropertySerialiserBase.h"
 
 #include <map>
+#include <cassert>
 
 /******************************************************************************
  *
