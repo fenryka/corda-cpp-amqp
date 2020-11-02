@@ -1,7 +1,13 @@
 #include "corda-utils/include/types.h"
 
 #include <string>
-#include <iostream>
 
+/******************************************************************************/
+
+template<>
+std::string
+javaTypeName<std::string> () {
+    return "String";
+}
 
 /******************************************************************************/

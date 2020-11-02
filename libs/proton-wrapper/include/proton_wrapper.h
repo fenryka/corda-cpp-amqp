@@ -128,7 +128,12 @@ namespace proton {
 
     template<typename T>
     T
-    readAndNext (pn_data_t *, [[maybe_unused]]bool tolerateDeviance_ = false) {
+    readAndNext (
+        pn_data_t *,
+        const std::string &,
+        int,
+        [[maybe_unused]]bool tolerateDeviance_ = false
+    ) {
         return T{};
     }
 

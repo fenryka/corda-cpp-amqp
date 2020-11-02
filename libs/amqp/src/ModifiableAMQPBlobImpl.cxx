@@ -61,7 +61,7 @@ ModifiableAMQPBlobImpl::startComposite (
     auto it = m_schemas.find (id);
 
     if (it == m_schemas.end()) {
-        m_schemas[id] = {};
+        m_schemas[id] = std::make_unique<CompositeBlob>();
     }
 
     pn_data_put_described (m_payload);
@@ -95,9 +95,11 @@ ModifiableAMQPBlobImpl::writeNull (
 
     assert (m_schemas.find (id) != m_schemas.end());
 
-    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
+    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
+
+    if (blob.m_schemas.find (propertyName_) == blob.end()) {
         std::cout << propertyName_ << " missing :(" << std::endl;
-        m_schemas[id][propertyName_] =
+        blob.m_schemas[propertyName_] =
             internal::schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
                 propertyType_,
@@ -119,7 +121,6 @@ amqp::internal::
 ModifiableAMQPBlobImpl::startRestricted (
     const amqp::serializable::Serializable & restricted_
 ) {
-
     DBG (__FUNCTION__
              << " - "
              << restricted_.name()
@@ -139,7 +140,7 @@ ModifiableAMQPBlobImpl::startRestricted (
     auto it = m_schemas.find (id);
 
     if (it == m_schemas.end()) {
-        m_schemas[id] = {};
+        m_schemas[id] = std::make_unique<ListBlob>(restricted_.name());
     }
 
     pn_data_put_described (m_payload);
@@ -210,19 +211,44 @@ ModifiableAMQPBlobImpl::writeComposite_ (
 
     assert (m_schemas.find (id) != m_schemas.end());
 
-    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
-        m_schemas[id][propertyName_] =
+    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
+
+    if (blob.m_schemas.find (propertyName_) == blob.end()) {
+        blob.m_schemas[propertyName_] =
             schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
                 propertyType_,
                 {});
     }
+}
 
-    DBG ("    schemas sz: "
-        << m_schemas.size()
-        << ", "
-        << m_schemas[id].size()
-        << std::endl); // NOLINT
+/******************************************************************************/
+
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::writeRestricted_ (
+    const std::string & propertyName_,
+    const std::string & propertyType_,
+    const amqp::serializable::Serializable & restricted_
+) {
+    DBG (__FUNCTION__
+             << "::"
+             << restricted_.name()
+             << std::endl); // NOLINT
+
+    auto id = key (restricted_);
+
+    assert (m_schemas.find (id) != m_schemas.end());
+
+    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
+
+    if (blob.m_schemas.find (propertyName_) == blob.end()) {
+        blob.m_schemas[propertyName_] =
+            schema::descriptors::FieldDescriptor::makeProton (
+                propertyName_,
+                propertyType_,
+                {});
+    }
 }
 
 /******************************************************************************/
@@ -240,12 +266,11 @@ ModifiableAMQPBlobImpl::toBlob() const {
         DBG ("    * "
             << schema.first.first
             << ": "
-            << schema.second.size()
+            << schema.second->size()
             << std::endl); // NOLINT
 
         composites.emplace_back (
-            schema::descriptors::CompositeDescriptor::makeProton (
-                schema.first.first, {}, schema.first.second, schema.second));
+            schema.second->make (schema.first.first, schema.first.second));
     }
 
     auto schema = schema::descriptors::SchemaDescriptor::makeProton (
@@ -269,7 +294,7 @@ ModifiableAMQPBlobImpl::dump() const {
                   << i.first.first
                   << ", "
                   << i.first.second
-                  << "] : " << i.second.size() << std::endl;
+                  << "] : " << i.second->size() << std::endl;
     }
 }
 

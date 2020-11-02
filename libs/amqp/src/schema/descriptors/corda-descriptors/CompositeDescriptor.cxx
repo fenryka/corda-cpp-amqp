@@ -108,13 +108,13 @@ CompositeDescriptor::readRaw (
         proton::attest_is_string (data_, __FILE__, __LINE__);
         ss_ << ai
             << "1] String: ClassName: "
-            << proton::readAndNext<std::string>(data_)
+            << proton::readAndNext<std::string>(data_, __FILE__, __LINE__)
             << std::endl;
 
         proton::attest_is_string (data_, __FILE__, __LINE__);
         ss_ << ai
             << "2] String: Label: \""
-            << proton::readAndNext<std::string>(data_, true)
+            << proton::readAndNext<std::string>(data_, __FILE__, __LINE__, true)
             << "\"" << std::endl;
 
         proton::attest_is_list (data_, __FILE__, __LINE__);
@@ -176,7 +176,7 @@ CompositeDescriptor::readAvro (
 
 
         ss_ << ai << R"("type" : "record",)" << std::endl;
-        auto name = proton::readAndNext<std::string>(data_);
+        auto name = proton::readAndNext<std::string>(data_, __FILE__, __LINE__);
         std::size_t found = name.find_last_of('.');
 
         ss_ << ai << R"("name" : ")" << name.substr (found + 1) << R"(",)" << std::endl;
