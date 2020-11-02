@@ -12,7 +12,7 @@ ContainsList::serialiseImpl (
 ) const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
 
-    sf_.writeRestricted (&m_list, "m_list", *this, blob_);
+    sf_.writeRestricted (m_list, "m_list", *this, blob_);
 }
 
 /******************************************************************************/

@@ -25,58 +25,60 @@
 namespace amqp::internal {
 
     struct BaseBlob {
-        virtual ~BaseBlob() = default;
+        virtual ~BaseBlob () = default;
 
-        [[nodiscard]] virtual size_t size() const = 0;
-        [[nodiscard]] virtual pn_data_t * make(const std::string &, const std::string &) const = 0;
+        [[nodiscard]] virtual size_t size () const = 0;
+
+        [[nodiscard]] virtual pn_data_t *make (const std::string &, const std::string &) const = 0;
     };
 
     struct CompositeBlob : public BaseBlob {
         std::map<std::string, pn_data_t *> m_schemas;
 
-        decltype (m_schemas.end()) end() {
-            return m_schemas.end();
+        decltype (m_schemas.end ()) end () {
+            return m_schemas.end ();
         }
 
-        [[nodiscard]] size_t size() const override {
-            return m_schemas.size();
+        [[nodiscard]] size_t size () const override {
+            return m_schemas.size ();
         }
 
         [[nodiscard]] pn_data_t * make (
-            const std::string & name_,
-            const std::string & fingerprint
+            const std::string &name_,
+            const std::string &fingerprint
         ) const override {
+            DBG (__FUNCTION__ << std::endl);
             return schema::descriptors::CompositeDescriptor::makeProton (
                 name_, {}, fingerprint, m_schemas);
         }
     };
 
     struct ListBlob : public BaseBlob {
-        std::string m_source;
+        const std::string m_source = "list";
 
-        ListBlob() = delete;
-        ListBlob (const std::string & source_)
-            : m_source (source_) {
+        ListBlob () = default;
 
-        }
-
-        [[nodiscard]] size_t size() const override {
+        [[nodiscard]] size_t size () const override {
             return 0;
         }
 
         [[nodiscard]] pn_data_t * make (
-            const std::string & name_,
-            const std::string & fingerprint_
+            const std::string &name_,
+            const std::string &fingerprint_
         ) const override {
+            DBG (__FUNCTION__ << std::endl);
             return schema::descriptors::RestrictedDescriptor::makeProton (
                 name_,
                 m_source,
-                fingerprint_
-                );
+                fingerprint_);
         }
-
-
     };
+
+}
+
+/******************************************************************************/
+
+namespace amqp::internal {
 
     class ModifiableAMQPBlobImpl : public amqp::ModifiableAMQPBlob {
         private :
