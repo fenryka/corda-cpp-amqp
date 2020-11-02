@@ -8,10 +8,24 @@
 #include "amqp/include/assembler/SerialiserFactory.h"
 #include "amqp/include/ModifiableAMQPBlob.h"
 
-#include "corda-utils/include/types.h"
 #include "corda-utils/include/debug.h"
 
 /******************************************************************************/
+
+namespace amqp::serializable {
+    template<typename, typename>
+    class SerializableVector;
+}
+
+
+template<typename T, typename A>
+struct is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
+    static std::string fun () {
+        return "java.util.ARSE<" + javaTypeName<T> () + ">";
+    }
+};
+
+#include "corda-utils/include/types.h"
 
 namespace amqp::assembler {
 
@@ -23,25 +37,26 @@ namespace amqp::assembler {
 
 namespace amqp::serializable {
 
-    template<typename T>
-    class SerializableVector final : public std::vector<T>, public Serializable {
+    template<typename T, typename A = std::allocator<T>>
+    class SerializableVector final : public std::vector<T, A>, public Serializable {
 
         protected :
             void serialiseImpl (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
             ) const override {
-
+                DBG (__FUNCTION__ << std::endl);
             }
+
+            typedef std::true_type isVector;
 
         public :
             SerializableVector() = delete;
 
             SerializableVector(
-                const std::string & name_,
                 const std::string & fingerprint_
             ) : std::vector<T>()
-              , Serializable (name_, fingerprint_)
+              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
             { }
 
             SerializableVector(
@@ -49,15 +64,14 @@ namespace amqp::serializable {
                 const std::string& fingerprint_,
                 std::initializer_list<T> l_
             ) : std::vector<T>(l_)
-              , Serializable (name_, fingerprint_)
+              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
             { }
 
             SerializableVector(
-                const std::string & name_,
                 const std::string & fingerprint_,
                 std::vector<T> && v_
             ) : std::vector<T>(v_)
-              , Serializable (name_, fingerprint_)
+              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
             { }
 
             template<typename U>
@@ -122,6 +136,8 @@ namespace amqp::serializable {
             }
     };
 
+
 }
+
 
 /******************************************************************************/

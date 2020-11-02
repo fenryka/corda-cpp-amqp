@@ -13,7 +13,7 @@
 std::any
 amqp::internal::serialiser::reader::
 StringPropertyReader::read (pn_data_t * data_) const {
-    return std::any { proton::readAndNext<std::string> (data_) };
+    return std::any { proton::readAndNext<std::string> (data_, __FILE__, __LINE__) };
 }
 
 /******************************************************************************/
@@ -21,7 +21,7 @@ StringPropertyReader::read (pn_data_t * data_) const {
 std::string
 amqp::internal::serialiser::reader::
 StringPropertyReader::readString (pn_data_t * data_) const {
-    return proton::readAndNext<std::string> (data_);
+    return proton::readAndNext<std::string> (data_, __FILE__, __LINE__);
 }
 
 /******************************************************************************/
@@ -36,7 +36,7 @@ StringPropertyReader::dump (
     DBG ("StringPropertyReader::dump - " << name_ << std::endl);
     return std::make_unique<TypedPair<std::string>> (
             name_,
-            "\"" + proton::readAndNext<std::string> (data_) + "\"");
+            "\"" + proton::readAndNext<std::string> (data_, __FILE__, __LINE__) + "\"");
 }
 
 /******************************************************************************/
@@ -49,7 +49,7 @@ StringPropertyReader::dump (
 {
     DBG ("StringPropertyReader::dump - no-name" << std::endl);
     return std::make_unique<TypedSingle<std::string>> (
-            "\"" + proton::readAndNext<std::string> (data_) + "\"");
+            "\"" + proton::readAndNext<std::string> (data_, __FILE__, __LINE__) + "\"");
 }
 
 /******************************************************************************/

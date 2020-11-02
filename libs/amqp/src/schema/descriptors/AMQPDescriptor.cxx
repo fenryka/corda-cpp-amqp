@@ -80,7 +80,7 @@ AMQPDescriptor::readRaw (
 
         switch (pn_data_type (data_)) {
             case PN_ULONG : {
-                auto key = proton::readAndNext<u_long> (data_);
+                auto key = proton::readAndNext<u_long> (data_, __FILE__, __LINE__);
 
                 ss_ << ai << "key  : "
                     << key << " :: " << amqp::stripCorda (key)
@@ -137,7 +137,7 @@ AMQPDescriptor::readAvro (
 
     switch (pn_data_type (data_)) {
         case PN_ULONG : {
-            auto key = proton::readAndNext<u_long>(data_);
+            auto key = proton::readAndNext<u_long>(data_, __FILE__, __LINE__);
 
             // a described type really has to be describing something
             proton::attest_is_list (data_, __FILE__, __LINE__);

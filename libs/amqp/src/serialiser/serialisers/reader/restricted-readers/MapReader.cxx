@@ -32,7 +32,7 @@ MapReader::dump_(
     // and don't need context from the schema as there isn't
     // any. Maps have a Key and a Value, they aren't named
     // parameters, unlike composite types.
-    schema_.fromDescriptor (proton::readAndNext<std::string>(data_));
+    schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
 
     {
         proton::auto_map_enter am (data_, true);

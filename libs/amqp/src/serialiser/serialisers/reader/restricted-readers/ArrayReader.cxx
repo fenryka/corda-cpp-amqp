@@ -60,7 +60,7 @@ ArrayReader::dump_(
 
     {
         proton::auto_enter ae (data_);
-        schema_.fromDescriptor (proton::readAndNext<std::string>(data_));
+        schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
 
         {
             proton::auto_list_enter ale (data_, true);

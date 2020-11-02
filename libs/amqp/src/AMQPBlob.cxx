@@ -218,7 +218,7 @@ namespace {
 
         {
             proton::auto_enter p2(data_);
-            auto fingerprint = proton::readAndNext<std::string>(data_);
+            auto fingerprint = proton::readAndNext<std::string>(data_, __FILE__, __LINE__);
 
             auto type = pn_data_type (data_);
 
@@ -252,7 +252,7 @@ AMQPBlob::dumpData() const -> std::string {
         proton::attest_is_described (m_data, __FILE__, __LINE__);
         {
             proton::auto_enter p (m_data);
-            uint64_t key = proton::readAndNext<u_long>(m_data);
+            uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
             assert (stripCorda (key) == amqp::internal::schema::descriptors::ENVELOPE);
         }
 

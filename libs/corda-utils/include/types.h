@@ -62,16 +62,21 @@ typeName () {
         nullptr, &status);
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Forward declarations
+ *
+ ******************************************************************************/
 
 template<class T>
 std::string
 javaTypeName ();
 
+/******************************************************************************/
+
 template<typename>
 struct is_std_vector : std::false_type {
     static std::string fun() {
-        std::cout << "N" << std::endl;
         return "";
     }
 };
@@ -81,7 +86,6 @@ struct is_std_vector<std::vector<T,A>> : std::true_type {
     static std::string fun() {
         return "java.util.List<" + javaTypeName<T>() + ">";
     }
-
 };
 
 /******************************************************************************/
@@ -94,8 +98,6 @@ javaTypeName () {
 
     if (is_std_vector<T>::value) {
         return is_std_vector<T>::fun();
-    } else {
-        //
     }
 
     std::string str { typeName<T>() };
@@ -108,5 +110,15 @@ javaTypeName () {
 
     return str;
 }
+
+/******************************************************************************/
+
+/*
+ * We need a specialisation for string since we don't want it spitting out
+ * all of the STL nonsense around allocators and char types
+ */
+template<>
+std::string
+javaTypeName<std::string> ();
 
 /******************************************************************************/

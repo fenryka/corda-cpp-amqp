@@ -11,7 +11,7 @@
 std::any
 amqp::internal::serialiser::reader::
 BoolPropertyReader::read (pn_data_t * data_) const {
-    return std::any (proton::readAndNext<bool> (data_));
+    return std::any (proton::readAndNext<bool> (data_, __FILE__, __LINE__));
 }
 
 /******************************************************************************/
@@ -19,7 +19,7 @@ BoolPropertyReader::read (pn_data_t * data_) const {
 std::string
 amqp::internal::serialiser::reader::
 BoolPropertyReader::readString (pn_data_t * data_) const {
-    return std::to_string (proton::readAndNext<bool> (data_));
+    return std::to_string (proton::readAndNext<bool> (data_, __FILE__, __LINE__));
 }
 
 /******************************************************************************/
@@ -33,7 +33,7 @@ BoolPropertyReader::dump (
 {
     return std::make_unique<TypedPair<std::string>> (
             name_,
-            std::to_string (proton::readAndNext<bool> (data_)));
+            std::to_string (proton::readAndNext<bool> (data_, __FILE__, __LINE__)));
 }
 
 /******************************************************************************/
@@ -45,7 +45,7 @@ BoolPropertyReader::dump (
         const amqp::schema::ISchema & schema_) const
 {
     return std::make_unique<TypedSingle<std::string>> (
-            std::to_string (proton::readAndNext<bool> (data_)));
+            std::to_string (proton::readAndNext<bool> (data_, __FILE__, __LINE__)));
 }
 
 /******************************************************************************/

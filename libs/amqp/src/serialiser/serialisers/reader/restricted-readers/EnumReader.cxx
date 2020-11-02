@@ -31,11 +31,11 @@ namespace {
                 }
             }
 
-            auto fingerprint = proton::readAndNext<std::string>(data_);
+            auto fingerprint = proton::readAndNext<std::string>(data_, __FILE__, __LINE__);
 
             proton::auto_list_enter ale (data_, true);
 
-            return proton::readAndNext<std::string>(data_);
+            return proton::readAndNext<std::string>(data_, __FILE__, __LINE__);
 
             /*
              * After a string representation of the enumerated value

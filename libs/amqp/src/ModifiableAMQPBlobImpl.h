@@ -13,6 +13,8 @@
 
 #include <map>
 #include <cassert>
+#include <amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h>
+#include <amqp/src/schema/descriptors/corda-descriptors/RestrictedDescriptor.h>
 
 /******************************************************************************
  *
@@ -22,15 +24,70 @@
 
 namespace amqp::internal {
 
+    struct BaseBlob {
+        virtual ~BaseBlob() = default;
+
+        [[nodiscard]] virtual size_t size() const = 0;
+        [[nodiscard]] virtual pn_data_t * make(const std::string &, const std::string &) const = 0;
+    };
+
+    struct CompositeBlob : public BaseBlob {
+        std::map<std::string, pn_data_t *> m_schemas;
+
+        decltype (m_schemas.end()) end() {
+            return m_schemas.end();
+        }
+
+        [[nodiscard]] size_t size() const override {
+            return m_schemas.size();
+        }
+
+        [[nodiscard]] pn_data_t * make (
+            const std::string & name_,
+            const std::string & fingerprint
+        ) const override {
+            return schema::descriptors::CompositeDescriptor::makeProton (
+                name_, {}, fingerprint, m_schemas);
+        }
+    };
+
+    struct ListBlob : public BaseBlob {
+        std::string m_source;
+
+        ListBlob() = delete;
+        ListBlob (const std::string & source_)
+            : m_source (source_) {
+
+        }
+
+        [[nodiscard]] size_t size() const override {
+            return 0;
+        }
+
+        [[nodiscard]] pn_data_t * make (
+            const std::string & name_,
+            const std::string & fingerprint_
+        ) const override {
+            return schema::descriptors::RestrictedDescriptor::makeProton (
+                name_,
+                m_source,
+                fingerprint_
+                );
+        }
+
+
+    };
+
     class ModifiableAMQPBlobImpl : public amqp::ModifiableAMQPBlob {
         private :
             pn_data_t * m_payload;
 
+            /*
+             * Maps { Name, Fingerprint } to { }
+             */
             std::map<
                 std::pair<std::string, std::string>,
-                std::map<
-                    std::string,
-                    pn_data_t *>> m_schemas;
+                uPtr<BaseBlob>> m_schemas;
 
         public :
             ModifiableAMQPBlobImpl();
@@ -50,6 +107,11 @@ namespace amqp::internal {
                 const amqp::serializable::Serializable &);
 
             void writeComposite_ (
+                const std::string &,
+                const std::string &,
+                const amqp::serializable::Serializable &);
+
+            void writeRestricted_ (
                 const std::string &,
                 const std::string &,
                 const amqp::serializable::Serializable &);
@@ -103,8 +165,10 @@ ModifiableAMQPBlobImpl::writePrimitive (
         std::remove_const_t<T>
     >::serialiser::m_type;
 
-    if (m_schemas[id].find (propertyName_) == m_schemas[id].end()) {
-        m_schemas[id][propertyName_] =
+    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
+
+    if (blob.m_schemas.find (propertyName_) == blob.m_schemas.end()) {
+        blob.m_schemas[propertyName_] =
             internal::schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
                 type,

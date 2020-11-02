@@ -208,9 +208,19 @@ SerialiserFactoryInternal::writeRestricted_ (
     const amqp::serializable::Serializable & parent_,
     ModifiableAMQPBlob & blob_
 ) const {
-    DBG (__FUNCTION__ << std::endl);
+    DBG (__FUNCTION__ << "::" << type_ << std::endl); // NOLINT
 
-    clazz_->serialise (*this, blob_);
+    auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.writeRestricted_ (propertyName_, type_, parent_);
+
+    if (clazz_) {
+        DBG (__FUNCTION__ << " - " << clazz_->name() << std::endl); // NOLINT
+
+        clazz_->serialise (*this, blob_);
+    } else {
+        blob.writeNull (propertyName_, type_, parent_);
+    }
 }
 
 /******************************************************************************/

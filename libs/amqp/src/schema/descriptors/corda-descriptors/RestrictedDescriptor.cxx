@@ -10,6 +10,7 @@
 #include <map>
 #include <regex>
 #include <sstream>
+#include <amqp/src/schema/descriptors/Descriptors.h>
 
 /******************************************************************************/
 
@@ -105,8 +106,8 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
 
     proton::auto_enter ae (data_);
 
-    auto name  = makePrim (proton::readAndNext<std::string>(data_));
-    auto label = proton::readAndNext<std::string>(data_, true);
+    auto name  = makePrim (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
+    auto label = proton::readAndNext<std::string>(data_, __FILE__, __LINE__, true);
 
     DBG ("  name: " << name << ", label: \"" << label << "\"" << std::endl); // NOLINT
 
@@ -122,7 +123,7 @@ RestrictedDescriptor::build (pn_data_t * data_) const {
 
     pn_data_next (data_);
 
-    auto source = proton::readAndNext<std::string> (data_);
+    auto source = proton::readAndNext<std::string> (data_, __FILE__, __LINE__);
 
     DBG ("source: " << source << std::endl); // NOLINT
 
@@ -168,10 +169,10 @@ RestrictedDescriptor::readRaw (
     AutoIndent ai { ai_ };
 
     ss_ << ai << "1] String: Name: "
-        << proton::readAndNext<std::string> (data_)
+        << proton::readAndNext<std::string> (data_, __FILE__, __LINE__)
         << std::endl;
     ss_ << ai << "2] String: Label: "
-        << proton::readAndNext<std::string> (data_, true)
+        << proton::readAndNext<std::string> (data_, __FILE__, __LINE__, true)
         << std::endl;
     ss_ << ai << "3] List: Provides: [ ";
 
@@ -185,7 +186,7 @@ RestrictedDescriptor::readRaw (
 
     pn_data_next (data_);
     ss_ << ai << "4] String: Source: "
-        << proton::readAndNext<std::string> (data_)
+        << proton::readAndNext<std::string> (data_, __FILE__, __LINE__)
         << std::endl;
 
     ss_ << ai << "5] Descriptor:" << std::endl;
@@ -221,8 +222,52 @@ RestrictedDescriptor::readAvro (
  */
 pn_data_t *
 amqp::internal::schema::descriptors::
-RestrictedDescriptor::makeProton () {
+RestrictedDescriptor::makeProton (
+    const std::string & name_,
+    const std::string & source_,
+    const std::string & fingerprint_
+) {
     auto rtn = pn_data (0);
+
+    pn_data_put_described (rtn);
+    {
+        proton::auto_enter ae (rtn);
+        pn_data_put_ulong (rtn, descriptors_longs::RESTRICTED_TYPE | descriptors::DESCRIPTOR_TOP_32BITS);
+        pn_data_put_list (rtn);
+
+        {
+            proton::auto_enter ae2 (rtn);
+
+            // name
+            pn_data_put_string(rtn, pn_bytes (name_.size(), name_.data()));
+
+            // label
+            pn_data_put_string (rtn, pn_bytes (0, ""));
+
+            // provides
+            pn_data_put_list(rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                /*
+                for (const auto & i : provides_) {
+                    pn_data_put_string (rtn, pn_bytes (i.size(), i.data()));
+                }
+                 */
+            }
+
+            pn_data_put_described (rtn);
+            {
+                proton::auto_enter ae3 (rtn);
+                pn_data_put_ulong (rtn, descriptors_longs::OBJECT | descriptors::DESCRIPTOR_TOP_32BITS);
+                pn_data_put_list(rtn);
+                {
+                    proton::auto_enter ae4 (rtn);
+                    pn_data_put_symbol (rtn, pn_bytes (fingerprint_.size(), fingerprint_.data()));
+                    pn_data_put_null(rtn);
+                }
+            }
+        }
+    }
 
     return rtn;
 }

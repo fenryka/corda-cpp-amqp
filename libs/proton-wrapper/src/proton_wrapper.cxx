@@ -399,6 +399,8 @@ int32_t
 proton::
 readAndNext<int32_t> (
     pn_data_t * data_,
+    const std::string & file_,
+    int line_,
     [[maybe_unused]] bool tolerateDeviance_
 ) {
     int rtn = pn_data_get_int (data_);
@@ -413,6 +415,8 @@ std::string
 proton::
 readAndNext<std::string> (
     pn_data_t * data_,
+    const std::string & file_,
+    int line_,
     bool tolerateDeviance_
 ) {
     auto_next an (data_);
@@ -428,7 +432,7 @@ readAndNext<std::string> (
     }
 
     std::stringstream ss;
-    ss << "Expected a String but found [" << data_ << "]";
+    ss << "Expected a String but found [" << data_ << "] :: " << file_ << "::" << line_;
     throw std::runtime_error (ss.str());
 }
 
@@ -439,6 +443,8 @@ bool
 proton::
 readAndNext<bool> (
     pn_data_t * data_,
+    const std::string & file_,
+    int line_,
     [[maybe_unused]] bool tolerateDeviance_
 ) {
     bool rtn = pn_data_get_bool (data_);
@@ -453,6 +459,8 @@ double
 proton::
 readAndNext<double> (
     pn_data_t * data_,
+    const std::string & file_,
+    int line_,
     [[maybe_unused]] bool tolerateDeviance_
 ) {
     auto_next an (data_);
@@ -466,6 +474,8 @@ long
 proton::
 readAndNext<long> (
     pn_data_t * data_,
+    const std::string & file_,
+    int line_,
     [[maybe_unused]] bool tolerateDeviance_
 ) {
     long rtn = pn_data_get_long (data_);
@@ -480,6 +490,8 @@ u_long
 proton::
 readAndNext<u_long > (
         pn_data_t * data_,
+        const std::string & file_,
+        int line_,
         [[maybe_unused]] bool tolerateDeviance_
 ) {
     long rtn = pn_data_get_ulong (data_);
