@@ -12,21 +12,6 @@
 
 /******************************************************************************/
 
-namespace amqp::serializable {
-    template<typename, typename>
-    class SerializableVector;
-}
-
-
-template<typename T, typename A>
-struct is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
-    static std::string fun () {
-        return "java.util.ARSE<" + javaTypeName<T> () + ">";
-    }
-};
-
-#include "corda-utils/include/types.h"
-
 namespace amqp::assembler {
 
     class SerialiserFactory;
@@ -135,9 +120,16 @@ namespace amqp::serializable {
                 return blob->toBlob();
             }
     };
-
-
 }
 
+
+/******************************************************************************/
+
+template<typename T, typename A>
+struct is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
+    static std::string fun () {
+        return "java.util.List<" + javaTypeName<T> () + ">";
+    }
+};
 
 /******************************************************************************/

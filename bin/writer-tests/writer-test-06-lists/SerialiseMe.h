@@ -25,7 +25,6 @@ class ContainsList : public amqp::serializable::Serializable {
             : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
             , m_list ("fingerprint456", std::move (list_))
         {
-            std::cout << "m_list.name() = " << m_list.name() << std::endl;
         }
 };
 

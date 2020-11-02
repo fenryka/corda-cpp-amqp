@@ -1,14 +1,21 @@
 #pragma once
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * These need to exist since we cannot rely on __type__ not being null
+ *
+ ******************************************************************************/
 
 #define writeComposite(__type__, __name__, __parent__, __blob__) \
     writeComposite_ ( \
-        javaTypeName<decltype (__type__)>(), __type__, __name__, *this, __blob__);
+        javaTypeName<decltype (__type__)>(), &__type__, __name__, *this, __blob__);
 
 #define writeRestricted(__type__, __name__, __parent__, __blob__) \
-    writeRestricted_ ( \
-        javaTypeName<decltype (__type__)>(), __type__, __name__, *this, __blob__);
+    writeRestricted_ (                                            \
+        javaTypeName<                                             \
+            std::remove_reference_t<                              \
+                std::remove_pointer_t<decltype (__type__)>>       \
+        >(), &__type__, __name__, *this, __blob__);
 
 /******************************************************************************/
 
@@ -16,11 +23,11 @@ namespace amqp {
 
     class ModifiableAMQPBlob;
 
-    namespace serializable {
+}
 
-        class Serializable;
+namespace amqp::serializable {
 
-    }
+    class Serializable;
 
 }
 
@@ -106,7 +113,7 @@ namespace amqp::assembler {
                 ModifiableAMQPBlob &
             ) const = 0;
 
-            virtual void writeBool(
+            virtual void writeBool (
                 bool,
                 const std::string &,
                 const amqp::serializable::Serializable &,

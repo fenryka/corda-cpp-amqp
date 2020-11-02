@@ -255,6 +255,10 @@ RestrictedDescriptor::makeProton (
                  */
             }
 
+            // source
+            pn_data_put_string (rtn, pn_bytes (source_.size(), source_.data()));
+
+            // Descriptor
             pn_data_put_described (rtn);
             {
                 proton::auto_enter ae3 (rtn);
@@ -265,6 +269,12 @@ RestrictedDescriptor::makeProton (
                     pn_data_put_symbol (rtn, pn_bytes (fingerprint_.size(), fingerprint_.data()));
                     pn_data_put_null(rtn);
                 }
+            }
+
+            // Choices
+            pn_data_put_list(rtn);
+            {
+                proton::auto_enter ae3 (rtn);
             }
         }
     }

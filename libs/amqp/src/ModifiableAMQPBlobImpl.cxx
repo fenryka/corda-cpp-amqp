@@ -14,8 +14,8 @@
 
 amqp::internal::
 ModifiableAMQPBlobImpl::ModifiableAMQPBlobImpl()
-    : m_payload (pn_data (0)
-) {
+    : m_payload (pn_data (0))
+{
 
 }
 
@@ -140,7 +140,7 @@ ModifiableAMQPBlobImpl::startRestricted (
     auto it = m_schemas.find (id);
 
     if (it == m_schemas.end()) {
-        m_schemas[id] = std::make_unique<ListBlob>(restricted_.name());
+        m_schemas[id] = std::make_unique<ListBlob>();
     }
 
     pn_data_put_described (m_payload);
@@ -246,8 +246,8 @@ ModifiableAMQPBlobImpl::writeRestricted_ (
         blob.m_schemas[propertyName_] =
             schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
-                propertyType_,
-                {});
+                "*",
+                {propertyType_});
     }
 }
 
@@ -261,6 +261,9 @@ ModifiableAMQPBlobImpl::toBlob() const {
         << m_schemas.size()
         << std::endl); // NOLINT
 
+    /*
+     *
+     */
     std::vector<pn_data_t *> composites;
     for (const auto & schema : m_schemas) {
         DBG ("    * "

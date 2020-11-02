@@ -7,7 +7,7 @@
 template<>
 std::string
 javaTypeName<std::string> () {
-    return "String";
+    return "string";
 }
 
 /******************************************************************************/

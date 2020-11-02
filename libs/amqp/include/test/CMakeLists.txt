@@ -9,5 +9,5 @@ set (sources
 
 add_executable (${EXE} ${sources})
 
-target_link_libraries (${EXE} gtest amqp)
+target_link_libraries (${EXE} gtest amqp corda-utils)
 
