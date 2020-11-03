@@ -21,7 +21,7 @@ namespace {
 
     std::map<pn_type_t, std::pair<std::string, protonTypeTypes>> protonToString {
             { PN_NULL, { "null", COMPLEX } },
-            { PN_BOOL, { "boolean", PRIMITIVE } },
+            { PN_BOOL, { "bool", PRIMITIVE } },
             { PN_UBYTE, { "unsigned byte", PRIMITIVE } },
             { PN_BYTE, { "byte", PRIMITIVE } },
             { PN_USHORT, { "unsigned short", PRIMITIVE } },

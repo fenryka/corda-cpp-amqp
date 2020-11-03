@@ -5,10 +5,12 @@ target_sources(amqp
         DoublePropertySerialiserBase.cxx
         IntPropertySerialiserBase.cxx
         LongPropertySerialiserBase.cxx
+        FloatPropertySerialiserBase.cxx
     PUBLIC
         BoolPropertySerialiser.h
         DoublePropertySerialiser.h
         IntPropertySerialiser.h
         LongPropertySerialiser.h
         StringPropertySerialiser.h
+        FloatPropertySerialiser.h
 )

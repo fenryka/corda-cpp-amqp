@@ -13,7 +13,7 @@ namespace amqp::internal::serialiser::serialisers {
      * [DoublePropertySerialiser] is a templated class
      */
     class DoublePropertySerialiserBase {
-        protected:
+        public:
             static const std::string m_name;
             static const std::string m_type;
     };

@@ -13,7 +13,7 @@ namespace amqp::internal::serialiser::serialisers {
      * [LongPropertySerialiser] is a templated class
      */
     class LongPropertySerialiserBase {
-        protected:
+        public:
             static const std::string m_name;
             static const std::string m_type;
     };

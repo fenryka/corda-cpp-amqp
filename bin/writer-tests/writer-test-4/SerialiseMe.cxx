@@ -15,6 +15,9 @@ Inner::serialiseImpl (
 
     sf_.write (m_a, "m_a", *this, blob_);
     sf_.write<const std::string &> (m_b, "m_b", *this, blob_);
+    sf_.write (m_c, "m_c", *this, blob_);
+    sf_.write (m_d, "m_d", *this, blob_);
+    sf_.write (m_e, "m_e", *this, blob_);
 }
 
 /******************************************************************************/

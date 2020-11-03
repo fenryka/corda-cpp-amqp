@@ -10,6 +10,10 @@
 #include "serialiser/Serialiser.h"
 #include "serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.h"
 #include "serialiser/serialisers/property-serialisers/StringPropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/BoolPropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/DoublePropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/LongPropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/FloatPropertySerialiserBase.h"
 
 #include <map>
 #include <cassert>

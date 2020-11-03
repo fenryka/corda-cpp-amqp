@@ -14,12 +14,14 @@
 #include "amqp/src/serialiser/serialisers/property-serialisers/LongPropertySerialiser.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/BoolPropertySerialiser.h"
 #include "amqp/src/serialiser/serialisers/property-serialisers/StringPropertySerialiser.h"
+#include "amqp/src/serialiser/serialisers/property-serialisers/FloatPropertySerialiser.h"
 
 #include "amqp/src/serialiser/serialisers/reader/property-readers/IntPropertyReader.h"
 #include "amqp/src/serialiser/serialisers/reader/property-readers/DoublePropertyReader.h"
 #include "amqp/src/serialiser/serialisers/reader/property-readers/LongPropertyReader.h"
 #include "amqp/src/serialiser/serialisers/reader/property-readers/BoolPropertyReader.h"
 #include "amqp/src/serialiser/serialisers/reader/property-readers/StringPropertyReader.h"
+#include "amqp/src/serialiser/serialisers/reader/property-readers/FloatPropertyReader.h"
 
 /******************************************************************************/
 
@@ -31,29 +33,34 @@ namespace amqp::internal::serialiser::serialisers {
             makePropertyReader (const std::string & type_) {
                 if (type_ == "int") {
                     return std::make_shared<
-                            IntPropertySerialiser<
-                                    reader::IntPropertyReader,
-                                    writer::Writer>>();
+                        IntPropertySerialiser<
+                            reader::IntPropertyReader,
+                            writer::Writer>>();
                 } else if (type_ == "long")  {
                     return std::make_shared<
-                            LongPropertySerialiser<
-                                    reader::LongPropertyReader,
-                                    writer::Writer>>();
+                        LongPropertySerialiser<
+                            reader::LongPropertyReader,
+                            writer::Writer>>();
                 } else if (type_ == "double")  {
                     return std::make_shared<
-                            DoublePropertySerialiser<
-                                    reader::DoublePropertyReader,
-                                    writer::Writer>>();
-                } else if (type_ == "bool")  {
+                        DoublePropertySerialiser<
+                            reader::DoublePropertyReader,
+                            writer::Writer>>();
+                } else if (type_ == "boolean")  {
                     return std::make_shared<
-                            BoolPropertySerialiser<
-                                    reader::BoolPropertyReader,
-                                    writer::Writer>>();
+                        BoolPropertySerialiser<
+                            reader::BoolPropertyReader,
+                            writer::Writer>>();
                 } else if (type_ == "string") {
                     return std::make_shared<
-                            StringPropertySerialiser<
-                                    reader::StringPropertyReader,
-                                    writer::Writer>>();
+                        StringPropertySerialiser<
+                            reader::StringPropertyReader,
+                            writer::Writer>>();
+                } else if (type_ == "float") {
+                    return std::make_shared<
+                        FloatPropertySerialiser<
+                            reader::FloatPropertyReader,
+                            writer::Writer>>();
                 } else {
                     throw std::runtime_error ("THIS IS BAD");
                 }
@@ -64,8 +71,6 @@ namespace amqp::internal::serialiser::serialisers {
             return std::make_shared<ListSerialiser<reader::ListReader, writer::Writer>> (type_, serialser_);
         }
     };
-
-
 
 }
 

@@ -3,16 +3,16 @@
 /******************************************************************************/
 
 #include "amqp/src/serialiser/serialisers/PropertySerialiser.h"
-#include "DoublePropertySerialiserBase.h"
+#include "FloatPropertySerialiserBase.h"
 
 /******************************************************************************/
 
 namespace amqp::internal::serialiser::serialisers {
 
     template <class Reader, class Writer>
-    class DoublePropertySerialiser
+    class FloatPropertySerialiser final
             : public PropertySerialiser<Reader, Writer>
-            , DoublePropertySerialiserBase
+            , public FloatPropertySerialiserBase
     {
         public :
             [[nodiscard]] const std::string & name() const override { return m_name; }
@@ -22,3 +22,4 @@ namespace amqp::internal::serialiser::serialisers {
 }
 
 /******************************************************************************/
+

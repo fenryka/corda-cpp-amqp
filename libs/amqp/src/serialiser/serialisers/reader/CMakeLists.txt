@@ -7,6 +7,7 @@ target_sources (amqp
         property-readers/BoolPropertyReader.cxx
         property-readers/DoublePropertyReader.cxx
         property-readers/StringPropertyReader.cxx
+        property-readers/FloatPropertyReader.cxx
         restricted-readers/MapReader.cxx
         restricted-readers/ListReader.cxx
         restricted-readers/ArrayReader.cxx

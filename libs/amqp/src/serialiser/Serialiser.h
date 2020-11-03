@@ -12,6 +12,10 @@
 namespace amqp::internal::serialiser::serialisers {
 
     class IntPropertySerialiserBase;
+    class BoolPropertySerialiserBase;
+    class LongPropertySerialiserBase;
+    class FloatPropertySerialiserBase;
+    class DoublePropertySerialiserBase;
     class StringPropertySerialiserBase;
 
 }
@@ -33,7 +37,7 @@ namespace amqp::internal::serialiser {
     struct PrimToSerialiser<int> {
         typedef serialisers::IntPropertySerialiserBase serialiser;
 
-        static void put (const int * val_, pn_data_t * data_) {
+        [[maybe_unused]] static void put (const int * val_, pn_data_t * data_) {
             if (val_) {
                 pn_data_put_int (data_, *val_);
             } else {
@@ -46,9 +50,60 @@ namespace amqp::internal::serialiser {
     struct PrimToSerialiser<std::string> {
         typedef serialisers::StringPropertySerialiserBase serialiser;
 
-        static void put(const std::string * val_, pn_data_t * data_) {
+        [[maybe_unused]] static void put(const std::string * val_, pn_data_t * data_) {
             if (val_) {
                 pn_data_put_string (data_, pn_bytes (val_->size (), val_->data ()));
+            } else {
+                pn_data_put_null (data_);
+            }
+        }
+    };
+
+    template<>
+    struct PrimToSerialiser<bool> {
+        typedef serialisers::BoolPropertySerialiserBase serialiser;
+
+        [[maybe_unused]] static void put (const bool * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_bool (data_, *val_);
+            } else {
+                pn_data_put_null (data_);
+            }
+        }
+    };
+    template<>
+    struct PrimToSerialiser<float> {
+        typedef serialisers::FloatPropertySerialiserBase serialiser;
+
+        [[maybe_unused]] static void put (const float * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_float (data_, *val_);
+            } else {
+                pn_data_put_null (data_);
+            }
+        }
+    };
+
+    template<>
+    struct PrimToSerialiser<double> {
+        typedef serialisers::DoublePropertySerialiserBase serialiser;
+
+        [[maybe_unused]] static void put (const double * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_double (data_, *val_);
+            } else {
+                pn_data_put_null (data_);
+            }
+        }
+    };
+
+    template<>
+    struct PrimToSerialiser<long> {
+        typedef serialisers::LongPropertySerialiserBase serialiser;
+
+        [[maybe_unused]] static void put (const long * val_, pn_data_t * data_) {
+            if (val_) {
+                pn_data_put_long (data_, *val_);
             } else {
                 pn_data_put_null (data_);
             }

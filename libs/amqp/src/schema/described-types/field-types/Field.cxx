@@ -120,6 +120,8 @@ Field::typeIsPrimitive (const std::string & type_) {
     return (type_ == "string" ||
             type_ == "long" ||
             type_ == "boolean" ||
+            type_ == "bool" ||
+            type_ == "float" ||
             type_ == "int" ||
             type_ == "double");
 }

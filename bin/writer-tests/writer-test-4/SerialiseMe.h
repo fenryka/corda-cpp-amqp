@@ -11,6 +11,9 @@ class Inner : public amqp::serializable::Serializable {
     private :
         int m_a;
         std::string m_b;
+        bool m_c;
+        double m_d;
+        float m_e;
 
     public :
         /**
@@ -21,10 +24,13 @@ class Inner : public amqp::serializable::Serializable {
             const amqp::assembler::SerialiserFactory &,
             amqp::ModifiableAMQPBlob &) const override;
 
-        explicit Inner (int a_, std::string b_)
+        explicit Inner (int a_, std::string b_, bool c_, double d_, float e_)
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_a (a_)
             , m_b (std::move (b_))
+            , m_c (c_)
+            , m_d (d_)
+            , m_e (e_)
         { }
 };
 

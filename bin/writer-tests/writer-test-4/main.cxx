@@ -15,7 +15,7 @@ main (int argc, char ** argv) {
         return EXIT_FAILURE;
     }
 
-    auto inner = Inner (101, "butts");
+    auto inner = Inner (101, "butts", true, 10.1, 1.02);
     Outer outer (inner);
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
