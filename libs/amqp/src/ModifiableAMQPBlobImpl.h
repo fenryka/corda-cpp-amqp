@@ -103,11 +103,6 @@ namespace amqp::internal {
             void startRestricted (
                 const amqp::serializable::Serializable &);
 
-            void startList (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &);
-
             void writeComposite_ (
                 const std::string &,
                 const std::string &,
@@ -143,6 +138,37 @@ namespace amqp::internal {
 
 /******************************************************************************/
 
+/*
+ * Allows us to handle primitive types that are either a pointer or
+ * not
+ */
+template<typename T>
+struct Writer {
+    static void write (T propertyValue_, pn_data_t * payload_) {
+        amqp::internal::serialiser::PrimToSerialiser<
+            std::remove_const_t<T>
+        >::put (&propertyValue_, payload_);
+    }
+};
+
+template<typename T>
+struct Writer<T &> {
+    static void write (T & propertyValue_, pn_data_t * payload_) {
+        amqp::internal::serialiser::PrimToSerialiser<
+            std::remove_const_t<T>
+        >::put (&propertyValue_, payload_);
+    }
+};
+
+template<typename T>
+struct Writer<T *> {
+    static void write (T * propertyValue_, pn_data_t * payload_) {
+        amqp::internal::serialiser::PrimToSerialiser<
+            std::remove_const_t<T>
+        >::put (propertyValue_, payload_);
+    }
+};
+
 template<typename T>
 void
 amqp::internal::
@@ -151,21 +177,11 @@ ModifiableAMQPBlobImpl::writePrimitive (
     const std::string & propertyName_,
     const amqp::serializable::Serializable & clazz_)
 {
-    DBG (__FUNCTION__
-        << "::"
-        << propertyName_
-        << "::"
-        << propertyValue_ << std::endl); // NOLINT
+    DBG (__FUNCTION__ << "::" << propertyName_ << "::"<< propertyValue_ << std::endl); // NOLINT
 
     auto id = key (clazz_);
 
     assert (m_schemas.find (id) != m_schemas.end());
-
-    DBG ("FOUND IT" << std::endl); // NOLINT
-
-    std::string type = serialiser::PrimToSerialiser<
-        std::remove_const_t<T>
-    >::serialiser::m_type;
 
     auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
 
@@ -173,7 +189,11 @@ ModifiableAMQPBlobImpl::writePrimitive (
         blob.m_schemas[propertyName_] =
             internal::schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
-                type,
+                serialiser::PrimToSerialiser<
+                    std::remove_const_t<
+                        std::remove_reference_t<
+                            std::remove_pointer_t<
+                                std::remove_const_t<T>>>>>::serialiser::m_type,
                 {},
                 "", "",
                 std::is_pointer_v<T>,
@@ -182,9 +202,7 @@ ModifiableAMQPBlobImpl::writePrimitive (
 
     DBG ("WRITE IT" << std::endl); // NOLINT
 
-    serialiser::PrimToSerialiser<
-        std::remove_const_t<T>
-    >::put (propertyValue_, m_payload);
+    Writer<T>::write(propertyValue_, m_payload);
 }
 
 /******************************************************************************/
@@ -196,19 +214,13 @@ ModifiableAMQPBlobImpl::writePrimitiveSingle (
     T propertyValue_,
     const amqp::serializable::Serializable & clazz_)
 {
-    DBG (__FUNCTION__
-             << "::"
-             << propertyValue_ << std::endl); // NOLINT
+    DBG (__FUNCTION__ << "::" << propertyValue_ << std::endl); // NOLINT
 
     auto id = key (clazz_);
 
     assert (m_schemas.find (id) != m_schemas.end());
 
-    DBG ("  => WRITE IT" << std::endl); // NOLINT
-
-    serialiser::PrimToSerialiser<
-        std::remove_const_t<T>
-    >::put (propertyValue_, m_payload);
+    Writer<T>::write(propertyValue_, m_payload);
 }
 
 /******************************************************************************/

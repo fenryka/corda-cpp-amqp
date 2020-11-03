@@ -158,6 +158,7 @@ ModifiableAMQPBlobImpl::startRestricted (
 
 /******************************************************************************/
 
+/*
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startList (
@@ -192,6 +193,7 @@ ModifiableAMQPBlobImpl::startList (
     pn_data_put_list (m_payload);
     pn_data_enter (m_payload);
 }
+ */
 
 /******************************************************************************/
 
@@ -264,7 +266,7 @@ ModifiableAMQPBlobImpl::toBlob() const {
     /*
      *
      */
-    std::vector<pn_data_t *> composites;
+    std::vector<pn_data_t *> schemas;
     for (const auto & schema : m_schemas) {
         DBG ("    * "
             << schema.first.first
@@ -272,12 +274,12 @@ ModifiableAMQPBlobImpl::toBlob() const {
             << schema.second->size()
             << std::endl); // NOLINT
 
-        composites.emplace_back (
+        schemas.emplace_back (
             schema.second->make (schema.first.first, schema.first.second));
     }
 
     auto schema = schema::descriptors::SchemaDescriptor::makeProton (
-        composites);
+        schemas);
 
     auto envelope = schema::descriptors::EnvelopeDescriptor::makeProton (
         m_payload, schema);

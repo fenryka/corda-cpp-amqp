@@ -1,14 +1,19 @@
 #include "SerialiseMe.h"
 
+#include "corda-utils/include/debug.h"
+#include "corda-utils/include/types.h"
+
 /******************************************************************************/
 
 void
-SerialiseMe::serialiseImpl (
+ContainsList::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
-    sf_.write<int> (m_val, "m_val", *this, blob_);
-    sf_.write<int *> (m_val2, "m_val2", *this, blob_);
+    DBG (__FUNCTION__ << std::endl); // NOLINT
+
+    sf_.writeRestricted (m_list, "m_list", *this, blob_);
 }
 
 /******************************************************************************/
+

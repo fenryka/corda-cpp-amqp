@@ -33,8 +33,6 @@ namespace amqp::serializable {
                 DBG (__FUNCTION__ << std::endl);
             }
 
-            typedef std::true_type isVector;
-
         public :
             SerializableVector() = delete;
 
@@ -59,37 +57,6 @@ namespace amqp::serializable {
               , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
             { }
 
-            template<typename U>
-            void _memberSerialiser (
-                const U & m,
-                const amqp::assembler::SerialiserFactory & sf_,
-                ModifiableAMQPBlob & blob_
-            ) const {
-                DBG (__FUNCTION__ << "NOT Serializable" << std::endl);
-            }
-
-            template<>
-            [[maybe_unused]]
-            void _memberSerialiser (
-                const Serializable & m,
-                const amqp::assembler::SerialiserFactory & sf_,
-                ModifiableAMQPBlob & blob_
-            ) const {
-                DBG (__FUNCTION__ << "Serializable" << std::endl);
-                m.serialise (sf_, blob_);
-            }
-
-            template<>
-            [[maybe_unused]]
-            void _memberSerialiser (
-                const std::string & m,
-                const amqp::assembler::SerialiserFactory & sf_,
-                ModifiableAMQPBlob & blob_
-            ) const {
-                DBG (__FUNCTION__ << "Serializable" << std::endl);
-                sf_.writeStringSingle (m, *this, blob_);
-            }
-
             void _serialise (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
@@ -100,7 +67,7 @@ namespace amqp::serializable {
                 serialiseImpl (sf_, blob_);
 
                 for (const auto & i: *this) {
-                    _memberSerialiser (i, sf_, blob_);
+                    sf_.writeSingle<T> (i, *this, blob_);
                 }
             }
 
@@ -126,7 +93,7 @@ namespace amqp::serializable {
 /******************************************************************************/
 
 template<typename T, typename A>
-struct is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
+struct [[maybe_unused]] is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
     static std::string fun () {
         return "java.util.List<" + javaTypeName<T> () + ">";
     }

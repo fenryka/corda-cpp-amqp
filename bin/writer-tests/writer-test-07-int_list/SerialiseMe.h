@@ -1,16 +1,16 @@
 #pragma once
 
 #include "include/serializable/Serializable.h"
+#include "include/serializable/SerializableVector.h"
 
 #include "amqp/include/AMQPBlob.h"
 #include "amqp/include/assembler/SerialiserFactory.h"
 
 /******************************************************************************/
 
-class SerialiseMe : public amqp::serializable::Serializable {
+class ContainsList : public amqp::serializable::Serializable {
     private :
-        int   m_val;
-        int * m_val2;
+        amqp::serializable::SerializableVector<int> m_list;
 
         /**
          * Overriding this lets us actually specify how to serialise
@@ -21,15 +21,12 @@ class SerialiseMe : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit SerialiseMe (int val_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
-            , m_val (val_)
-            , m_val2 { new int (val_) }
-        { }
-
-        [[maybe_unused]] [[nodiscard]] int val() const {
-            return m_val;
+        explicit ContainsList (std::vector<int> list_)
+            : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
+            , m_list ("fingerprint456", std::move (list_))
+        {
         }
 };
 
 /******************************************************************************/
+

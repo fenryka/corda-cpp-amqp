@@ -19,42 +19,27 @@
 
 /******************************************************************************/
 
-namespace amqp {
-
-    class ModifiableAMQPBlob;
-
-}
-
 namespace amqp::serializable {
 
     class Serializable;
 
 }
 
+#include "amqp/src/ModifiableAMQPBlobImpl.h"
+
+
 /******************************************************************************/
 
 namespace amqp::assembler {
+    using Serializable = amqp::serializable::Serializable;
 
     class SerialiserFactory {
         public :
             [[nodiscard]] virtual uPtr<ModifiableAMQPBlob> blob() const = 0;
 
-            virtual void startComposite (
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
+            virtual void startComposite (const Serializable &, ModifiableAMQPBlob &) const = 0;
 
-            virtual void startRestricted (
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void startList (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
+            virtual void startRestricted (const Serializable &, ModifiableAMQPBlob &) const = 0;
 
             virtual void writeComposite_ (
                 const std::string &,
@@ -72,53 +57,26 @@ namespace amqp::assembler {
                 ModifiableAMQPBlob &
             ) const = 0;
 
-            virtual void writeInt (
-                int,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
+            template<typename T>
+            void write (
+                T propertyValue_,
+                const std::string & propertyName_,
+                const Serializable & clazz_,
+                ModifiableAMQPBlob & blob_
+            ) const {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitive<T> (
+                    propertyValue_, propertyName_, clazz_);
+            }
 
-            virtual void writeIntPtr (
-                int *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeStringPair (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeStringSingle (
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeStringPtr (
-                std::string *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeLong (
-                long,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeBool (
-                bool,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
+            template<typename T>
+            void writeSingle (
+                T propertyValue_,
+                const Serializable & clazz_,
+                ModifiableAMQPBlob & blob_
+            ) const {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
+                    propertyValue_, clazz_);
+            }
     };
 
 }

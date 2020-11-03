@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "descriptors/AMQPDescriptor.h"
+#include "amqp/src/schema/descriptors/AMQPDescriptor.h"
 
 /******************************************************************************/
 

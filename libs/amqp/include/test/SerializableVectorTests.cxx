@@ -1,3 +1,6 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cert-err58-cpp"
+
 #include <gtest/gtest.h>
 #include <string>
 
@@ -74,6 +77,7 @@ TEST (serializableVector, autoName) {
 
 TEST (serializableVector, javaTypeName) {
     typedef amqp::serializable::SerializableVector<std::string> T;
+
     T * l;
     T   l2("ABC");
 
@@ -129,5 +133,9 @@ TEST (serializableVector, javaTypeName3) {
     Test t;
     t.fun();
 }
+
+/******************************************************************************/
+
+#pragma clang diagnostic pop
 
 /******************************************************************************/

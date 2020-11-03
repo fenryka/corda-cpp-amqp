@@ -4,7 +4,7 @@
 
 #include "proton/codec.h"
 
-#include "descriptors/AMQPDescriptor.h"
+#include "amqp/src/schema/descriptors/AMQPDescriptor.h"
 
 /******************************************************************************/
 

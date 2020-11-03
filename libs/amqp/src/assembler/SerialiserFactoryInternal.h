@@ -1,5 +1,6 @@
 #pragma once
 
+#include <amqp/src/ModifiableAMQPBlobImpl.h>
 #include "amqp/src/serialiser/serialisers/reader/CompositeReader.h"
 #include "amqp/src/serialiser/serialisers/writer/Writer.h"
 #include "amqp/include/assembler/SerialiserFactory.h"
@@ -9,6 +10,8 @@
 /******************************************************************************/
 
 namespace amqp::internal::assembler {
+
+    using Serializable = amqp::serializable::Serializable;
 
     class SerialiserFactoryInternal : public amqp::assembler::SerialiserFactory {
         public :
@@ -28,56 +31,9 @@ namespace amqp::internal::assembler {
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
-            void startList (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob & blob_
-            ) const override;
-
             void startComposite (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
             void startRestricted (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
 
-            void writeInt(
-                int,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeIntPtr(
-                int *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeStringPair (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeStringSingle (
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeStringPtr(
-                std::string *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeLong(
-                long,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeBool(
-                bool,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
     };
 
 }

@@ -75,14 +75,14 @@ javaTypeName ();
 /******************************************************************************/
 
 template<typename>
-struct is_std_vector : std::false_type {
+struct [[maybe_unused]] is_std_vector : std::false_type {
     static std::string fun() {
         return "";
     }
 };
 
 template<typename T, typename A>
-struct is_std_vector<std::vector<T,A>> : std::true_type {
+struct [[maybe_unused]] is_std_vector<std::vector<T,A>> : std::true_type {
     static std::string fun() {
         return "java.util.List<" + javaTypeName<T>() + ">";
     }
