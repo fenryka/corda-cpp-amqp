@@ -20,6 +20,26 @@ namespace amqp::assembler {
 
 /******************************************************************************/
 
+namespace {
+
+    struct AutoRestricted {
+        const amqp::serializable::Serializable & m_s;
+        amqp::ModifiableAMQPBlob & m_b;
+
+        AutoRestricted (decltype(m_s) s_, decltype(m_b) b_) : m_s (s_), m_b (b_) {
+            amqp::assembler::SerialiserFactory::startRestricted (m_s, m_b);
+        }
+
+        ~AutoRestricted() {
+            amqp::assembler::SerialiserFactory::endRestricted (m_s, m_b);
+        }
+
+    };
+
+};
+
+/******************************************************************************/
+
 namespace amqp::serializable {
 
     template<typename T, typename A = std::allocator<T>>
@@ -34,7 +54,7 @@ namespace amqp::serializable {
             ) const {
                 DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
 
-                sf_.startRestricted (*this, blob_);
+                AutoRestricted ar (*this, blob_);
 
                 for (const auto & i: *this) {
                     sf_.writeSingle<T> (i, *this, blob_);
@@ -52,7 +72,7 @@ namespace amqp::serializable {
         public :
             SerializableVector() = delete;
 
-            SerializableVector(
+            explicit SerializableVector(
                 const std::string & fingerprint_
             ) : std::vector<T>()
               , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)

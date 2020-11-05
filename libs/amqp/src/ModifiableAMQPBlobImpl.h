@@ -95,6 +95,9 @@ namespace amqp::internal {
                 std::pair<std::string, std::string>,
                 uPtr<BaseBlob>> m_schemas;
 
+            void startSerializable (
+                const amqp::serializable::Serializable & composite);
+
         public :
             ModifiableAMQPBlobImpl();
 
@@ -108,6 +111,9 @@ namespace amqp::internal {
                 const amqp::serializable::Serializable &);
 
             void startRestricted (
+                const amqp::serializable::Serializable &);
+
+            void endRestricted (
                 const amqp::serializable::Serializable &);
 
             void writeComposite_ (

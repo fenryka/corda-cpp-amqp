@@ -70,7 +70,13 @@ namespace amqp::assembler {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endComposite (clazz_);
             }
 
-            virtual void startRestricted (const Serializable &, ModifiableAMQPBlob &) const = 0;
+            static void startRestricted (const Serializable & clazz_, ModifiableAMQPBlob & blob_)  {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startRestricted (clazz_);
+            }
+
+            static void endRestricted (const Serializable & clazz_, ModifiableAMQPBlob & blob_)  {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endRestricted (clazz_);
+            }
 
             virtual void writeComposite_ (
                 const std::string &,
@@ -110,6 +116,5 @@ namespace amqp::assembler {
     };
 
 }
-
 
 /******************************************************************************/

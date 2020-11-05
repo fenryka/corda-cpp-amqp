@@ -30,6 +30,25 @@ ModifiableAMQPBlobImpl::key (const amqp::serializable::Serializable & s_) {
 
 /******************************************************************************/
 
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::startSerializable (
+    const amqp::serializable::Serializable & s_
+) {
+    pn_data_put_described (m_payload);
+    pn_data_enter (m_payload);
+    pn_data_put_symbol (
+        m_payload,
+        pn_bytes (
+            s_.fingerprint().size(),
+            s_.fingerprint().data()));
+
+    pn_data_put_list (m_payload);
+    pn_data_enter (m_payload);
+}
+
+/******************************************************************************/
+
 /*
  *
  * For now we're just going to accept that in recursive class definitions
@@ -50,30 +69,33 @@ ModifiableAMQPBlobImpl::startComposite (
         << std::endl); // NOLINT
 
     auto id = key (composite_);
-
-    DBG ("    key = ["
-        << id.first
-        << ", "
-        << id.second
-        << "]"
-        << std::endl); // NOLINT
-
-    auto it = m_schemas.find (id);
-
-    if (it == m_schemas.end()) {
+    if (m_schemas.find (id) == m_schemas.end()) {
         m_schemas[id] = std::make_unique<CompositeBlob>();
     }
 
-    pn_data_put_described (m_payload);
-    pn_data_enter (m_payload);
-    pn_data_put_symbol (
-        m_payload,
-        pn_bytes (
-            composite_.fingerprint().size(),
-            composite_.fingerprint().data()));
+    startSerializable (composite_);
+}
 
-    pn_data_put_list (m_payload);
-    pn_data_enter (m_payload);
+/******************************************************************************/
+
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::startRestricted (
+    const amqp::serializable::Serializable & restricted_
+) {
+    DBG (__FUNCTION__
+             << " - "
+             << restricted_.name()
+             << " - "
+             << restricted_.fingerprint()
+             << std::endl); // NOLINT
+
+    auto id = key (restricted_);
+    if (m_schemas.find (id) == m_schemas.end()) {
+        m_schemas[id] = std::make_unique<ListBlob>();
+    }
+
+    startSerializable (restricted_);
 }
 
 /******************************************************************************/
@@ -83,6 +105,7 @@ amqp::internal::
 ModifiableAMQPBlobImpl::endComposite (
     const amqp::serializable::Serializable & composite_
 ) {
+    DBG ("endComposite - " << composite_.name() << std::endl);
     pn_data_exit (m_payload);
     pn_data_exit (m_payload);
 }
@@ -128,37 +151,12 @@ ModifiableAMQPBlobImpl::writeNull (
 
 void
 amqp::internal::
-ModifiableAMQPBlobImpl::startRestricted (
+ModifiableAMQPBlobImpl::endRestricted (
     const amqp::serializable::Serializable & restricted_
 ) {
-    DBG (__FUNCTION__
-             << " - "
-             << restricted_.name()
-             << " - "
-             << restricted_.fingerprint()
-             << std::endl); // NOLINT
-
-    auto id = key (restricted_);
-
-    DBG ("    key = [" << id.first << ", " << id.second << "]" << std::endl); // NOLINT
-
-    auto it = m_schemas.find (id);
-
-    if (it == m_schemas.end()) {
-        m_schemas[id] = std::make_unique<ListBlob>();
-    }
-
-    pn_data_put_described (m_payload);
-
-    pn_data_enter (m_payload);
-    pn_data_put_symbol (
-        m_payload,
-        pn_bytes (
-            restricted_.fingerprint().size(),
-            restricted_.fingerprint().data()));
-
-    pn_data_put_list (m_payload);
-    pn_data_enter (m_payload);
+    DBG ("endRestricted - " << restricted_.name() << std::endl);
+    pn_data_exit (m_payload);
+    pn_data_exit (m_payload);
 }
 
 /******************************************************************************/
@@ -171,9 +169,7 @@ ModifiableAMQPBlobImpl::writeComposite_ (
     const amqp::serializable::Serializable & composite_
 ) {
     DBG (__FUNCTION__
-        << "::"
-        << composite_.name()
-        << std::endl); // NOLINT
+        << "::" << composite_.name() << std::endl); // NOLINT
 
     auto id = key (composite_);
 
@@ -200,9 +196,7 @@ ModifiableAMQPBlobImpl::writeRestricted_ (
     const amqp::serializable::Serializable & restricted_
 ) {
     DBG (__FUNCTION__
-             << "::"
-             << restricted_.name()
-             << std::endl); // NOLINT
+             << "::" << restricted_.name() << std::endl); // NOLINT
 
     auto id = key (restricted_);
 
