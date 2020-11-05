@@ -65,7 +65,6 @@ ModifiableAMQPBlobImpl::startComposite (
     }
 
     pn_data_put_described (m_payload);
-
     pn_data_enter (m_payload);
     pn_data_put_symbol (
         m_payload,
@@ -75,6 +74,17 @@ ModifiableAMQPBlobImpl::startComposite (
 
     pn_data_put_list (m_payload);
     pn_data_enter (m_payload);
+}
+
+/******************************************************************************/
+
+void
+amqp::internal::
+ModifiableAMQPBlobImpl::endComposite (
+    const amqp::serializable::Serializable & composite_
+) {
+    pn_data_exit (m_payload);
+    pn_data_exit (m_payload);
 }
 
 /******************************************************************************/

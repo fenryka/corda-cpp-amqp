@@ -42,23 +42,6 @@ SerialiserFactoryInternal::writeComposite_ (
 
 void
 amqp::internal::assembler::
-SerialiserFactoryInternal::startComposite (
-    const amqp::serializable::Serializable & clazz_,
-    ModifiableAMQPBlob & blob_
-) const  {
-    DBG (__FUNCTION__ << " - " << clazz_.name() << std::endl); // NOLINT
-
-    auto & blob = dynamic_cast<ModifiableAMQPBlobImpl &>(blob_);
-
-    blob.dump();
-
-    blob.startComposite (clazz_);
-}
-
-/******************************************************************************/
-
-void
-amqp::internal::assembler::
 SerialiserFactoryInternal::startRestricted (
     const amqp::serializable::Serializable & clazz_,
     ModifiableAMQPBlob & blob_

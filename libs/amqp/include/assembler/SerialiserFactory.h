@@ -62,7 +62,14 @@ namespace amqp::assembler {
         public :
             [[nodiscard]] virtual uPtr<ModifiableAMQPBlob> blob() const = 0;
 
-            virtual void startComposite (const Serializable &, ModifiableAMQPBlob &) const = 0;
+            static void startComposite (const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startComposite (clazz_);
+            }
+
+            static void endComposite (const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
+                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endComposite (clazz_);
+            }
+
             virtual void startRestricted (const Serializable &, ModifiableAMQPBlob &) const = 0;
 
             virtual void writeComposite_ (

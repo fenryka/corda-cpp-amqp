@@ -104,6 +104,9 @@ namespace amqp::internal {
             void startComposite (
                 const amqp::serializable::Serializable &);
 
+            void endComposite (
+                const amqp::serializable::Serializable &);
+
             void startRestricted (
                 const amqp::serializable::Serializable &);
 
@@ -217,7 +220,7 @@ ModifiableAMQPBlobImpl::writePrimitiveSingle (
 {
     DBG (__FUNCTION__ << "::" << propertyValue_ << std::endl); // NOLINT
 
-    Writer<T>::write(propertyValue_, m_payload);
+    Writer<T>::write (propertyValue_, m_payload);
 }
 
 /******************************************************************************/

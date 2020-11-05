@@ -31,7 +31,6 @@ namespace amqp::internal::assembler {
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
-            void startComposite (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
             void startRestricted (const amqp::serializable::Serializable &, ModifiableAMQPBlob &) const override;
 
     };

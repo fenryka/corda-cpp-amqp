@@ -17,6 +17,26 @@ Serializable::Serializable (
 
 /******************************************************************************/
 
+namespace {
+
+    struct AutoComposite {
+        const amqp::serializable::Serializable & m_s;
+        amqp::ModifiableAMQPBlob & m_b;
+
+        AutoComposite (decltype(m_s) s_, decltype(m_b) b_) : m_s (s_), m_b (b_) {
+            amqp::assembler::SerialiserFactory::startComposite (m_s, m_b);
+        }
+
+        ~AutoComposite() {
+            amqp::assembler::SerialiserFactory::endComposite (m_s, m_b);
+        }
+
+    };
+
+};
+
+/******************************************************************************/
+
 /**
  *
  * @param sf_ serialiser factory
@@ -28,8 +48,10 @@ Serializable::serialise (
     const amqp::assembler::SerialiserFactory & sf_
 ) const {
     auto blob = sf_.blob();
-    sf_.startComposite (*this, *blob);
-    serialiseImpl (sf_, *blob);
+    {
+        AutoComposite ac (*this, *blob);
+        serialiseImpl (sf_, *blob);
+    }
     return blob->toBlob();
 }
 
@@ -41,8 +63,8 @@ Serializable::serialise (
     const amqp::assembler::SerialiserFactory & sf_,
     ModifiableAMQPBlob & blob_) const
 {
-    DBG (__FUNCTION__ << "::" << m_name << std::endl);
-    sf_.startComposite (*this, blob_);
+    DBG (__FUNCTION__ << "::" << m_name << std::endl); // NOLINT
+    AutoComposite ac (*this, blob_);
     serialiseImpl (sf_, blob_);
 }
 
