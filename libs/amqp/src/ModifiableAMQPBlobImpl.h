@@ -124,9 +124,7 @@ namespace amqp::internal {
                 const amqp::serializable::Serializable &);
 
             template<typename T>
-            void writePrimitiveSingle(
-                T,
-                const amqp::serializable::Serializable &);
+            void writePrimitiveSingle(T);
 
             void writeNull (
                 const std::string &,
@@ -215,14 +213,9 @@ template<typename T>
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::writePrimitiveSingle (
-    T propertyValue_,
-    const amqp::serializable::Serializable & clazz_)
+    T propertyValue_)
 {
     DBG (__FUNCTION__ << "::" << propertyValue_ << std::endl); // NOLINT
-
-    auto id = key (clazz_);
-
-    assert (m_schemas.find (id) != m_schemas.end());
 
     Writer<T>::write(propertyValue_, m_payload);
 }

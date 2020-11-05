@@ -38,13 +38,13 @@ namespace amqp::assembler {
              * Since we can't partially specialise functions we need
              * to pull out the writing of single values into two functions. Use
              * basic meta-programing to switch between primitives and
-             * composits
+             * composites
              */
             template<typename T,  bool = std::is_base_of<Serializable , T>::value>
             struct SingleWriter {
-                static void write (T propertyValue_, const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
+                static void write (T propertyValue_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_) {
                     dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
-                        propertyValue_, clazz_);
+                        propertyValue_);
                 }
             };
 
@@ -54,15 +54,15 @@ namespace amqp::assembler {
              */
             template<typename T>
             struct SingleWriter<T, true> {
-                static void write (T propertyValue_, const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
-                    std::cout << "ARSE - " << javaTypeName<T>() << std::endl;
+                static void write (T propertyValue_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_) {
+                    propertyValue_.serialise (sf_, blob_);
                 }
             };
+
         public :
             [[nodiscard]] virtual uPtr<ModifiableAMQPBlob> blob() const = 0;
 
             virtual void startComposite (const Serializable &, ModifiableAMQPBlob &) const = 0;
-
             virtual void startRestricted (const Serializable &, ModifiableAMQPBlob &) const = 0;
 
             virtual void writeComposite_ (
@@ -98,7 +98,7 @@ namespace amqp::assembler {
                 const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             ) const {
-                SingleWriter<T>::write (propertyValue_, clazz_, blob_);
+                SingleWriter<T>::write (propertyValue_, blob_, *this);
             }
     };
 

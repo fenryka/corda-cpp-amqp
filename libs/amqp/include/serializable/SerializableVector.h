@@ -24,11 +24,27 @@ namespace amqp::serializable {
 
     template<typename T, typename A = std::allocator<T>>
     class SerializableVector final : public std::vector<T, A>, public Serializable {
+        private :
+            /**
+             *
+             */
+            void _serialise (
+                const amqp::assembler::SerialiserFactory & sf_,
+                ModifiableAMQPBlob & blob_
+            ) const {
+                DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
+
+                sf_.startRestricted (*this, blob_);
+
+                for (const auto & i: *this) {
+                    sf_.writeSingle<T> (i, *this, blob_);
+                }
+            }
 
         protected :
             void serialiseImpl (
-                const amqp::assembler::SerialiserFactory & sf_,
-                ModifiableAMQPBlob & blob_
+                const amqp::assembler::SerialiserFactory &,
+                ModifiableAMQPBlob &
             ) const override {
                 DBG (__FUNCTION__ << std::endl);
             }
@@ -57,20 +73,6 @@ namespace amqp::serializable {
               , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
             { }
 
-            void _serialise (
-                const amqp::assembler::SerialiserFactory & sf_,
-                ModifiableAMQPBlob & blob_
-            ) const {
-                DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
-
-                sf_.startRestricted (*this, blob_);
-                serialiseImpl (sf_, blob_);
-
-                for (const auto & i: *this) {
-                    sf_.writeSingle<T> (i, *this, blob_);
-                }
-            }
-
             void serialise (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
@@ -92,6 +94,9 @@ namespace amqp::serializable {
 
 /******************************************************************************/
 
+/**
+ * Our type library needs a little help with our custom vector type
+ */
 template<typename T, typename A>
 struct [[maybe_unused]] is_std_vector<amqp::serializable::SerializableVector<T, A>> : std::true_type {
     static std::string fun () {

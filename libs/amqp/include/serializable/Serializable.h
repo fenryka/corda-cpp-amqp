@@ -48,7 +48,6 @@ namespace amqp::serializable {
 
 
             [[nodiscard]] const std::string & name() const;
-
             [[nodiscard]] const std::string & fingerprint() const;
     };
 

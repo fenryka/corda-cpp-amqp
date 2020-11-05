@@ -24,13 +24,6 @@ namespace amqp::internal::assembler {
                 const amqp::serializable::Serializable &,
                 ModifiableAMQPBlob &) const override;
 
-            void writeCompositeSingle_ (
-                const std::string &,
-                const amqp::serializable::Serializable *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
             void writeRestricted_ (
                 const std::string &,
                 const amqp::serializable::Serializable *,
