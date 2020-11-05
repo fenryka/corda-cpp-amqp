@@ -26,6 +26,8 @@ class Composite : public amqp::serializable::Serializable {
             , m_b (b_)
         {
         }
+
+        virtual ~Composite() = default;
 };
 
 /******************************************************************************/
@@ -48,6 +50,8 @@ class CompositeList : public amqp::serializable::Serializable {
             , m_list ("fingerprint456", std::move (list_))
         {
         }
+
+        virtual ~CompositeList() = default;
 };
 
 /******************************************************************************/

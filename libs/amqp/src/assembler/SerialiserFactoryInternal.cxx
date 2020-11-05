@@ -14,12 +14,35 @@ SerialiserFactoryInternal::blob() const  {
 
 /******************************************************************************/
 
+void
+amqp::internal::assembler::
+SerialiserFactoryInternal::writeComposite_ (
+    const std::string & type_,
+    const amqp::serializable::Serializable * clazz_,
+    const std::string & propertyName_,
+    const amqp::serializable::Serializable & parent_,
+    ModifiableAMQPBlob & blob_
+) const  {
+    DBG (__FUNCTION__ << "::" << type_ << std::endl); // NOLINT
+
+    auto &blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+    blob.writeComposite_ (propertyName_, type_, parent_);
+
+    if (clazz_) {
+        DBG (__FUNCTION__ << " - " << clazz_->name() << std::endl); // NOLINT
+
+        clazz_->serialise (*this, blob_);
+    } else {
+        blob.writeNull (propertyName_, type_, parent_);
+    }
+}
 
 /******************************************************************************/
 
 void
 amqp::internal::assembler::
-SerialiserFactoryInternal::writeComposite_ (
+SerialiserFactoryInternal::writeCompositeSingle_ (
     const std::string & type_,
     const amqp::serializable::Serializable * clazz_,
     const std::string & propertyName_,

@@ -130,12 +130,7 @@ ModifiableAMQPBlobImpl::startRestricted (
 
     auto id = key (restricted_);
 
-    DBG ("    key = ["
-             << id.first
-             << ", "
-             << id.second
-             << "]"
-             << std::endl); // NOLINT
+    DBG ("    key = [" << id.first << ", " << id.second << "]" << std::endl); // NOLINT
 
     auto it = m_schemas.find (id);
 
@@ -155,45 +150,6 @@ ModifiableAMQPBlobImpl::startRestricted (
     pn_data_put_list (m_payload);
     pn_data_enter (m_payload);
 }
-
-/******************************************************************************/
-
-/*
-void
-amqp::internal::
-ModifiableAMQPBlobImpl::startList (
-    const std::string & propertyName_,
-    const std::string & propertyType_,
-    const amqp::serializable::Serializable & parent_
-) {
-    DBG (__FUNCTION__
-             << " - "
-             << propertyName_
-             << " - "
-             << propertyType_
-             << std::endl); // NOLINT
-
-    auto id = key (parent_);
-
-    auto it = m_schemas.find (id);
-
-    if (it == m_schemas.end()) {
-        m_schemas[id] = {};
-    }
-
-    pn_data_put_described (m_payload);
-
-    pn_data_enter (m_payload);
-    pn_data_put_symbol (
-        m_payload,
-        pn_bytes (
-            4,
-            "list"));
-
-    pn_data_put_list (m_payload);
-    pn_data_enter (m_payload);
-}
- */
 
 /******************************************************************************/
 
@@ -249,7 +205,8 @@ ModifiableAMQPBlobImpl::writeRestricted_ (
             schema::descriptors::FieldDescriptor::makeProton (
                 propertyName_,
                 "*",
-                {propertyType_});
+                { propertyType_ }
+            );
     }
 }
 

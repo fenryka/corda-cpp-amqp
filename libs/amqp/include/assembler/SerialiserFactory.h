@@ -27,13 +27,37 @@ namespace amqp::serializable {
 
 #include "amqp/src/ModifiableAMQPBlobImpl.h"
 
-
 /******************************************************************************/
 
 namespace amqp::assembler {
     using Serializable = amqp::serializable::Serializable;
 
     class SerialiserFactory {
+        private :
+            /*
+             * Since we can't partially specialise functions we need
+             * to pull out the writing of single values into two functions. Use
+             * basic meta-programing to switch between primitives and
+             * composits
+             */
+            template<typename T,  bool = std::is_base_of<Serializable , T>::value>
+            struct SingleWriter {
+                static void write (T propertyValue_, const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
+                    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
+                        propertyValue_, clazz_);
+                }
+            };
+
+            /*
+             * Specialisation to handle the composite case, basically anything which
+             * implements Serializable.
+             */
+            template<typename T>
+            struct SingleWriter<T, true> {
+                static void write (T propertyValue_, const Serializable & clazz_, ModifiableAMQPBlob & blob_) {
+                    std::cout << "ARSE - " << javaTypeName<T>() << std::endl;
+                }
+            };
         public :
             [[nodiscard]] virtual uPtr<ModifiableAMQPBlob> blob() const = 0;
 
@@ -74,10 +98,11 @@ namespace amqp::assembler {
                 const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             ) const {
-                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
-                    propertyValue_, clazz_);
+                SingleWriter<T>::write (propertyValue_, clazz_, blob_);
             }
     };
 
 }
+
+
 /******************************************************************************/
