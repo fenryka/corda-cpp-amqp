@@ -119,6 +119,8 @@ comp (
     desc,
     std::vector<std::unique_ptr<Field>> & fields_);
     */
+    
+    return nullptr;
 }
 
 /******************************************************************************/
