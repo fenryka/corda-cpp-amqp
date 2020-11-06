@@ -5,6 +5,7 @@
 #include "amqp/include/AMQPBlob.h"
 #include "amqp/include/serialiser/ISerialiser.h"
 #include "amqp/include/serializable/Serializable.h"
+#include "amqp/include/serializable/RestrictedSerializable.h"
 #include "amqp/include/assembler/SerialiserFactory.h"
 #include "amqp/include/ModifiableAMQPBlob.h"
 
@@ -17,26 +18,6 @@ namespace amqp::assembler {
     class SerialiserFactory;
 
 }
-
-/******************************************************************************/
-
-namespace {
-
-    struct AutoRestricted {
-        const amqp::serializable::Serializable & m_s;
-        amqp::ModifiableAMQPBlob & m_b;
-
-        AutoRestricted (decltype(m_s) s_, decltype(m_b) b_) : m_s (s_), m_b (b_) {
-            amqp::assembler::SerialiserFactory::startRestricted (m_s, m_b);
-        }
-
-        ~AutoRestricted() {
-            amqp::assembler::SerialiserFactory::endRestricted (m_s, m_b);
-        }
-
-    };
-
-};
 
 /******************************************************************************/
 
@@ -54,7 +35,7 @@ namespace amqp::serializable {
             ) const {
                 DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
 
-                AutoRestricted ar (*this, blob_);
+                amqp::internal::serializable::AutoRestricted ar (*this, blob_);
 
                 for (const auto & i: *this) {
                     sf_.writeSingle<T> (i, *this, blob_);
