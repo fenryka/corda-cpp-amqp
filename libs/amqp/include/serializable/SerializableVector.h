@@ -79,7 +79,6 @@ namespace amqp::serializable {
             { }
 
             SerializableVector(
-                const std::string& name_,
                 const std::string& fingerprint_,
                 std::initializer_list<T> l_
             ) : std::vector<T>(l_)

@@ -61,3 +61,13 @@ TEST (typeName, vectors) {
 }
 
 /******************************************************************************/
+
+TEST (typeName, maps) {
+    typedef std::map<int, int> V1;
+    typedef std::map<int, std::vector<std::string>> V2;
+
+    EXPECT_EQ ("java.util.Map<int,int>", javaTypeName<V1>());
+    EXPECT_EQ ("java.util.Map<int,java.util.List<string>>", javaTypeName<V2>());
+}
+
+/******************************************************************************/

@@ -77,7 +77,7 @@ javaTypeName ();
 template<typename>
 struct [[maybe_unused]] is_std_vector : std::false_type {
     static std::string fun() {
-        return "";
+        throw std::runtime_error ("never call this method");
     }
 };
 
@@ -85,6 +85,22 @@ template<typename T, typename A>
 struct [[maybe_unused]] is_std_vector<std::vector<T,A>> : std::true_type {
     static std::string fun() {
         return "java.util.List<" + javaTypeName<T>() + ">";
+    }
+};
+
+/******************************************************************************/
+
+template<typename>
+struct [[maybe_unused]] is_std_map : std::false_type {
+    static std::string fun() {
+        throw std::runtime_error ("never call this method");
+    }
+};
+
+template<typename K, typename V, typename C, typename A>
+struct [[maybe_unused]] is_std_map<std::map<K, V, C, A>> : std::true_type {
+    static std::string fun() {
+        return "java.util.Map<" + javaTypeName<K>() + "," + javaTypeName<V>() + ">";
     }
 };
 
@@ -98,6 +114,8 @@ javaTypeName () {
 
     if (is_std_vector<T>::value) {
         return is_std_vector<T>::fun();
+    } else if (is_std_map<T>::value) {
+        return is_std_map<T>::fun();
     }
 
     std::string str { typeName<T>() };
