@@ -116,15 +116,15 @@ namespace amqp::internal {
             void endRestricted (
                 const amqp::serializable::Serializable &);
 
-            void writeComposite_ (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &);
+            void writeComposite (
+                const std::string &propertyName_,
+                const std::string &propertyType_,
+                const amqp::serializable::Serializable &composite_);
 
-            void writeRestricted_ (
-                const std::string &,
-                const std::string &,
-                const amqp::serializable::Serializable &);
+            void writeRestricted (
+                const std::string &propertyName_,
+                const std::string &propertyType_,
+                const amqp::serializable::Serializable &restricted_);
 
             template<typename T>
             void writePrimitive(

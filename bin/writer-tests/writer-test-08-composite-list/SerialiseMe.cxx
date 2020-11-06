@@ -14,6 +14,8 @@ Composite::serialiseImpl (
     sf_.write (m_b, "m_b", *this, blob_);
 }
 
+/******************************************************************************/
+
 void
 CompositeList::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
@@ -21,7 +23,7 @@ CompositeList::serialiseImpl (
 ) const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
 
-    sf_.writeRestricted (m_list, "m_list", *this, blob_);
+    sf_.write (m_list, "m_list", *this, blob_);
 }
 
 /******************************************************************************/

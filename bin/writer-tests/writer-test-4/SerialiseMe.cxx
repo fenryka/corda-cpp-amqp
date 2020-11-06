@@ -30,7 +30,8 @@ Outer::serialiseImpl (
     DBG (__FUNCTION__ << std::endl);
     DBG (javaTypeName<decltype(m_a)>() << std::endl);
 
-    sf_.writeComposite (m_a, "m_a", *this, blob_);
+//    sf_.writeComposite (m_a, "m_a", *this, blob_);
+    sf_.write (m_a, "m_a", *this, blob_);
 }
 
 /******************************************************************************/

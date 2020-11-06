@@ -16,20 +16,6 @@ namespace amqp::internal::assembler {
     class SerialiserFactoryInternal : public amqp::assembler::SerialiserFactory {
         public :
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;
-
-            void writeComposite_ (
-                const std::string &,
-                const amqp::serializable::Serializable *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
-
-            void writeRestricted_ (
-                const std::string &,
-                const amqp::serializable::Serializable *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &) const override;
     };
 
 }

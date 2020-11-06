@@ -1,27 +1,12 @@
 #pragma once
 
-/******************************************************************************
- *
- * These need to exist since we cannot rely on __type__ not being null
- *
- ******************************************************************************/
-
-#define writeComposite(__type__, __name__, __parent__, __blob__) \
-    writeComposite_ ( \
-        javaTypeName<decltype (__type__)>(), &__type__, __name__, *this, __blob__);
-
-#define writeRestricted(__type__, __name__, __parent__, __blob__) \
-    writeRestricted_ (                                            \
-        javaTypeName<                                             \
-            std::remove_reference_t<                              \
-                std::remove_pointer_t<decltype (__type__)>>       \
-        >(), &__type__, __name__, *this, __blob__);
-
 /******************************************************************************/
 
 namespace amqp::serializable {
 
     class Serializable;
+
+    template<typename, typename> class SerializableVector;
 
 }
 
@@ -59,6 +44,79 @@ namespace amqp::assembler {
                 }
             };
 
+            /*
+             * Similar to the above, save for properties of composites
+             */
+            template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>, bool = std::is_pointer_v<T>>
+            struct PropertyWriter {
+                static void write (T propertyValue_, const std::string & propertyName_,
+                    const Serializable & clazz_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_
+                ) {
+                    dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitive<T> (
+                        propertyValue_, propertyName_, clazz_);
+                }
+            };
+
+            template<typename T>
+            struct NonPrimWriter {
+                static void write (
+                    const std::string & type_, const std::string & propertyName_,
+                    const Serializable & parent_, internal::ModifiableAMQPBlobImpl & blob_
+                ) {
+                    blob_.writeComposite (propertyName_, type_, parent_);
+                }
+            };
+
+            template<typename A, typename B>
+            struct NonPrimWriter<amqp::serializable::SerializableVector<A, B>> {
+                static void write (
+                    const std::string & type_, const std::string & propertyName_,
+                    const Serializable & parent_, internal::ModifiableAMQPBlobImpl & blob_
+                ) {
+                    blob_.writeRestricted (propertyName_, type_, parent_);
+                }
+            };
+
+            /*
+             * specialisation for non pointer composites
+             */
+            template<typename T>
+            struct PropertyWriter<T, true, false> {
+                static void write (
+                    T propertyValue_, const std::string & propertyName_,
+                    const Serializable & parent_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_
+                ) {
+                    auto type = javaTypeName<std::remove_reference_t<std::remove_pointer_t<T>>>();
+                    auto & blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+                    NonPrimWriter<T>::write (type, propertyName_, parent_, blob);
+
+                    propertyValue_.serialise (sf_, blob_);
+                }
+            };
+
+            /*
+             * specialisation for pointer composites
+             */
+            template<typename T>
+            struct PropertyWriter<T, true, true> {
+                static void write (
+                    T propertyValue_, const std::string & propertyName_,
+                    const Serializable & parent_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_
+                ) {
+                    auto type = javaTypeName<std::remove_reference_t<std::remove_pointer_t<T>>>();
+                    auto & blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
+
+                    NonPrimWriter<T>::write (type, propertyName_, parent_, blob);
+
+                    if (propertyValue_) {
+                        propertyValue_->serialise (sf_, blob_);
+                    } else {
+                        blob.writeNull (propertyName_, type, parent_);
+                    }
+                }
+            };
+
         public :
             [[nodiscard]] virtual uPtr<ModifiableAMQPBlob> blob() const = 0;
 
@@ -78,22 +136,6 @@ namespace amqp::assembler {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endRestricted (clazz_);
             }
 
-            virtual void writeComposite_ (
-                const std::string &,
-                const amqp::serializable::Serializable *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
-            virtual void writeRestricted_ (
-                const std::string &,
-                const amqp::serializable::Serializable *,
-                const std::string &,
-                const amqp::serializable::Serializable &,
-                ModifiableAMQPBlob &
-            ) const = 0;
-
             template<typename T>
             void write (
                 T propertyValue_,
@@ -101,14 +143,11 @@ namespace amqp::assembler {
                 const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             ) const {
-                dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitive<T> (
-                    propertyValue_, propertyName_, clazz_);
+                PropertyWriter<T>::write (propertyValue_, propertyName_, clazz_, blob_, *this);
             }
 
             template<typename T>
-            void writeSingle (
-                T propertyValue_,
-                const Serializable & clazz_,
+            void writeSingle (T propertyValue_, const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             ) const {
                 SingleWriter<T>::write (propertyValue_, blob_, *this);

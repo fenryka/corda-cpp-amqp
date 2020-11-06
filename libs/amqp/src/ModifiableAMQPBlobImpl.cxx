@@ -163,7 +163,7 @@ ModifiableAMQPBlobImpl::endRestricted (
 
 void
 amqp::internal::
-ModifiableAMQPBlobImpl::writeComposite_ (
+ModifiableAMQPBlobImpl::writeComposite (
     const std::string & propertyName_,
     const std::string & propertyType_,
     const amqp::serializable::Serializable & composite_
@@ -190,7 +190,7 @@ ModifiableAMQPBlobImpl::writeComposite_ (
 
 void
 amqp::internal::
-ModifiableAMQPBlobImpl::writeRestricted_ (
+ModifiableAMQPBlobImpl::writeRestricted (
     const std::string & propertyName_,
     const std::string & propertyType_,
     const amqp::serializable::Serializable & restricted_

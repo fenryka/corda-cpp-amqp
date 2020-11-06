@@ -9,8 +9,7 @@ ListOfLists::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
-    sf_.writeRestricted (m_list, "m_list", *this, blob_);
+    sf_.write (m_list, "m_list", *this, blob_);
 }
 
 /******************************************************************************/
-
