@@ -1,6 +1,7 @@
 #include "ModifiableAMQPBlobImpl.h"
 
 #include <proton/codec.h>
+#include <amqp/include/serializable/RestrictedSerializable.h>
 
 #include "corda-utils/include/debug.h"
 
@@ -42,9 +43,6 @@ ModifiableAMQPBlobImpl::startSerializable (
         pn_bytes (
             s_.fingerprint().size(),
             s_.fingerprint().data()));
-
-    pn_data_put_list (m_payload);
-    pn_data_enter (m_payload);
 }
 
 /******************************************************************************/
@@ -74,6 +72,9 @@ ModifiableAMQPBlobImpl::startComposite (
     }
 
     startSerializable (composite_);
+
+    pn_data_put_list (m_payload);
+    pn_data_enter (m_payload);
 }
 
 /******************************************************************************/
@@ -81,7 +82,7 @@ ModifiableAMQPBlobImpl::startComposite (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startRestricted (
-    const amqp::serializable::Serializable & restricted_
+    const amqp::serializable::RestrictedSerializable & restricted_
 ) {
     DBG (__FUNCTION__
              << " - "
@@ -92,10 +93,21 @@ ModifiableAMQPBlobImpl::startRestricted (
 
     auto id = key (restricted_);
     if (m_schemas.find (id) == m_schemas.end()) {
-        m_schemas[id] = std::make_unique<ListBlob>();
+        m_schemas[id] = std::make_unique<ListBlob>(restricted_.javaType());
     }
 
     startSerializable (restricted_);
+
+    if (restricted_.javaType() == "map") {
+        pn_data_put_map (m_payload);
+    } else if (restricted_.javaType() == "list") {
+        pn_data_put_list (m_payload);
+    } else {
+        std::stringstream ss;
+        ss << "Unknown restricted type. " << __FILE__ << "::" << __LINE__;
+        throw std::runtime_error (ss.str());
+    }
+    pn_data_enter (m_payload);
 }
 
 /******************************************************************************/
@@ -152,7 +164,7 @@ ModifiableAMQPBlobImpl::writeNull (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::endRestricted (
-    const amqp::serializable::Serializable & restricted_
+    const amqp::serializable::RestrictedSerializable & restricted_
 ) {
     DBG ("endRestricted - " << restricted_.name() << std::endl);
     pn_data_exit (m_payload);

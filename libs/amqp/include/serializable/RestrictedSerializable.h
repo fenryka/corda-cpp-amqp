@@ -2,25 +2,46 @@
 
 /******************************************************************************/
 
-#include "amqp/include/assembler/SerialiserFactory.h"
+namespace amqp::serializable {
+    class RestrictedSerializable;
+}
 
 /******************************************************************************/
 
 namespace amqp::internal::serializable {
 
     struct AutoRestricted {
-        const amqp::serializable::Serializable & m_s;
+        const amqp::serializable::RestrictedSerializable & m_s;
         amqp::ModifiableAMQPBlob & m_b;
 
-        AutoRestricted (decltype(m_s) s_, decltype(m_b) b_) : m_s (s_), m_b (b_) {
-            amqp::assembler::SerialiserFactory::startRestricted (m_s, m_b);
-        }
-
-        ~AutoRestricted() {
-            amqp::assembler::SerialiserFactory::endRestricted (m_s, m_b);
-        }
+        AutoRestricted (decltype(m_s), decltype(m_b) b_);
+        ~AutoRestricted();
     };
 
-};
+}
+
+/******************************************************************************/
+
+namespace amqp::serializable {
+
+    class RestrictedSerializable : public Serializable {
+        private :
+            std::string m_javaType;
+
+        public :
+            RestrictedSerializable (
+                std::string name_,
+                std::string fingerprint_,
+                std::string javaType_
+            ) : Serializable (std::move (name_), std::move (fingerprint_))
+                , m_javaType (std::move (javaType_))
+            { }
+
+            [[nodiscard]] const std::string & javaType() const {
+                return m_javaType;
+            }
+    };
+
+}
 
 /******************************************************************************/

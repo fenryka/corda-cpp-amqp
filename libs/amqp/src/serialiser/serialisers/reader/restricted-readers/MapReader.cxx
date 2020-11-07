@@ -37,7 +37,9 @@ MapReader::dump_(
     {
         proton::auto_map_enter am (data_, true);
 
-        decltype (dump_(data_, schema_)) rtn;
+        DBG ("  " << am.elements() << std::endl); // NOLINT
+
+        decltype (dump_ (data_, schema_)) rtn;
         rtn.reserve (am.elements() / 2);
 
         auto serialisers = (dynamic_cast<const amqp::serialiser::ISerialiser *>(this))->serialisers();
@@ -65,16 +67,16 @@ MapReader::dump_(
 uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::serialiser::reader::
 MapReader::dump(
-        const std::string & name_,
-        pn_data_t * data_,
-        const amqp::schema::ISchema & schema_
+    const std::string & name_,
+    pn_data_t * data_,
+    const amqp::schema::ISchema & schema_
 ) const {
     DBG ("MapReader::dump " << name_ << std::endl);
     proton::auto_next an (data_);
 
     return std::make_unique<TypedPair<sVec<uPtr<amqp::serialiser::reader::IValue>>>>(
-            name_,
-            dump_ (data_, schema_));
+        name_,
+        dump_ (data_, schema_));
 }
 
 /******************************************************************************/

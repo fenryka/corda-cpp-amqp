@@ -25,12 +25,16 @@ namespace amqp::assembler {
 
 namespace amqp::serializable {
 
-    template <typename K, typename V, typename C = std::less<K>, typename A = std::allocator<std::pair<const K, V>>>
-    class SerializableMap final : public std::map<K, V, C, A>, public Serializable {
+    template <
+        typename K,
+        typename V,
+        typename C = std::less<K>,
+        typename A = std::allocator<std::pair<const K, V>>>
+    class SerializableMap final : public std::map<K, V, C, A>, public RestrictedSerializable {
         private :
-        /**
-         *
-         */
+            /**
+             *
+             */
             void _serialise (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
@@ -48,48 +52,48 @@ namespace amqp::serializable {
             void serialiseImpl (
                 const amqp::assembler::SerialiserFactory &,
                 ModifiableAMQPBlob &
-        ) const override {
-            DBG (__FUNCTION__ << std::endl);
-        }
+            ) const override {
+                DBG (__FUNCTION__ << std::endl);
+            }
 
-    public :
-        SerializableMap() = delete;
+        public :
+            SerializableMap() = delete;
 
-        explicit SerializableMap(
+            explicit SerializableMap(
                 const std::string & fingerprint_
-        ) : std::map<K,V,C, A>()
-                , Serializable (javaTypeName<std::map<K,V,C,A>>(), fingerprint_)
-        { }
+            ) : std::map<K,V,C, A>()
+              , RestrictedSerializable (javaTypeName<std::map<K,V,C,A>>(), fingerprint_, "map")
+            { }
 
-        SerializableMap(
+            SerializableMap(
                 const std::string & fingerprint_,
                 std::initializer_list<std::pair<const K, V>> l_
-        ) : std::map<K,V,C,A>(l_)
-                , Serializable (javaTypeName<std::map<K, V, C, A>>(), fingerprint_)
-        { }
+            ) : std::map<K,V,C,A>(l_)
+              , RestrictedSerializable (javaTypeName<std::map<K, V, C, A>>(), fingerprint_, "map")
+            { }
 
-        [[maybe_unused]] SerializableMap(
+            [[maybe_unused]] SerializableMap(
                 const std::string & fingerprint_,
                 std::map<K, V, C, A> && v_
-        ) : std::map<K, V, C, A>(v_)
-                , Serializable (javaTypeName<std::map<K, V, C, A>>(), fingerprint_)
-        { }
+            ) : std::map<K, V, C, A>(v_)
+              , RestrictedSerializable (javaTypeName<std::map<K, V, C, A>>(), fingerprint_, "map")
+            { }
 
-        void serialise (
+            void serialise (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
-        ) const override {
+            ) const override {
                 return _serialise (sf_, blob_);
-        }
+            }
 
-        [[nodiscard]]
-        uPtr<AMQPBlob> serialise (
+            [[nodiscard]]
+            uPtr<AMQPBlob> serialise (
                 const amqp::assembler::SerialiserFactory & sf_
-        ) const override {
-            auto blob = sf_.blob();
+            ) const override {
+                auto blob = sf_.blob();
                 _serialise (sf_, *blob);
-            return blob->toBlob();
-        }
+                return blob->toBlob();
+            }
 
     };
 

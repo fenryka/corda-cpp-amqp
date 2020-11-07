@@ -6,6 +6,7 @@
 #include "corda-utils/include/debug.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/FieldDescriptor.h"
 #include "amqp/include/serializable/Serializable.h"
+#include "amqp/include/serializable/RestrictedSerializable.h"
 
 #include "serialiser/Serialiser.h"
 #include "serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.h"
@@ -15,10 +16,12 @@
 #include "serialiser/serialisers/property-serialisers/LongPropertySerialiserBase.h"
 #include "serialiser/serialisers/property-serialisers/FloatPropertySerialiserBase.h"
 
+#include "amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h"
+#include "amqp/src/schema/descriptors/corda-descriptors/RestrictedDescriptor.h"
+
 #include <map>
 #include <cassert>
-#include <amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h>
-#include <amqp/src/schema/descriptors/corda-descriptors/RestrictedDescriptor.h>
+#include <utility>
 
 /******************************************************************************
  *
@@ -51,24 +54,24 @@ namespace amqp::internal {
             const std::string &name_,
             const std::string &fingerprint
         ) const override {
-            DBG (__FUNCTION__ << std::endl);
+            DBG (__FUNCTION__ << std::endl); // NOLINT
             return schema::descriptors::CompositeDescriptor::makeProton (
                 name_, {}, fingerprint, m_schemas);
         }
     };
 
     struct ListBlob : public BaseBlob {
-        const std::string m_source = "list";
+        std::string m_source;
 
-        ListBlob () = default;
+        explicit ListBlob (const std::string & source_) : m_source (source_) { }
 
         [[nodiscard]] size_t size () const override {
             return 0;
         }
 
         [[nodiscard]] pn_data_t * make (
-            const std::string &name_,
-            const std::string &fingerprint_
+            const std::string & name_,
+            const std::string & fingerprint_
         ) const override {
             DBG (__FUNCTION__ << std::endl);
             return schema::descriptors::RestrictedDescriptor::makeProton (
@@ -111,10 +114,10 @@ namespace amqp::internal {
                 const amqp::serializable::Serializable &);
 
             void startRestricted (
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::RestrictedSerializable &);
 
             void endRestricted (
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::RestrictedSerializable &);
 
             void writeComposite (
                 const std::string &propertyName_,

@@ -24,7 +24,7 @@ namespace amqp::assembler {
 namespace amqp::serializable {
 
     template<typename T, typename A = std::allocator<T>>
-    class SerializableVector final : public std::vector<T, A>, public Serializable {
+    class SerializableVector final : public std::vector<T, A>, public RestrictedSerializable {
         private :
             /**
              *
@@ -56,21 +56,21 @@ namespace amqp::serializable {
             explicit SerializableVector(
                 const std::string & fingerprint_
             ) : std::vector<T>()
-              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
+              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
             { }
 
             SerializableVector(
                 const std::string& fingerprint_,
                 std::initializer_list<T> l_
             ) : std::vector<T>(l_)
-              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
+              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
             { }
 
             SerializableVector(
                 const std::string & fingerprint_,
                 std::vector<T> && v_
             ) : std::vector<T>(v_)
-              , Serializable (javaTypeName<std::vector<T, A>>(), fingerprint_)
+              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
             { }
 
             void serialise (

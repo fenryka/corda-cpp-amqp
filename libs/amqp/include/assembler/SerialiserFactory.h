@@ -2,20 +2,25 @@
 
 /******************************************************************************/
 
+#include "amqp/src/ModifiableAMQPBlobImpl.h"
+
+/******************************************************************************/
+
 namespace amqp::serializable {
 
     class Serializable;
+    class RestrictedSerializable;
 
     template<typename, typename> class SerializableVector;
+    template<typename, typename, typename, typename> class SerializableMap;
 
 }
-
-#include "amqp/src/ModifiableAMQPBlobImpl.h"
 
 /******************************************************************************/
 
 namespace amqp::assembler {
     using Serializable = amqp::serializable::Serializable;
+    using RestrictedSerializable = amqp::serializable::RestrictedSerializable;
 
     class SerialiserFactory {
         private :
@@ -77,6 +82,16 @@ namespace amqp::assembler {
                 }
             };
 
+            template<typename A, typename B, typename C, typename D>
+            struct NonPrimWriter<amqp::serializable::SerializableMap<A, B, C, D>> {
+                static void write (
+                    const std::string & type_, const std::string & propertyName_,
+                    const Serializable & parent_, internal::ModifiableAMQPBlobImpl & blob_
+                ) {
+                    blob_.writeRestricted (propertyName_, type_, parent_);
+                }
+            };
+
             /*
              * specialisation for non pointer composites
              */
@@ -128,11 +143,11 @@ namespace amqp::assembler {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endComposite (clazz_);
             }
 
-            static void startRestricted (const Serializable & clazz_, ModifiableAMQPBlob & blob_)  {
+            static void startRestricted (const RestrictedSerializable & clazz_, ModifiableAMQPBlob & blob_)  {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startRestricted (clazz_);
             }
 
-            static void endRestricted (const Serializable & clazz_, ModifiableAMQPBlob & blob_)  {
+            static void endRestricted (const RestrictedSerializable & clazz_, ModifiableAMQPBlob & blob_)  {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endRestricted (clazz_);
             }
 
