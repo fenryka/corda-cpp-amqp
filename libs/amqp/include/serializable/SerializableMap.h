@@ -43,6 +43,9 @@ namespace amqp::serializable {
                 amqp::internal::serializable::AutoRestricted ar (*this, blob_);
 
                 for (const auto& [key, value]: *this ) {
+                    DBG ("  * " << javaTypeName<K>() << std::endl);
+                    DBG ("  * " << javaTypeName<V>() << std::endl);
+
                     sf_.writeSingle<K> (key, *this, blob_);
                     sf_.writeSingle<V> (value, *this, blob_);
                 }

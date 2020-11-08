@@ -36,6 +36,7 @@ amqp::internal::
 ModifiableAMQPBlobImpl::startSerializable (
     const amqp::serializable::Serializable & s_
 ) {
+    DBG ("  startSerializable: " << s_.fingerprint() << std::endl);
     pn_data_put_described (m_payload);
     pn_data_enter (m_payload);
     pn_data_put_symbol (

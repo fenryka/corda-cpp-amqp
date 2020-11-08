@@ -178,20 +178,29 @@ namespace {
                 return list;
             }
 
+            DBG ("MAP IS NOT EMPTY" << std::endl); // NOLINT
+
             /*
              * Map isn't empty
              */
             for (int i {0} ; i < am.elements() ; i += 2) {
                 IValPtr key, value;
 
-                switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
+                auto type = pn_data_type ((pn_data_t *)proton::auto_next (data_));
+                DBG ("  " << pn_type_name(type) << " " << type << std::endl);
+                switch (type) {
+//                    switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
                     case PN_LIST : key = std::make_unique<SingleList>(dumpList (data_)); break;
                     case PN_MAP  : key = std::make_unique<SingleList>(dumpMap (data_)); break;
                     case PN_DESCRIBED : key = dumpDescribed (data_); break;
                     default : key = dumpPrimitive (data_);
                 }
 
-                switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
+                type = pn_data_type ((pn_data_t *)proton::auto_next (data_));
+                DBG ("  " << pn_type_name(type) << " " << type << std::endl);
+
+                switch (type) {
+                    //switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
                     case PN_LIST : value = std::make_unique<SingleList>(dumpList (data_)); break;
                     case PN_MAP  : value = std::make_unique<SingleList>(dumpMap (data_)); break;
                     case PN_DESCRIBED : value = dumpDescribed (data_); break;
@@ -214,11 +223,13 @@ namespace {
 
     IValPtr
     dumpDescribed (pn_data_t * data_) {
-        proton::attest_is_described (data_, __FILE__, __LINE__);
+        DBG (__FUNCTION__  << std::endl); // NOLINT
+    //    proton::attest_is_described (data_, __FILE__, __LINE__);
 
         {
             proton::auto_enter p2(data_);
             auto fingerprint = proton::readAndNext<std::string>(data_, __FILE__, __LINE__);
+            DBG ("  FINGERPRINT: " << fingerprint << std::endl); // NOLINT
 
             auto type = pn_data_type (data_);
 

@@ -33,6 +33,7 @@ namespace amqp::assembler {
             template<typename T,  bool = std::is_base_of<Serializable , T>::value>
             struct SingleWriter {
                 static void write (T propertyValue_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_) {
+                    DBG ("  SingleWriter::" << javaTypeName<T>() << " - primitive" << std::endl);
                     dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
                         propertyValue_);
                 }
@@ -45,6 +46,7 @@ namespace amqp::assembler {
             template<typename T>
             struct SingleWriter<T, true> {
                 static void write (T propertyValue_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_) {
+                    DBG ("  SingleWriter::" << javaTypeName<T>() << " - serialise" << std::endl);
                     propertyValue_.serialise (sf_, blob_);
                 }
             };
