@@ -37,10 +37,16 @@ namespace amqp::serializable {
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob &) const;
 
+            static void startComposite (
+                const amqp::assembler::SerialiserFactory & sf_,
+                const AMQPBlob &);
+
             [[nodiscard]]
             virtual uPtr<AMQPBlob> serialise (
                 const amqp::assembler::SerialiserFactory & sf_
             ) const;
+
+            static void deserialise (const amqp::AMQPBlob &);
 
             explicit Serializable (
                 std::string name_,

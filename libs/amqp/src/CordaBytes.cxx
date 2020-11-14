@@ -67,7 +67,9 @@ CordaBytes::CordaBytes (const std::string & file_)
 /******************************************************************************/
 
 amqp::
-CordaBytes::CordaBytes (const AMQPBlob & bytes_) {
+CordaBytes::CordaBytes (const AMQPBlob & bytes_)
+    : m_encoding (DATA_AND_STOP)
+{
     m_size = pn_data_encoded_size (bytes_.data());
     m_blob = new char[m_size];
     pn_data_encode (bytes_.data(), m_blob, m_size);

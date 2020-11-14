@@ -25,6 +25,7 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
+    void attest_is_int (pn_data_t *, const std::string &, int);
     void attest_is_list (pn_data_t *, const std::string &, int);
     void attest_is_string(pn_data_t *, const std::string &, int, bool = false);
     void attest_is_described(pn_data_t *, const std::string &, int);
@@ -102,7 +103,7 @@ namespace proton {
             explicit auto_list_enter (pn_data_t *, bool next_ = false);
             ~auto_list_enter();
 
-            size_t elements() const;
+            [[nodiscard]] size_t elements() const;
     };
 
     /**
@@ -117,7 +118,7 @@ namespace proton {
             explicit auto_map_enter (pn_data_t *, bool next_ = false);
             ~auto_map_enter();
 
-            size_t elements() const;
+            [[nodiscard]] size_t elements() const;
     };
 
 }

@@ -4,6 +4,10 @@
 
 #include "amqp/include/serialiser/ISerialiser.h"
 
+#include "proton-wrapper/include/proton_wrapper.h"
+
+#include "corda-utils/include/debug.h"
+
 #include <sstream>
 #include <proton/codec.h>
 
@@ -31,6 +35,12 @@ namespace amqp::internal::serialiser {
             ss << "NO MATCH FOR " << typeid(prim).name();
             throw std::runtime_error (ss.str());
         }
+
+        [[maybe_unused]] static void get (prim *, pn_data_t *) {
+            std::stringstream ss;
+            ss << "NO MATCH FOR " << typeid(prim).name();
+            throw std::runtime_error (ss.str());
+        }
     };
 
     template<>
@@ -43,6 +53,12 @@ namespace amqp::internal::serialiser {
             } else {
                 pn_data_put_null (data_);
             }
+        }
+
+        [[maybe_unused]] static void get (int * rtn_, pn_data_t * data_) {
+            proton::attest_is_int (data_, __FILE__, __LINE__);
+            *rtn_ = pn_data_get_int (data_);
+            DBG ("PrimToSerializer<int>::get - return " << *rtn_ << std::endl);
         }
     };
 
@@ -71,6 +87,7 @@ namespace amqp::internal::serialiser {
             }
         }
     };
+
     template<>
     struct PrimToSerialiser<float> {
         typedef serialisers::FloatPropertySerialiserBase serialiser;

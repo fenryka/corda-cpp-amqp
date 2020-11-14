@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "SerialiseMe.h"
+#include "DeSerialiseMe.h"
 
 #include "amqp/include/CordaBytes.h"
 
@@ -15,7 +15,7 @@ main (int argc, char ** argv) {
         return EXIT_FAILURE;
     }
 
-    SerialiseMe sme = SerialiseMe (100);
+    DeSerialiseMe sme = DeSerialiseMe (100);
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
     auto blob = sme.serialise (sf);

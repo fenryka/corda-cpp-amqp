@@ -16,12 +16,6 @@ namespace amqp {
 
 }
 
-namespace amqp::serializable {
-
-    class Serializable;
-
-}
-
 /******************************************************************************
  *
  * class amqp::ModifiableAMQPBlob

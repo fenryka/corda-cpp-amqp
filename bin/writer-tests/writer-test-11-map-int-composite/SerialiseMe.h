@@ -32,7 +32,7 @@ class Inner : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class SerialiseMe : public amqp::serializable::Serializable {
+class DeSerialiseMe : public amqp::serializable::Serializable {
     private :
         amqp::serializable::SerializableMap<int, Inner> m_map;
 
@@ -45,7 +45,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit SerialiseMe (
+        explicit DeSerialiseMe (
         ) : Serializable (javaTypeName<decltype(this)>(),"SERIALISE-ME-FP")
           , m_map ("MAP-FP-2")
         {
@@ -57,7 +57,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
             m_map.emplace(32, Inner ("thirty two"));
         }
 
-    virtual ~SerialiseMe() = default;
+    virtual ~DeSerialiseMe() = default;
 };
 
 /******************************************************************************/

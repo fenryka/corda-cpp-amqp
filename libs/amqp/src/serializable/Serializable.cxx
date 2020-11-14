@@ -59,6 +59,17 @@ Serializable::serialise (
 
 void
 amqp::serializable::
+Serializable::deserialise (
+    const amqp::AMQPBlob & blob_
+) {
+    DBG (__FUNCTION__ << std::endl); // NOLINT
+    blob_.startComposite();
+}
+
+/******************************************************************************/
+
+void
+amqp::serializable::
 Serializable::serialise (
     const amqp::assembler::SerialiserFactory & sf_,
     ModifiableAMQPBlob & blob_) const
@@ -69,6 +80,15 @@ Serializable::serialise (
 }
 
 /******************************************************************************/
+
+void
+amqp::serializable::
+Serializable::startComposite (
+    const amqp::assembler::SerialiserFactory & sf_,
+    const AMQPBlob & blob_
+) {
+
+}
 
 const std::string &
 amqp::serializable::

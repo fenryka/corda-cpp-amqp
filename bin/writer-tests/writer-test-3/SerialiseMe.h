@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-class SerialiseMe : public amqp::serializable::Serializable {
+class DeSerialiseMe : public amqp::serializable::Serializable {
     private :
         std::string m_a;
         std::string m_b;
@@ -21,7 +21,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit SerialiseMe (std::string a_, std::string b_)
+        explicit DeSerialiseMe (std::string a_, std::string b_)
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_a (std::move (a_))
             , m_b (std::move (b_))

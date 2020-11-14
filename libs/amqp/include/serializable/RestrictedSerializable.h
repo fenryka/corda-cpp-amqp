@@ -1,5 +1,7 @@
 #pragma once
 
+#include "amqp/include/serializable/Serializable.h"
+
 /******************************************************************************/
 
 namespace amqp::serializable {

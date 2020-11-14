@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-class SerialiseMe : public amqp::serializable::Serializable {
+class DeSerialiseMe : public amqp::serializable::Serializable {
     private :
         int   m_val;
         int * m_val2;
@@ -21,7 +21,7 @@ class SerialiseMe : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit SerialiseMe (int val_)
+        explicit DeSerialiseMe (int val_)
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_val (val_)
             , m_val2 { new int (val_) }

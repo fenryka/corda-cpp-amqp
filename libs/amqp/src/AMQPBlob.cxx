@@ -173,7 +173,7 @@ namespace {
              */
             if (pn_data_type(data_) == PN_INVALID) {
                 list.emplace_back (
-                        std::make_unique<SingleString>("<<<Empty Map>>>"));
+                    std::make_unique<SingleString>("<<<Empty Map>>>"));
 
                 return list;
             }
@@ -187,9 +187,8 @@ namespace {
                 IValPtr key, value;
 
                 auto type = pn_data_type ((pn_data_t *)proton::auto_next (data_));
-                DBG ("  " << pn_type_name(type) << " " << type << std::endl);
+                DBG ("  " << pn_type_name(type) << " " << type << std::endl); // NOLINT
                 switch (type) {
-//                    switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
                     case PN_LIST : key = std::make_unique<SingleList>(dumpList (data_)); break;
                     case PN_MAP  : key = std::make_unique<SingleList>(dumpMap (data_)); break;
                     case PN_DESCRIBED : key = dumpDescribed (data_); break;
@@ -197,10 +196,8 @@ namespace {
                 }
 
                 type = pn_data_type ((pn_data_t *)proton::auto_next (data_));
-                DBG ("  " << pn_type_name(type) << " " << type << std::endl);
-
+                DBG ("  " << pn_type_name(type) << " " << type << std::endl); // NOLINT
                 switch (type) {
-                    //switch (pn_data_type ((pn_data_t *)proton::auto_next (data_))) {
                     case PN_LIST : value = std::make_unique<SingleList>(dumpList (data_)); break;
                     case PN_MAP  : value = std::make_unique<SingleList>(dumpMap (data_)); break;
                     case PN_DESCRIBED : value = dumpDescribed (data_); break;
@@ -296,8 +293,8 @@ AMQPBlob::dumpContents() const {
         auto a = pn_data_get_ulong(m_data);
 
         envelope.reset (
-                dynamic_cast<amqp::internal::schema::Envelope *> (
-                        internal::AMQPDescriptorRegistory[a]->build(m_data).release()));
+            dynamic_cast<amqp::internal::schema::Envelope *> (
+                internal::AMQPDescriptorRegistory[a]->build(m_data).release()));
     }
 
     auto cf = internal::assembler::CompositeFactory();
@@ -336,6 +333,71 @@ pn_data_t *
 amqp::
 AMQPBlob::data() const {
     return m_data;
+}
+
+/******************************************************************************/
+
+void
+amqp::
+AMQPBlob::readyPayload () const {
+    DBG (__FUNCTION__ << std::endl);
+
+    proton::attest_is_described (m_data, __FILE__, __LINE__);
+
+    proton::pn_data_enter (m_data);
+
+    uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    assert (stripCorda (key) == amqp::internal::schema::descriptors::ENVELOPE);
+    proton::attest_is_list (m_data, __FILE__, __LINE__);
+    proton::pn_data_enter (m_data);
+    proton::attest_is_described (m_data, __FILE__, __LINE__);
+    {
+        proton::auto_enter an (m_data);
+        DBG (__FUNCTION__ << "::" << m_data << " " << describedToString (pn_data_get_ulong (m_data))
+                          << std::endl); // NOLINT
+    }
+
+    /*
+    DBG (__FUNCTION__ << " " << describedToString (pn_data_get_ulong (m_data)) << std::endl);
+
+    proton::pn_data_enter (m_data);
+    proton::attest_is_list (m_data, __FILE__, __LINE__);
+
+    // first element in the list is the data (second the schema, third the transforms)
+    proton::auto_list_enter ale (m_data, true);
+    proton::attest_is_described (m_data, __FILE__, __LINE__);
+     */
+}
+
+void
+amqp::
+AMQPBlob::startComposite () const {
+    proton::attest_is_described (m_data, __FILE__, __LINE__);
+    proton::pn_data_enter (m_data);
+    uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    DBG (__FUNCTION__ << "::" << describedToString (key) <<  std::endl); // NOLINT
+    proton::attest_is_list (m_data, __FILE__, __LINE__);
+    proton::pn_data_enter (m_data);
+    pn_data_next (m_data);
+    DBG (__FUNCTION__ << "::" << m_data << std::endl);
+}
+
+void
+amqp::
+AMQPBlob::endComposite () {
+
+}
+
+void
+amqp::
+AMQPBlob::startRestricted (const amqp::serializable::RestrictedSerializable &) {
+
+}
+
+void
+amqp::
+AMQPBlob::endRestricted (const amqp::serializable::RestrictedSerializable &) {
+
 }
 
 /******************************************************************************/

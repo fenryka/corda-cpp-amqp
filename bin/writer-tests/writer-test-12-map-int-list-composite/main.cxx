@@ -18,7 +18,7 @@ main (int argc, char ** argv) {
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
 
-    auto blob = SerialiseMe().serialise (sf);
+    auto blob = DeSerialiseMe().serialise (sf);
 
     amqp::CordaBytes cb (*blob);
     cb.toFile (std::string (argv[1]));

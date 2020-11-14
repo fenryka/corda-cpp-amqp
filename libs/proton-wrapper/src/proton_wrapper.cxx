@@ -117,8 +117,8 @@ operator << (std::ostream& stream, pn_data_t * data_) {
  */
 bool
 proton::pn_data_enter(pn_data_t * data_) {
-    ::pn_data_enter(data_);
-    return pn_data_next(data_);
+    ::pn_data_enter (data_);
+    return pn_data_next (data_);
 }
 
 /******************************************************************************/
@@ -170,8 +170,22 @@ proton::
 attest_is_described (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type (data_) != PN_DESCRIBED) {
         std::stringstream ss;
-        ss << "Expected a Described type, got " << protonToString[pn_data_type (data_)].first
+        ss << "Expected an Integer type, got " << protonToString[pn_data_type (data_)].first
             << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
+attest_is_int (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_INT) {
+        std::stringstream ss;
+        ss << "Expected a Described type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
 
         throw std::runtime_error (ss.str());
     }

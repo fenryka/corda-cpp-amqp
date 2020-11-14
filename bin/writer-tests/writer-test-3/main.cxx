@@ -15,7 +15,7 @@ main (int argc, char ** argv) {
         return EXIT_FAILURE;
     }
 
-    SerialiseMe sme = SerialiseMe ("hello", "world");
+    DeSerialiseMe sme = DeSerialiseMe ("hello", "world");
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
     auto blob = sme.serialise (sf);

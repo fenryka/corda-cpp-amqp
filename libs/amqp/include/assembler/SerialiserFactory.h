@@ -64,6 +64,14 @@ namespace amqp::assembler {
                 }
             };
 
+            template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>, bool = std::is_pointer_v<T>>
+            struct PropertyReader {
+                static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_
+                ) {
+                    return blob_.readPrimitive<T> ();
+                }
+            };
+
             template<typename T>
             struct NonPrimWriter {
                 static void write (
@@ -164,10 +172,27 @@ namespace amqp::assembler {
             }
 
             template<typename T>
+            T read (
+                const AMQPBlob & blob_
+            ) const {
+                return PropertyReader<T>::read (blob_, *this);
+            }
+
+            template<typename T>
             void writeSingle (T propertyValue_, const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             ) const {
                 SingleWriter<T>::write (propertyValue_, blob_, *this);
+            }
+
+
+            template<typename T>
+            T
+            deserialise (const AMQPBlob & blob_) {
+                DBG (__FUNCTION__ << std::endl);
+                blob_.readyPayload();
+                T::deserialise (blob_);
+                return T (*this, blob_);
             }
     };
 

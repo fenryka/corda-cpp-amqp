@@ -14,7 +14,7 @@ Inner::serialiseImpl (
 /******************************************************************************/
 
 void
-SerialiseMe::serialiseImpl (
+DeSerialiseMe::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
