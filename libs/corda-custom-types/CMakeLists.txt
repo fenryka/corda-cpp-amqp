@@ -1,12 +1,9 @@
 # Make it OK to convert relative paths when adding interface sources to targets
 CMAKE_POLICY (SET CMP0076 NEW)
 
-set (libName amqp)
+set (libName corda-custom-types)
 
 include_directories (include)
-include_directories (src/serialiser)
-include_directories (src/schema)
-include_directories (amqp)
 
 ADD_LIBRARY ( ${libName} SHARED "" )
 
@@ -20,6 +17,8 @@ SET_TARGET_PROPERTIES (${libName} PROPERTIES SOVERSION 1)
 if(APPLE)
     target_link_libraries (${libName} proton-wrapper qpid-proton)
 endif()
+
+target_link_libraries (${libName} amqp)
 
 ADD_SUBDIRECTORY (include)
 ADD_SUBDIRECTORY (src)

@@ -195,6 +195,20 @@ attest_is_int (pn_data_t * data_, const std::string & file_, int line_) {
 
 void
 proton::
+attest_is_binary (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_BINARY) {
+        std::stringstream ss;
+        ss << "Expected a binary type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
 attest_is_list (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type(data_) != PN_LIST) {
         std::stringstream ss;
@@ -510,6 +524,25 @@ readAndNext<u_long > (
 ) {
     long rtn = pn_data_get_ulong (data_);
     pn_data_next (data_);
+    return rtn;
+}
+
+/******************************************************************************/
+
+template<>
+char *
+proton::
+readAndNext<char *> (
+    pn_data_t * data_,
+    const std::string & file_,
+    int line_,
+    bool tolerateDeviance_
+) {
+    auto binary = pn_data_get_binary (data_);
+
+    auto rtn = new char[binary.size];
+    std::memcpy(rtn, binary.start, binary.size);
+
     return rtn;
 }
 
