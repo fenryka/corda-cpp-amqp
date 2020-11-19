@@ -1,1 +1,1 @@
-ADD_SUBDIRECTORY (reader-test-01)
+#ADD_SUBDIRECTORY (reader-test-01)
