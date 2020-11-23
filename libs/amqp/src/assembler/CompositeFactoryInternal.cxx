@@ -172,7 +172,6 @@ CompositeFactoryInternal::processComposite (
             }
             case schema::Field::Type::custom_t : {
                 // Deal with random Java types
-                std::cout << field->resolvedType() << std::endl;
                 serialiser = m_serialisersByType[field->resolvedType()];
                 break;
             }
@@ -369,7 +368,6 @@ CompositeFactoryInternal::installCustomSerialiser (
 ) {
     DBG (__FUNCTION__ << "::" << serialiser_->name() << "::" << serialiser_->type() << std::endl);
     m_serialisersByType[serialiser_->type()] = serialiser_;
-//    m_serialisersByDescriptor[serialiser_->de
 }
 
 /******************************************************************************/
