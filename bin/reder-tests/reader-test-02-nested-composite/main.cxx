@@ -17,13 +17,14 @@ main (int argc, char ** argv) {
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    auto o = Outer();
-    auto blob = o.serialise (sf);
+    auto blob = Outer().serialise (sf);
+    amqp::CordaBytes cb (*blob);
+    cb.toFile ("serialized.bin");
+
 
     DBG ("\n\nDESERIALISE\n\n");
 
-    Outer o2 = sf.deserialise<Outer> (*blob);
-
+    auto o2 = sf.deserialise<Outer> (*blob);
 
     return EXIT_SUCCESS;
 }

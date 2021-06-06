@@ -23,6 +23,8 @@ main (int argc, char ** argv) {
 
     auto b = sf.deserialise<DeSerialiseMe>(blob);
 
+    std::cout << b.val() << ", " << b.val2() << std::endl;
+
     return EXIT_SUCCESS;
 }
 

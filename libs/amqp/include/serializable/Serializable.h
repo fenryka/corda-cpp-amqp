@@ -46,7 +46,7 @@ namespace amqp::serializable {
                 const amqp::assembler::SerialiserFactory & sf_
             ) const;
 
-            static void deserialise (const amqp::AMQPBlob &);
+            static Serializable * deserialise (const amqp::AMQPBlob &);
 
             explicit Serializable (
                 std::string name_,

@@ -57,14 +57,16 @@ Serializable::serialise (
 
 /******************************************************************************/
 
-void
+amqp::serializable::Serializable *
 amqp::serializable::
 Serializable::deserialise (
     const amqp::AMQPBlob & blob_
 ) {
-    DBG (__FUNCTION__ << std::endl); // NOLINT
+    DBG (__FUNCTION__ << "::" << std::endl); // NOLINT
     blob_.startComposite();
     DBG (__FUNCTION__ << "::DOME" << std::endl); // NOLINT
+
+    return nullptr;
 }
 
 /******************************************************************************/
@@ -76,8 +78,10 @@ Serializable::serialise (
     ModifiableAMQPBlob & blob_) const
 {
     DBG (__FUNCTION__ << "::" << m_name << std::endl); // NOLINT
-    AutoComposite ac (*this, blob_);
-    serialiseImpl (sf_, blob_);
+    {
+        AutoComposite ac (*this, blob_);
+        serialiseImpl (sf_, blob_);
+    }
 }
 
 /******************************************************************************/

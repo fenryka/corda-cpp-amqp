@@ -18,7 +18,7 @@ Inner::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
-//    sf_.write<int> (m_val, "m_val", *this, blob_);
+    sf_.write<int> (m_val, "m_val", *this, blob_);
 }
 
 /******************************************************************************/
@@ -30,7 +30,6 @@ Outer::Outer (
     javaTypeName<decltype(this)>(),
     "fingerprint456")
   , m_a (sf_.read<Inner> (blob_))
-  , m_b (sf_.read<Inner *> (blob_))
 {
 }
 
@@ -42,7 +41,6 @@ Outer::serialiseImpl (
     amqp::ModifiableAMQPBlob & blob_
 ) const {
     sf_.write (m_a, "m_a", *this, blob_);
-    sf_.write (m_b, "m_b", *this, blob_);
 }
 
 /******************************************************************************/

@@ -3,6 +3,7 @@
 /******************************************************************************/
 
 #include <string>
+#include "assembler/SerialiserFactory.h"
 #include "corda-utils/include/debug.h"
 
 #include "schema/SchemaDumpTargets.h"
@@ -68,8 +69,15 @@ namespace amqp {
                 static
                 T
                 read (const AMQPBlob & blob_) {
-                    DBG (__FUNCTION__ << std::endl); // NOLINT
+                    DBG (__FUNCTION__ << "<" << typeName<T>()
+                        << ", is_ptr " << std::is_pointer_v<T> << ">"<< std::endl); // NOLINT
                     T::deserialise (blob_);
+
+                    return T { blob_.m_data };
+
+                    //
+                    // XXX THis might be the source of pain
+                    //
                 }
             };
 
@@ -80,7 +88,8 @@ namespace amqp {
             struct ReadComposite<T, true> {
                 static
                 T
-                read (const AMQPBlob & blob_) {
+                read (const AMQPBlob & blob_, amqp::assembler::SerialiserFactory & sf_) {
+                    DBG (__FUNCTION__ << "<" << typeName<T>() << ", true>" << std::endl); // NOLINT
 
                 }
             };
@@ -122,22 +131,12 @@ namespace amqp {
 
             template<typename T>
             T
-            readComposite() const {
-                struct AutoComposite {
-                    const AMQPBlob & m_data;
-
-                    explicit AutoComposite (const AMQPBlob & data_) : m_data (data_) {
-                        m_data.startComposite();
-                    }
-
-                    ~AutoComposite() {
-                        m_data.endComposite();
-                    }
-                };
-
+            readComposite(const ::amqp::assembler::SerialiserFactory & sf_) const {
                 DBG (__FUNCTION__ << "::" << javaTypeName<T>() << std::endl);
-                AutoComposite ac (*this);
-                return ReadComposite<T>::read (*this);
+                {
+                    //AutoComposite ac (*this)
+                    return ReadComposite<T>::read (*this);
+                }
             }
     };
 

@@ -35,7 +35,6 @@ class Inner : public amqp::serializable::Serializable {
 class Outer : public amqp::serializable::Serializable {
     private :
         Inner   m_a;
-        Inner * m_b;
 
         void serialiseImpl(
             const amqp::assembler::SerialiserFactory &,
@@ -45,7 +44,6 @@ class Outer : public amqp::serializable::Serializable {
         explicit Outer ()
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint456")
             , m_a (Inner (1))
-            , m_b (new Inner (2))
         { }
 
         Outer (

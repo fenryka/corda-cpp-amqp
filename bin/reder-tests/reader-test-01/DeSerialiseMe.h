@@ -34,6 +34,10 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
         [[maybe_unused]] [[nodiscard]] int val() const {
             return m_val;
         }
+
+        [[maybe_unused]] [[nodiscard]] int val2() const {
+            return *m_val2;
+        }
 };
 
 /******************************************************************************/

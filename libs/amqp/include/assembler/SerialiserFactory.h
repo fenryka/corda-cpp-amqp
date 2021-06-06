@@ -67,6 +67,7 @@ namespace amqp::assembler {
             template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>>
             struct PropertyReader {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
+                    DBG (__FUNCTION__ << "::Primitive::" << typeName<T>() << std::endl);
                     return blob_.readPrimitive<T> ();
                 }
             };
@@ -74,7 +75,8 @@ namespace amqp::assembler {
             template<typename T>
             struct PropertyReader<T, true> {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
-                    return blob_.readComposite<T> ();
+                    DBG (__FUNCTION__ << "::Composite::" << typeName<T>() << std::endl);
+                    return blob_.readComposite<T> (sf_);
                 }
             };
 
@@ -195,16 +197,31 @@ namespace amqp::assembler {
             read (
                 const AMQPBlob & blob_
             ) const {
-                DBG (__FUNCTION__ << std::endl); // NOLINT
+                DBG (__FUNCTION__ << " - " << typeName<T>() << std::endl); // NOLINT
                 return PropertyReader<T>::read (blob_, *this);
             }
 
             template<typename T>
             T
             deserialise (const AMQPBlob & blob_) {
-                DBG (__FUNCTION__ << std::endl); // NOLINT
+                struct AutoComposite {
+                    const AMQPBlob & m_data;
+
+                    explicit AutoComposite (const AMQPBlob & data_) : m_data (data_) {
+                        DBG (__FUNCTION__ << std::endl); // NOLINT
+                        m_data.startComposite();
+                    }
+
+                    ~AutoComposite() {
+                        DBG (__FUNCTION__ << std::endl); // NOLINT
+                        m_data.endComposite();
+                    }
+                };
+
+
+                DBG (__FUNCTION__ << ":-:" << typeName<T>() << std::endl); // NOLINT
                 blob_.readyPayload ();
-                T::deserialise (blob_);
+                AutoComposite ac (blob_);
                 return T { *this, blob_ };
             }
     };
