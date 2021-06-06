@@ -19,9 +19,11 @@
     * [Setup](#setup)
         * [MacOS](#macos)
         * [Linux, Ubuntu](#linux-ubuntu)
-<!-- te -->
+<!-- end -->
 
 > NOTE: ToC generated using https://github.com/fenryka/TOC-Generator
+
+<!-- body-start -->
 
 # C++ Corda Serialiser
 
