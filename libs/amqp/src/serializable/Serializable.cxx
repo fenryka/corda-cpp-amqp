@@ -57,17 +57,20 @@ Serializable::serialise (
 
 /******************************************************************************/
 
-amqp::serializable::Serializable *
+/*
+std::list<std::any>
 amqp::serializable::
 Serializable::deserialise (
+    const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
-) {
+) const {
     DBG (__FUNCTION__ << "::" << std::endl); // NOLINT
     blob_.startComposite();
     DBG (__FUNCTION__ << "::DOME" << std::endl); // NOLINT
 
-    return nullptr;
+    return deserialiseImpl (sf_, blob_);
 }
+ */
 
 /******************************************************************************/
 

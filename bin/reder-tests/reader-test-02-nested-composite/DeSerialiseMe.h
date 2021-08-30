@@ -25,9 +25,12 @@ class Inner : public amqp::serializable::Serializable {
             , m_val (val_)
         { }
 
-        Inner (
+        [[nodiscard]] static std::list<std::any>
+        deserialiseImpl (
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
+
+        explicit Inner (const std::list<std::any> &);
 };
 
 /******************************************************************************/
@@ -46,7 +49,9 @@ class Outer : public amqp::serializable::Serializable {
             , m_a (Inner (1))
         { }
 
-        Outer (
+        explicit Outer (const std::list<std::any> &);
+
+        static std::list<std::any> deserialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 };

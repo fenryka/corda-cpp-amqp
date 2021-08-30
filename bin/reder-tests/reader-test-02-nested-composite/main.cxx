@@ -21,7 +21,6 @@ main (int argc, char ** argv) {
     amqp::CordaBytes cb (*blob);
     cb.toFile ("serialized.bin");
 
-
     DBG ("\n\nDESERIALISE\n\n");
 
     auto o2 = sf.deserialise<Outer> (*blob);

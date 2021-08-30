@@ -3,6 +3,7 @@ target_sources(${libName}
         ISerialiser.cxx
     PUBLIC
         Serialiser.h
+        PrimToSerializer.h
         SerialiserFactoryInternal.h
 )
 

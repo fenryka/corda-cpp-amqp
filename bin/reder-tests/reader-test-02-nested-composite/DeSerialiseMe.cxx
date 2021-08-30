@@ -1,17 +1,22 @@
 #include "DeSerialiseMe.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Inner
+ *
+ ******************************************************************************/
 
 Inner::Inner (
-    const amqp::assembler::SerialiserFactory & sf_,
-    const amqp::AMQPBlob & blob_
+    const std::list<std::any> & l_
 ) : Serializable (
     javaTypeName<decltype(this)>(),
-    "fingerprint123")
-  , m_val { sf_.read<int> (blob_) }
-{
-
+    "fingerprint123"
+) {
+    auto i = l_.begin();
+    m_val = std::any_cast<int>(*i);
 }
+
+/******************************************************************************/
 
 void
 Inner::serialiseImpl (
@@ -23,13 +28,26 @@ Inner::serialiseImpl (
 
 /******************************************************************************/
 
-Outer::Outer (
+std::list<std::any>
+Inner::deserialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
-) : Serializable (
+) {
+    std::list<std::any> rtn(1);
+    rtn.emplace_back (sf_.read<int> (blob_));
+    return rtn;
+}
+
+/******************************************************************************
+ *
+ * Outer
+ *
+ ******************************************************************************/
+
+Outer::Outer (const std::list<std::any> & l_) : Serializable (
     javaTypeName<decltype(this)>(),
-    "fingerprint456")
-  , m_a (sf_.read<Inner> (blob_))
+    "fingerprint456"),
+    m_a (std::any_cast<Inner>(l_.front()))
 {
 }
 
@@ -41,6 +59,18 @@ Outer::serialiseImpl (
     amqp::ModifiableAMQPBlob & blob_
 ) const {
     sf_.write (m_a, "m_a", *this, blob_);
+}
+
+/******************************************************************************/
+
+std::list<std::any>
+Outer::deserialiseImpl (
+    const amqp::assembler::SerialiserFactory & sf_,
+    const amqp::AMQPBlob & blob_
+) {
+    std::list<std::any> rtn(1);
+    rtn.emplace_back (sf_.read<Inner> (blob_));
+    return rtn;
 }
 
 /******************************************************************************/

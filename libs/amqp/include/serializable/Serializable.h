@@ -8,6 +8,10 @@
 
 #include "corda-utils/include/types.h"
 
+#include <any>
+#include <list>
+
+
 /******************************************************************************/
 
 namespace amqp::assembler {
@@ -26,10 +30,19 @@ namespace amqp::serializable {
             std::string m_fingerprint;
 
         protected :
-            virtual void serialiseImpl (
+            virtual void
+            serialiseImpl (
                 const amqp::assembler::SerialiserFactory &,
                 ModifiableAMQPBlob &) const = 0;
 
+        /*
+            [[nodiscard]]
+            virtual std::list<std::any>
+            deserialiseImpl (
+                const amqp::assembler::SerialiserFactory &,
+                const AMQPBlob &) const = 0;
+
+         */
         public :
             Serializable() = delete;
 
@@ -46,7 +59,12 @@ namespace amqp::serializable {
                 const amqp::assembler::SerialiserFactory & sf_
             ) const;
 
-            static Serializable * deserialise (const amqp::AMQPBlob &);
+            /*
+            std::list<std::any>
+            deserialise (
+                const amqp::assembler::SerialiserFactory &,
+                const amqp::AMQPBlob &) const;
+            */
 
             explicit Serializable (
                 std::string name_,

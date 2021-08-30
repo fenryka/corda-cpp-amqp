@@ -5,8 +5,7 @@
 #include "corda-utils/include/types.h"
 #include "corda-utils/include/debug.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/FieldDescriptor.h"
-#include "amqp/include/serializable/Serializable.h"
-#include "amqp/include/serializable/RestrictedSerializable.h"
+#include "amqp/src/serialiser/PrimToSerializer.h"
 
 #include "serialiser/Serialiser.h"
 #include "serialiser/serialisers/property-serialisers/IntPropertySerialiserBase.h"
@@ -28,6 +27,15 @@
  * class amqp::ModifiableAMQPBlob
  *
  ******************************************************************************/
+
+namespace amqp::serializable {
+
+    class Serializable;
+    class RestrictedSerializable;
+
+}
+
+/******************************************************************************/
 
 namespace amqp::internal {
 
@@ -133,7 +141,7 @@ namespace amqp::internal {
             void writePrimitive(
                 T,
                 const std::string &,
-                const amqp::serializable::Serializable &);
+                const std::pair<std::string, std::string> &);
 
             template<typename T>
             void writePrimitiveSingle(T);
@@ -189,15 +197,14 @@ amqp::internal::
 ModifiableAMQPBlobImpl::writePrimitive (
     T propertyValue_,
     const std::string & propertyName_,
-    const amqp::serializable::Serializable & clazz_)
+    const std::pair<std::string, std::string> & key_)
 {
     DBG (__FUNCTION__ << "::" << propertyName_ << "::"<< propertyValue_ << std::endl); // NOLINT
 
-    auto id = key (clazz_);
 
-    assert (m_schemas.find (id) != m_schemas.end());
+    assert (m_schemas.find (key_) != m_schemas.end());
 
-    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[id]);
+    auto & blob = dynamic_cast<CompositeBlob &>(*m_schemas[key_]);
 
     if (blob.m_schemas.find (propertyName_) == blob.m_schemas.end()) {
         blob.m_schemas[propertyName_] =
