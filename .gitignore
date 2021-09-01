@@ -13,3 +13,5 @@ build
 .idea
 BLOB-INSPECTOR.cbp
 cmake-build-debug
+
+Testing
