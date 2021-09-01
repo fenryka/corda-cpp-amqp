@@ -8,6 +8,7 @@
 #include <proton/codec.h>
 #include <map>
 #include <utility>
+#include "include/colours.h"
 
 /******************************************************************************/
 
@@ -170,8 +171,12 @@ proton::
 attest_is_described (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type (data_) != PN_DESCRIBED) {
         std::stringstream ss;
-        ss << "Expected an Integer type, got " << protonToString[pn_data_type (data_)].first
-            << ", " << file_ << "::" << line_ << std::endl;
+        ss << "Expected a Described type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        if (pn_data_type (data_) == PN_INT) {
+            std::cerr << __FUNCTION__ << "::" << RED << "not desc is int " << RESET << pn_data_get_int (data_) << std::endl;
+        }
 
         throw std::runtime_error (ss.str());
     }
@@ -184,7 +189,7 @@ proton::
 attest_is_int (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type (data_) != PN_INT) {
         std::stringstream ss;
-        ss << "Expected a Described type, got " << protonToString[pn_data_type (data_)].first
+        ss << "Expected an Integer type, got " << protonToString[pn_data_type (data_)].first
            << ", " << file_ << "::" << line_ << std::endl;
 
         throw std::runtime_error (ss.str());

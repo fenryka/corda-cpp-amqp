@@ -6,6 +6,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include "described-types/field-types/RestrictedField.h"
 
 /******************************************************************************/
 
@@ -126,11 +127,27 @@ Composite::dependsOnRHS (
 
     // do we depend on the lhs
     for (const auto & field : m_fields) {
-        DBG ("FIELD - " << name() << "::" << type() << std::endl); // NOLINT
-        DBG ("  C/C a) " << field->resolvedType() << " == " << lhs_.name() << std::endl); // NOLINT
+        DBG (BLUE << "FIELD - " << name () << RESET << "::" << type () << std::endl); // NOLINT
 
-        if (field->resolvedType() == lhs_.name()) {
-            return 1;
+        /*
+         * So, we need to deal with nested generic types, i.e. a List<List<Thing>> since
+         * only considering the outer type means we will miss the dep on Thing and List<Thing>
+         * only conidering the outer generic.
+         */
+        if (field->AMQPType() == Field::Type::restricted_t) {
+            DBG ("  C/C a_ " << GREEN << "LHS Name: " << lhs_.name() << RESET << std::endl);
+            for (const auto & t : dynamic_cast<amqp::internal::schema::RestrictedField &> (*field).subTypes()) {
+                DBG ("  C/C a_ " << RED << "==>" << t << RESET << std::endl);
+                if (t == lhs_.name()) {
+                    return 1;
+                }
+            }
+        } else {
+            DBG ("  C/C a) " << field->resolvedType () << " == " << lhs_.name () << std::endl); // NOLINT
+
+            if (field->resolvedType () == lhs_.name ()) {
+                return 1;
+            }
         }
     }
 
@@ -142,7 +159,6 @@ Composite::dependsOnRHS (
             return 2;
         }
     }
-
 
     return 0;
 }

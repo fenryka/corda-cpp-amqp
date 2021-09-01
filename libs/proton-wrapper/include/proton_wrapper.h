@@ -58,7 +58,7 @@ namespace proton {
 
     std::string get_symbol (pn_data_t *);
 
-    int get_int (pn_data_t *);
+    [[maybe_unused]] int get_int (pn_data_t *);
     bool get_boolean (pn_data_t *);
     std::string get_string (pn_data_t *, bool allowNull = false);
 
