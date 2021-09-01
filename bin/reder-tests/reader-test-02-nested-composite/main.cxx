@@ -17,13 +17,15 @@ main (int argc, char ** argv) {
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    auto blob = Outer().serialise (sf);
+    auto blob = Outer(100).serialise (sf);
     amqp::CordaBytes cb (*blob);
     cb.toFile ("serialized.bin");
 
     DBG ("\n\nDESERIALISE\n\n");
 
     auto o2 = sf.deserialise<Outer> (*blob);
+
+    std::cout << o2.name() << ":: " << o2.a().val() << std::endl;
 
     return EXIT_SUCCESS;
 }

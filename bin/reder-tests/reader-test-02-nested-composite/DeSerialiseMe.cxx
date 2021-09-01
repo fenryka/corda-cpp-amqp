@@ -13,7 +13,11 @@ Inner::Inner (
     "fingerprint123"
 ) {
     auto i = l_.begin();
-    m_val = std::any_cast<int>(*i);
+    try {
+        m_val = std::any_cast<int> (*i);
+    } catch (std::bad_any_cast & e) {
+        std::cerr << "ARSE" << std::endl;
+    }
 }
 
 /******************************************************************************/
@@ -28,13 +32,16 @@ Inner::serialiseImpl (
 
 /******************************************************************************/
 
+[[maybe_unused]] // It's not, but compiler can't find it through the template invocation
 std::list<std::any>
 Inner::deserialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
 ) {
-    std::list<std::any> rtn(1);
+    std::list<std::any> rtn;
     rtn.emplace_back (sf_.read<int> (blob_));
+
+    std::cout << "Inner::deserialiseImple:" << rtn.size() << std::endl;
     return rtn;
 }
 
@@ -63,12 +70,13 @@ Outer::serialiseImpl (
 
 /******************************************************************************/
 
+[[maybe_unused]] // It's not, but compiler can't find it through the template invocation
 std::list<std::any>
 Outer::deserialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
 ) {
-    std::list<std::any> rtn(1);
+    std::list<std::any> rtn;
     rtn.emplace_back (sf_.read<Inner> (blob_));
     return rtn;
 }

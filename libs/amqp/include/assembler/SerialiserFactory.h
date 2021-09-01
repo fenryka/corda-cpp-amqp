@@ -81,7 +81,6 @@ namespace amqp::assembler {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
                     DBG (__FUNCTION__ << "::Primitive::" << typeName<T>() << std::endl);
                     return ReadPrimitive<T>::read(blob_);
-                    //return blob_.readPrimitive<T> ();
                 }
             };
 
@@ -89,8 +88,24 @@ namespace amqp::assembler {
             struct PropertyReader<T, true> {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
                     DBG (__FUNCTION__ << "::Composite::" << typeName<T>() << std::endl);
+
+                    struct AutoComposite {
+                        const AMQPBlob & m_data;
+
+                        explicit AutoComposite (const AMQPBlob & data_) : m_data (data_) {
+                            DBG (__FUNCTION__ << std::endl); // NOLINT
+                            m_data.startComposite();
+                        }
+
+                        ~AutoComposite() {
+                            DBG (__FUNCTION__ << std::endl); // NOLINT
+                            m_data.endComposite();
+                        }
+                    };
+
+                    AutoComposite ac (blob_);
+
                     return ReadComposite<T>::read (blob_, sf_);
-                    //return blob_.readComposite<T> (/* sf_ */);
                 }
             };
 
@@ -272,6 +287,7 @@ namespace amqp::assembler {
             template<typename T>
             T
             deserialise (const AMQPBlob & blob_) {
+                /*
                 struct AutoComposite {
                     const AMQPBlob & m_data;
 
@@ -285,10 +301,11 @@ namespace amqp::assembler {
                         m_data.endComposite();
                     }
                 };
+                 */
 
                 DBG (__FUNCTION__ << ":-:" << typeName<T>() << std::endl); // NOLINT
                 blob_.readyPayload ();
-                AutoComposite ac (blob_);
+             //   AutoComposite ac (blob_);
 
                 return PropertyReader<T>::read (blob_, *this);
             }
