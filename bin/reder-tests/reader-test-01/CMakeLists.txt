@@ -6,7 +6,7 @@ set (reader-test-1-srcs
         main.cxx DeSerialiseMe.cxx DeSerialiseMe.h)
 
 
-add_executable (reader-test-1 ${reader-test-1-srcs})
+add_executable (reader-test-01 ${reader-test-1-srcs})
 
-target_link_libraries (reader-test-1 amqp)
+target_link_libraries (reader-test-01 amqp)
 
