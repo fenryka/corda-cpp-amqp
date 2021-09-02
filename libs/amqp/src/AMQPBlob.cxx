@@ -13,7 +13,6 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
-
 /******************************************************************************/
 
 /**
@@ -120,10 +119,8 @@ namespace {
                 return std::make_unique<SingleString> ("<<SYMBOL>>");
             default :
                 return std::make_unique<SingleString> (proton::typeToString(data_));
-
         }
     }
-
 
     sList<IValPtr>
     dumpList (pn_data_t * data_) {
@@ -381,11 +378,28 @@ amqp::
 AMQPBlob::endComposite () const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
     pn_data_exit (m_data);
+    pn_data_exit (m_data);
     pn_data_next (m_data);
-  //  pn_data_exit (m_data);
 }
 
 /******************************************************************************/
+
+void
+amqp::
+AMQPBlob::startPrim () const {
+    DBG (__FUNCTION__ << std::endl); // NOLINT
+}
+
+/******************************************************************************/
+
+void
+amqp::
+AMQPBlob::endPrim () const {
+    pn_data_next (m_data);
+}
+
+/******************************************************************************/
+
 
 void
 amqp::

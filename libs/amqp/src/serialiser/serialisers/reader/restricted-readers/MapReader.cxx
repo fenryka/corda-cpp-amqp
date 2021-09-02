@@ -10,6 +10,7 @@
 
 /******************************************************************************/
 
+[[maybe_unused]]
 amqp::internal::schema::Restricted::RestrictedTypes
 amqp::internal::serialiser::reader::
 MapReader::restrictedType() {
@@ -32,7 +33,10 @@ MapReader::dump_(
     // and don't need context from the schema as there isn't
     // any. Maps have a Key and a Value, they aren't named
     // parameters, unlike composite types.
-    schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused"
+    const auto & schema = schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
+#pragma clang diagnostic pop
 
     {
         proton::auto_map_enter am (data_, true);

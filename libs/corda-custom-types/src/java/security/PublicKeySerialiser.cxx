@@ -11,12 +11,12 @@
 /******************************************************************************/
 
 const std::string
-java::security::PublicKeySeraliser::m_name {
+java::security::PublicKeySeraliser::m_name { /* NOLINT */
    "Public Key serialiser"
 };
 
 const std::string
-java::security::PublicKeySeraliser::m_type {
+java::security::PublicKeySeraliser::m_type { /* NOLINT */
     "java.security.PublicKey"
 };
 
@@ -41,7 +41,7 @@ PublicKeySeraliser::type() const  {
 std::any
 java::security::
 PublicKeySeraliser::read (pn_data_t *) const  {
-
+    return { nullptr };
 }
 
 /******************************************************************************/
@@ -49,7 +49,7 @@ PublicKeySeraliser::read (pn_data_t *) const  {
 std::string
 java::security::
 PublicKeySeraliser::readString (pn_data_t *) const  {
-
+    return "";
 }
 
 /******************************************************************************/
@@ -64,6 +64,7 @@ PublicKeySeraliser::dump (
     DBG (__FUNCTION__ << std::endl); // NOLINT
     proton::auto_next an (data_);
 
+
     proton::attest_is_described (data_, __FILE__, __LINE__);
     {
         proton::auto_enter ae (data_);
@@ -71,6 +72,7 @@ PublicKeySeraliser::dump (
         pn_data_next (data_);
 
         proton::attest_is_binary (data_, __FILE__, __LINE__);
+        [[maybe_unused]]
         auto val = proton::readAndNext<char *> (data_, __FILE__, __LINE__);
 
         return std::make_unique<amqp::internal::serialiser::reader::TypedPair<std::string>> (
@@ -87,7 +89,7 @@ PublicKeySeraliser::dump (
     pn_data_t *,
     const amqp::schema::ISchema &
 ) const  {
-
+    throw std::runtime_error ("NOT IMPLEMENTED");
 }
 
 /******************************************************************************/
