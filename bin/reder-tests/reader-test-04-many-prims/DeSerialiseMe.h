@@ -9,9 +9,6 @@
 
 class Inner : public amqp::serializable::Serializable {
     private :
-        int m_val1;
-        int m_val2;
-
         /**
          * Overriding this lets us actually specify how to serialise
          * this class
@@ -21,24 +18,32 @@ class Inner : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit Inner (int val1_, int val2_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
-            , m_val1 (val1_)
-            , m_val2 (val2_)
-        { }
+        int m_val1;
+        int m_val2;
+        int m_val3;
+        int m_val4;
+        int m_val5;
+        int m_val6;
 
-        explicit Inner (const std::vector<std::any> &);
+        explicit Inner (int a, int b, int c, int d, int e, int f)
+            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            , m_val1 (a)
+            , m_val2 (b)
+            , m_val3 (c)
+            , m_val4 (d)
+            , m_val5 (e)
+            , m_val6 (f)
+        { }
 
         virtual ~Inner() = default;
 
         [[nodiscard]]
-        static std::vector<std::any>
+        static std::list<std::any>
         deserialiseImpl (
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 
-        [[nodiscard]] int v1() const { return m_val1; }
-        [[nodiscard]] int v2() const { return m_val2; }
+        explicit Inner (const std::list<std::any> &);
 };
 
 /******************************************************************************/
@@ -46,32 +51,29 @@ class Inner : public amqp::serializable::Serializable {
 class Outer : public amqp::serializable::Serializable {
     private :
         Inner   m_a;
-        Inner * m_b;
 
         void serialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit Outer ()
+        explicit Outer (int a, int b, int c, int d, int e, int f)
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint456")
-            , m_a (Inner (1, 2))
-            , m_b (new Inner (3, 4))
+            , m_a (Inner (a, b, c, d, e, f))
         { }
 
-
-        explicit Outer (const std::vector<std::any> &);
+        explicit Outer (const std::list<std::any> &);
 
         virtual ~Outer() = default;
 
-        [[nodiscard]]
-        static std::vector<std::any>
-        deserialiseImpl (
+        static std::list<std::any> deserialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 
-        [[nodiscard]] const decltype(m_a) & a() const { return m_a; }
-        [[nodiscard]] const decltype(m_b) & b() const { return m_b; }
+        [[nodiscard]]
+        const decltype (m_a) & a() const {
+            return m_a;
+        }
 };
 
 /******************************************************************************/

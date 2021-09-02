@@ -381,11 +381,28 @@ amqp::
 AMQPBlob::endComposite () const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
     pn_data_exit (m_data);
+    pn_data_exit (m_data);
     pn_data_next (m_data);
-  //  pn_data_exit (m_data);
 }
 
 /******************************************************************************/
+
+void
+amqp::
+AMQPBlob::startPrim () const {
+    DBG (__FUNCTION__ << std::endl); // NOLINT
+}
+
+/******************************************************************************/
+
+void
+amqp::
+AMQPBlob::endPrim () const {
+    pn_data_next (m_data);
+}
+
+/******************************************************************************/
+
 
 void
 amqp::

@@ -59,6 +59,9 @@ namespace amqp {
             void startComposite () const;
             void endComposite () const;
 
+            void startPrim() const;
+            void endPrim() const;
+
             void startRestricted (const amqp::serializable::RestrictedSerializable &);
             void endRestricted (const amqp::serializable::RestrictedSerializable &);
 

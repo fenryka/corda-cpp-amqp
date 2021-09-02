@@ -79,7 +79,23 @@ namespace amqp::assembler {
             template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>>
             struct PropertyReader {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
+
+                    struct AutoPrim {
+                        const AMQPBlob & m_data;
+
+                        explicit AutoPrim (const AMQPBlob & data_) : m_data (data_) {
+                            DBG (__FUNCTION__ << std::endl); // NOLINT
+                            m_data.startPrim();
+                        }
+
+                        ~AutoPrim() {
+                            DBG (__FUNCTION__ << std::endl); // NOLINT
+                            m_data.endPrim();
+                        }
+                    };
                     DBG (__FUNCTION__ << "::Primitive::" << typeName<T>() << std::endl);
+
+                    AutoPrim ap (blob_);
                     return ReadPrimitive<T>::read(blob_);
                 }
             };
