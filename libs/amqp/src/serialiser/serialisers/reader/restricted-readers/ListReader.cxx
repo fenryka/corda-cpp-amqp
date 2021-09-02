@@ -61,7 +61,10 @@ ListReader::dump_(
 
     {
         proton::auto_enter ae (data_);
-        schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused"
+        const auto & schema = schema_.fromDescriptor (proton::readAndNext<std::string>(data_, __FILE__, __LINE__));
+#pragma clang diagnostic pop
 
         {
             proton::auto_list_enter ale (data_, true);
