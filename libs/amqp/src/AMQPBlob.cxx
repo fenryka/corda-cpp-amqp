@@ -13,7 +13,6 @@
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
-
 /******************************************************************************/
 
 /**
@@ -120,10 +119,8 @@ namespace {
                 return std::make_unique<SingleString> ("<<SYMBOL>>");
             default :
                 return std::make_unique<SingleString> (proton::typeToString(data_));
-
         }
     }
-
 
     sList<IValPtr>
     dumpList (pn_data_t * data_) {

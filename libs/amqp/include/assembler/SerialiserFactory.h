@@ -65,7 +65,10 @@ namespace amqp::assembler {
             /*
              * Similar to the above, save for properties of composites
              */
-            template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>, bool = std::is_pointer_v<T>>
+            template<
+                typename T,
+                bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>,
+                bool = std::is_pointer_v<T>>
             struct PropertyWriter {
                 static void write (T propertyValue_, const std::string & propertyName_,
                     const Serializable & clazz_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_
@@ -76,7 +79,9 @@ namespace amqp::assembler {
                 }
             };
 
-            template<typename T,  bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>>
+            template<
+                typename T,
+                bool = std::is_base_of_v<Serializable , std::remove_pointer_t<T>>>
             struct PropertyReader {
                 static T read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
 
@@ -164,14 +169,17 @@ namespace amqp::assembler {
                 }
             };
 
-            /*
+            /**
              * specialisation for non pointer composites
              */
             template<typename T>
             struct PropertyWriter<T, true, false> {
                 static void write (
-                    T propertyValue_, const std::string & propertyName_,
-                    const Serializable & parent_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_
+                    T propertyValue_,
+                    const std::string & propertyName_,
+                    const Serializable & parent_,
+                    ModifiableAMQPBlob & blob_,
+                    const SerialiserFactory & sf_
                 ) {
                     auto type = javaTypeName<std::remove_reference_t<std::remove_pointer_t<T>>>();
                     auto & blob = dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_);
