@@ -69,6 +69,12 @@ namespace amqp::internal::serialiser {
                 pn_data_put_null (data_);
             }
         }
+
+        [[maybe_unused]] static void get (std::string * rtn_, pn_data_t * data_) {
+            proton::attest_is_int (data_, __FILE__, __LINE__);
+            *rtn_ = std::string (pn_data_get_string (data_).start);
+            DBG ("PrimToSerializer<std::string>::get - return " << *rtn_ << std::endl);
+        }
     };
 
     template<>
@@ -81,6 +87,12 @@ namespace amqp::internal::serialiser {
             } else {
                 pn_data_put_null (data_);
             }
+        }
+
+        [[maybe_unused]] static void get (bool * rtn_, pn_data_t * data_) {
+            proton::attest_is_bool (data_, __FILE__, __LINE__);
+            *rtn_ = pn_data_get_bool(data_);
+            DBG ("PrimToSerializer<bool>::get - return " << *rtn_ << std::endl);
         }
     };
 
@@ -95,6 +107,12 @@ namespace amqp::internal::serialiser {
                 pn_data_put_null (data_);
             }
         }
+
+        [[maybe_unused]] static void get (float * rtn_, pn_data_t * data_) {
+            proton::attest_is_float (data_, __FILE__, __LINE__);
+            *rtn_ = pn_data_get_bool(data_);
+            DBG ("PrimToSerializer<bool>::get - return " << *rtn_ << std::endl);
+        }
     };
 
     template<>
@@ -108,6 +126,12 @@ namespace amqp::internal::serialiser {
                 pn_data_put_null (data_);
             }
         }
+
+        [[maybe_unused]] static void get (double * rtn_, pn_data_t * data_) {
+            proton::attest_is_float (data_, __FILE__, __LINE__);
+            *rtn_ = pn_data_get_double(data_);
+            DBG ("PrimToSerializer<double>::get - return " << *rtn_ << std::endl);
+        }
     };
 
     template<>
@@ -120,6 +144,12 @@ namespace amqp::internal::serialiser {
             } else {
                 pn_data_put_null (data_);
             }
+        }
+
+        [[maybe_unused]] static void get (long * rtn_, pn_data_t * data_) {
+            proton::attest_is_long (data_, __FILE__, __LINE__);
+            *rtn_ = pn_data_get_long);
+            DBG ("PrimToSerializer<long>::get - return " << *rtn_ << std::endl);
         }
     };
 }

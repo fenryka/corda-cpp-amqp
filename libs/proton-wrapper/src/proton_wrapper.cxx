@@ -214,6 +214,48 @@ attest_is_binary (pn_data_t * data_, const std::string & file_, int line_) {
 
 void
 proton::
+attest_is_bool (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_BOOL) {
+        std::stringstream ss;
+        ss << "Expected a boolean type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
+attest_is_float (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_FLOAT) {
+        std::stringstream ss;
+        ss << "Expected a float type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
+attest_is_long (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_FLOAT) {
+        std::stringstream ss;
+        ss << "Expected a long type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
 attest_is_list (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type(data_) != PN_LIST) {
         std::stringstream ss;

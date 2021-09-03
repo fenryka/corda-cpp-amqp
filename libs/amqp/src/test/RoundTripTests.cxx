@@ -169,3 +169,70 @@ TEST (RTT, one_int_one_int_ptr) { // NOLINT
 }
 
 /******************************************************************************/
+
+TEST (RTT, many_types) { // NOLINT
+    class DeSerialiseMe : public Serializable {
+        friend class amqp::assembler::SerialiserFactory;
+    private :
+        int           m_val1;
+        double        m_val2;
+        long          m_val3;
+        std::string   m_val4;
+        std::string * m_val5;
+
+        void serialiseImpl(
+                const SerialiserFactory & sf_,
+                ModifiableAMQPBlob & blob_
+        ) const override {
+            sf_.write<int> (m_val1, "m_val1", *this, blob_);
+            sf_.write<double> (m_val2, "m_val2", *this, blob_);
+            sf_.write<long> (m_val3, "m_val3", *this, blob_);
+            sf_.write<std::string> (m_val4, "m_val4", *this, blob_);
+            sf_.write<std::string *> (m_val5, "m_val5", *this, blob_);
+        }
+
+        explicit DeSerialiseMe (const std::vector<std::any> & l_)
+            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            , m_val1 { std::any_cast<int>(l_[0]) }
+            , m_val2 { std::any_cast<double>(l_[1]) }
+            , m_val3 { std::any_cast<long>(l_[2]) }
+            , m_val4 { std::any_cast<std::string>(l_[3]) }
+            , m_val5 { std::any_cast<std::string *>(l_[4]) }
+        { }
+
+        [[maybe_unused]] static std::vector<std::any> deserialiseImpl(
+                const SerialiserFactory & sf_,
+                const AMQPBlob & blob_
+        ) {
+            std::vector<std::any> rtn;
+            rtn.emplace_back (sf_.read<int> (blob_));
+            rtn.emplace_back (sf_.read<double> (blob_));
+            rtn.emplace_back (sf_.read<long> (blob_));
+            rtn.emplace_back (sf_.read<std::string> (blob_));
+            rtn.emplace_back (sf_.read<std::string *> (blob_));
+
+            return rtn;
+        }
+    public :
+        explicit DeSerialiseMe (int val1_, int val2_)
+                : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+                , m_val1 (val1_)
+                , m_val2 { new int { val2_ } }
+        { }
+
+        [[nodiscard]] int val1() const { return m_val1; }
+        [[nodiscard]] int val2() const { return *m_val2; }
+    };
+
+    amqp::internal::assembler::SerialiserFactoryInternal sf;
+
+    DeSerialiseMe deSerialiseMe(1000, 24);
+
+    auto blob = deSerialiseMe.serialise (sf);
+    auto b = sf.deserialise<DeSerialiseMe>(*blob);
+
+    ASSERT_EQ(deSerialiseMe.val1(), b.val1());
+    ASSERT_EQ(deSerialiseMe.val2(), b.val2());
+}
+
+/******************************************************************************/
