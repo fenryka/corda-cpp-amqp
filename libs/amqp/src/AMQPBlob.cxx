@@ -362,7 +362,7 @@ AMQPBlob::startComposite() const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
     proton::attest_is_described (m_data, __FILE__, __LINE__);
     proton::pn_data_enter (m_data);
-    uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    [[maybe_unused]]uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
     DBG (__FUNCTION__ << "::" << describedToString (key) <<  " " << key << std::endl); // NOLINT
     proton::attest_is_list (m_data, __FILE__, __LINE__);
     DBG (__FUNCTION__  << ":: list sz " << pn_data_get_list (m_data) << std::endl); // NOLINT

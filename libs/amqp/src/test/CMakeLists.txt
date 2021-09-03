@@ -9,7 +9,8 @@ set (amqp-test-sources
         TestUtils.cxx
         RestrictedDescriptor.cxx
         OrderedTypeNotationTest.cxx
-        SchemaUtils.cxx)
+        SchemaUtils.cxx
+        RoundTripTests.cxx)
 
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
 

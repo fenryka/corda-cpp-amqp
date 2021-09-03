@@ -133,7 +133,7 @@ javaTypeName () {
 
 /*
  * We need a specialisation for string since we don't want it spitting out
- * all of the STL nonsense around allocators and char types
+ * all the STL nonsense around allocators and char types
  */
 template<>
 std::string

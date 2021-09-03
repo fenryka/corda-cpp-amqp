@@ -254,7 +254,7 @@ namespace amqp::assembler {
                          << ", is_ptr " << std::is_pointer_v<T> << ">"<< std::endl); // NOLINT
                     const auto v = T::deserialiseImpl (sf_, blob_);
 
-                    return T { v };
+                    return T {static_cast<const std::vector<std::any>>(v)};
                 }
             };
 
