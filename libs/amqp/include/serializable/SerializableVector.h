@@ -26,6 +26,8 @@ namespace amqp::serializable {
     template<typename T, typename A = std::allocator<T>>
     class SerializableVector final : public std::vector<T, A>, public RestrictedSerializable {
         private :
+            friend class amqp::assembler::SerialiserFactory;
+
             /**
              *
              */
@@ -35,19 +37,41 @@ namespace amqp::serializable {
             ) const {
                 DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
 
-                amqp::internal::serializable::AutoRestricted ar (*this, blob_);
+                amqp::internal::serializable::AutoRestrictedWrite ar (*this, blob_);
 
                 for (const auto & i: *this) {
                     sf_.writeSingle<T> (i, *this, blob_);
                 }
             }
 
+            /**
+             *
+             * @param sf_
+             * @param blob_
+             * @return
+             */
+            [[maybe_unused]]
+            static std::vector<std::any>
+            deserialiseImpl (
+                const amqp::assembler::SerialiserFactory & sf_,
+                const AMQPBlob & blob_
+            ) {
+
+
+                while (true) {
+                    sf_.readSingle<T> (blob_);
+                }
+            }
+
         protected :
+            /**
+             *
+             */
             void serialiseImpl (
                 const amqp::assembler::SerialiserFactory &,
                 ModifiableAMQPBlob &
             ) const override {
-                DBG (__FUNCTION__ << std::endl);
+                DBG (__FUNCTION__ << std::endl); // NOLINT
             }
 
         public :

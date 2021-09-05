@@ -4,7 +4,7 @@
 /******************************************************************************/
 
 amqp::internal::serializable::
-AutoRestricted::AutoRestricted(
+AutoRestrictedWrite::AutoRestrictedWrite(
     decltype(m_s) s_, decltype(m_b) b_
 ) : m_s (s_), m_b (b_) {
     amqp::assembler::SerialiserFactory::startRestricted (m_s, m_b);
@@ -13,8 +13,27 @@ AutoRestricted::AutoRestricted(
 /******************************************************************************/
 
 amqp::internal::serializable::
-AutoRestricted::~AutoRestricted() {
+AutoRestrictedWrite::~AutoRestrictedWrite() {
     amqp::assembler::SerialiserFactory::endRestricted (m_s, m_b);
+}
+
+/******************************************************************************
+ *
+ *
+ ******************************************************************************/
+
+amqp::internal::serializable::
+AutoRestrictedRead::AutoRestrictedRead (
+    decltype (m_s) s_, decltype (m_b) b_
+) : m_s (s_)
+  , m_b (b_)
+{ }
+
+/******************************************************************************/
+
+amqp::internal::serializable::
+AutoRestrictedRead::~AutoRestrictedRead() {
+
 }
 
 /******************************************************************************/

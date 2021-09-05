@@ -38,12 +38,12 @@ class Inner : public amqp::serializable::Serializable {
         virtual ~Inner() = default;
 
         [[nodiscard]]
-        static std::list<std::any>
+        static std::vector<std::any>
         deserialiseImpl (
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 
-        explicit Inner (const std::list<std::any> &);
+        explicit Inner (const std::vector<std::any> &);
 };
 
 /******************************************************************************/
@@ -62,11 +62,11 @@ class Outer : public amqp::serializable::Serializable {
             , m_a (Inner (a, b, c, d, e, f))
         { }
 
-        explicit Outer (const std::list<std::any> &);
+        explicit Outer (const std::vector<std::any> &);
 
         virtual ~Outer() = default;
 
-        static std::list<std::any> deserialiseImpl(
+        static std::vector<std::any> deserialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 
