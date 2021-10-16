@@ -3,13 +3,14 @@
 #include <fstream>
 #include <cstddef>
 
-#include <assert.h>
-#include <string.h>
+#include <cassert>
 #include <proton/types.h>
 #include <proton/codec.h>
 #include <sys/stat.h>
 
+#include "amqp/include/AMQPConfig.h"
 #include "amqp/include/CordaBytes.h"
+
 #include "SchemaDumper.h"
 
 /******************************************************************************/
@@ -39,7 +40,7 @@ main (int argc, char **argv) {
     }
 
     try {
-        amqp::CordaBytes cb(argv[1]);
+        amqp::CordaBytes cb (std::string (argv[1]), std::make_unique<amqp::AMQPConfig>());
 
         if (cb.encoding() == amqp::DATA_AND_STOP) {
             SchemaDumper schemaDumper (cb);

@@ -10,25 +10,29 @@
 /******************************************************************************/
 
 int
-main (
-    int argc,
-    [[maybe_unused]] char ** argv
-) {
+main (int argc, [[ maybe_unused ]] char ** argv) {
     if (argc != 1) {
         return EXIT_FAILURE;
     }
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    auto blob = Outer().serialise (sf);
+    auto blob = Outer(100, "Hello World", 300, 4000000000, true, 69.96).serialise (sf);
     amqp::CordaBytes cb (*blob, std::make_unique<amqp::AMQPConfig>());
     cb.toFile ("serialized.bin");
 
-    DBG ("\n\nDESERIALISE\n\n");
+    DBG ("\n\nDESERIALISE\n\n"); // NOLINT
 
     auto o2 = sf.deserialise<Outer> (*blob);
 
-    std::cout << o2.a().v1() << " " << o2.a().v2() << " " << o2.b()->v1() << " " << o2.b()->v2() << std::endl;
+    std::cout << o2.name() << ":: " << std::endl
+        << "  " << o2.a().m_val1 << std::endl
+        << "  " << o2.a().m_val2 << std::endl
+        << "  " << o2.a().m_val3 << std::endl
+        << "  " << o2.a().m_val4 << std::endl
+        << "  " << o2.a().m_val5 << std::endl
+        << "  " << o2.a().m_val6 << std::endl;
+
 
     return EXIT_SUCCESS;
 }

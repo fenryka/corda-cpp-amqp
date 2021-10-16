@@ -25,7 +25,7 @@ namespace amqp::internal::serializable {
         amqp::AMQPBlob & m_b;
 
         AutoRestrictedRead (decltype(m_s), decltype(m_b) b_);
-        ~AutoRestrictedRead();
+        ~AutoRestrictedRead() = default;
 
     };
 

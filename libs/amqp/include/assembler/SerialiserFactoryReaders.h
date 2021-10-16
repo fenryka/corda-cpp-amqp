@@ -23,12 +23,13 @@ namespace amqp {
 
 }
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * ReadPrimitive
+ *
+ ******************************************************************************/
 
 namespace amqp::assembler {
-
-    using Serializable = amqp::serializable::Serializable;
-    using RestrictedSerializable = amqp::serializable::RestrictedSerializable;
 
     template<class T, bool = std::is_pointer_v<T>>
     struct ReadPrimitive {
@@ -44,18 +45,40 @@ namespace amqp::assembler {
         }
     };
 
-    template<class T, bool = std::is_pointer_v<T>>
-    struct ReadComposite {
+    template<class T>
+    struct ReadPrimitive<T, true> {
         static
         T
-        read (const AMQPBlob &blob_,
-              const SerialiserFactory &sf_
+        read (const AMQPBlob &blob_) {
+            T v = new std::remove_pointer_t<T> {};
+            amqp::internal::serialiser::PrimToSerialiser<
+                std::remove_pointer_t<std::remove_const_t<T>>
+            >::get (v, blob_.data ());
+
+            return v;
+        }
+    };
+}
+
+/******************************************************************************/
+
+namespace amqp::assembler {
+
+    using Serializable = amqp::serializable::Serializable;
+    using RestrictedSerializable = amqp::serializable::RestrictedSerializable;
+
+    template<class T, bool = std::is_pointer_v<T>>
+    struct ReadNonPrim {
+        static
+        T
+        read (const AMQPBlob & blob_,
+              const SerialiserFactory & sf_
         ) {
             DBG (__FUNCTION__ << "<" << typeName<T> ()
                               << ", is_ptr " << std::is_pointer_v<T> << ">" << std::endl); // NOLINT
             const auto v = T::deserialiseImpl (sf_, blob_);
 
-            return T {static_cast<const std::vector<std::any>>(v)};
+            return T { static_cast<const std::vector<std::any>>(v) };
         }
     };
 
@@ -63,7 +86,7 @@ namespace amqp::assembler {
      * Specialisation to read Composite pointers
      */
     template<class T>
-    struct ReadComposite<T, true> {
+    struct ReadNonPrim<T, true> {
         static
         T
         read (
@@ -79,6 +102,23 @@ namespace amqp::assembler {
         }
     };
 
+    template<typename A, typename B>
+    struct ReadNonPrim<amqp::serializable::SerializableVector<A, B>, true> {
+        static
+        amqp::serializable::SerializableVector<A, B>
+        read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
+
+        }
+    };
+
+    template<typename A, typename B>
+    struct ReadNonPrim<amqp::serializable::SerializableVector<A, B>, false> {
+        static
+        amqp::serializable::SerializableVector<A, B>
+        read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
+            throw std::logic_error ("ReadNonPrim no worky yet");
+        }
+    };
 
     template<
         typename T,
@@ -107,6 +147,7 @@ namespace amqp::assembler {
         }
     };
 
+
     template<typename T>
     struct PropertyReader<T, true> {
         static T read (
@@ -131,23 +172,9 @@ namespace amqp::assembler {
 
             AutoComposite ac (blob_);
 
-            return ReadComposite<T>::read (blob_, sf_);
-        }
-    };
-
-
-    template<class T>
-    struct ReadPrimitive<T, true> {
-        static
-        T
-        read (const AMQPBlob &blob_) {
-            T v = new std::remove_pointer_t<T> {};
-            amqp::internal::serialiser::PrimToSerialiser<
-                std::remove_pointer_t<std::remove_const_t<T>>
-            >::get (v, blob_.data ());
-
-            return v;
+            return ReadNonPrim<T>::read (blob_, sf_);
         }
     };
 
 }
+

@@ -3,6 +3,7 @@
 #include <cassert>
 #include <sys/stat.h>
 
+#include "include/AMQPConfig.h"
 #include "include/CordaBytes.h"
 #include "BlobInspector.h"
 
@@ -20,7 +21,10 @@ main (int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    amqp::CordaBytes cb (argv[1]);
+    auto config = std::make_unique<amqp::AMQPConfig>();
+    config->ignoreHeader = true;
+
+    amqp::CordaBytes cb (argv[1], std::move (config));
 
     if (cb.encoding() == amqp::DATA_AND_STOP) {
         BlobInspector blobInspector (cb);

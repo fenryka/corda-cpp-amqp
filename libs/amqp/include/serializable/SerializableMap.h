@@ -40,7 +40,7 @@ namespace amqp::serializable {
                 ModifiableAMQPBlob & blob_
             ) const {
                 DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
-                amqp::internal::serializable::AutoRestricted ar (*this, blob_);
+                amqp::internal::serializable::AutoRestrictedWrite ar (*this, blob_);
 
                 for (const auto& [key, value]: *this ) {
                     DBG ("  * " << javaTypeName<K>() << std::endl);

@@ -1,4 +1,6 @@
 include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs)
+include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/amqp)
+include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/corda-utils)
 
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
 link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/proton-wrapper)
