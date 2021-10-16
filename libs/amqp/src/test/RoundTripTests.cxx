@@ -2,7 +2,9 @@
 #include <gtest/gtest.h>
 
 #include <list>
+#include <vector>
 #include "serializable/Serializable.h"
+#include "serializable/SerializableVector.h"
 #include "src/assembler/SerialiserFactoryInternal.h"
 
 using namespace amqp;
@@ -213,26 +215,84 @@ TEST (RTT, many_types) { // NOLINT
 
             return rtn;
         }
-    public :
-        explicit DeSerialiseMe (int val1_, int val2_)
+
+        public :
+            explicit DeSerialiseMe (int val1_, double val2_, long val3_, std::string val4_, const std::string & val5_)
                 : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
                 , m_val1 (val1_)
-                , m_val2 { new int { val2_ } }
-        { }
+                , m_val2 (val2_)
+                , m_val3 (val3_)
+                , m_val4 { std::move (val4_) }
+                , m_val5 { new std::string (val5_) }
+            { }
 
-        [[nodiscard]] int val1() const { return m_val1; }
-        [[nodiscard]] int val2() const { return *m_val2; }
+            [[nodiscard]] const decltype (m_val1) & val1() const { return m_val1; }
+            [[nodiscard]] const decltype (m_val2) & val2() const { return m_val2; }
+            [[nodiscard]] const decltype (m_val3) & val3() const { return m_val3; }
+            [[nodiscard]] const decltype (m_val4) & val4() const { return m_val4; }
+            [[nodiscard]] const std::string & val5() const { return *m_val5; }
     };
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    DeSerialiseMe deSerialiseMe(1000, 24);
+    DeSerialiseMe deSerialiseMe(1000, 24, 1, "hello", "world");
 
     auto blob = deSerialiseMe.serialise (sf);
     auto b = sf.deserialise<DeSerialiseMe>(*blob);
 
     ASSERT_EQ(deSerialiseMe.val1(), b.val1());
     ASSERT_EQ(deSerialiseMe.val2(), b.val2());
+    ASSERT_EQ(deSerialiseMe.val3(), b.val3());
+    ASSERT_EQ(deSerialiseMe.val4(), b.val4());
+    ASSERT_EQ(deSerialiseMe.val5(), b.val5());
+}
+
+/******************************************************************************/
+
+TEST (RTT, int_list) { // NOLINT
+    class DeSerialiseMe : public Serializable {
+        private :
+            serializable::SerializableVector<int> m_val;
+
+            void serialiseImpl(
+                const SerialiserFactory & sf_,
+                ModifiableAMQPBlob & blob_
+            ) const override {
+                sf_.write (m_val, "m_val", *this, blob_);
+            }
+
+        public :
+            explicit DeSerialiseMe (std::vector<int> v_)
+                : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+                , m_val ( "fingerprint456", std::move (v_) )
+            { }
+
+            explicit DeSerialiseMe (const std::vector<std::any> & l_)
+                : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+                , m_val (std::any_cast<serializable::SerializableVector<int>>(l_[0]))
+            { }
+
+            [[maybe_unused]]
+            static std::vector<std::any> deserialiseImpl(
+                const SerialiserFactory & sf_,
+                const AMQPBlob & blob_
+            ) {
+                std::vector<std::any> rtn;
+                rtn.emplace_back (sf_.read<serializable::SerializableVector<int>> (blob_));
+                return rtn;
+            }
+
+            [[nodiscard]] const decltype(m_val) & val() const { return m_val; }
+    };
+
+    amqp::internal::assembler::SerialiserFactoryInternal sf;
+
+    DeSerialiseMe deSerialiseMe(std::vector<int> {1, 2, 3, 4, 5});
+
+    auto blob = deSerialiseMe.serialise (sf);
+    auto b = sf.deserialise<DeSerialiseMe>(*blob);
+
+    ASSERT_EQ(deSerialiseMe.val(), b.val());
 }
 
 /******************************************************************************/

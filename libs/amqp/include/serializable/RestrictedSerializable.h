@@ -12,12 +12,21 @@ namespace amqp::serializable {
 
 namespace amqp::internal::serializable {
 
-    struct AutoRestricted {
+    struct AutoRestrictedWrite {
         const amqp::serializable::RestrictedSerializable & m_s;
         amqp::ModifiableAMQPBlob & m_b;
 
-        AutoRestricted (decltype(m_s), decltype(m_b) b_);
-        ~AutoRestricted();
+        AutoRestrictedWrite (decltype(m_s), decltype(m_b) b_);
+        ~AutoRestrictedWrite();
+    };
+
+    struct AutoRestrictedRead {
+        const amqp::serializable::RestrictedSerializable & m_s;
+        amqp::AMQPBlob & m_b;
+
+        AutoRestrictedRead (decltype(m_s), decltype(m_b) b_);
+        ~AutoRestrictedRead();
+
     };
 
 }

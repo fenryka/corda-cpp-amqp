@@ -14,7 +14,7 @@ DeSerialiseMe::serialiseImpl (
 /******************************************************************************/
 
 DeSerialiseMe::DeSerialiseMe (
-    const std::list<std::any> & l_
+    const std::vector<std::any> & l_
 ) : Serializable (javaTypeName<decltype(this)>(), "fingerprint123") {
     auto i = l_.begin();
     m_val = std::any_cast<int> (*i++);
@@ -27,12 +27,12 @@ DeSerialiseMe::DeSerialiseMe (
 /******************************************************************************/
 
 [[maybe_unused]] // It's not, but compiler can't find it through the template invocation
-std::list<std::any>
+std::vector<std::any>
 DeSerialiseMe::deserialiseImpl(
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_)
 {
-    std::list<std::any> rtn;
+    std::vector<std::any> rtn;
     rtn.emplace_back (sf_.read<int> (blob_));
     rtn.emplace_back (sf_.read<int *> (blob_));
 

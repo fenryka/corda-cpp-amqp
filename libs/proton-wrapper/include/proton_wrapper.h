@@ -25,6 +25,7 @@ namespace proton {
      */
     bool pn_data_enter(pn_data_t *);
 
+    void attest_is_double (pn_data_t *, const std::string &, int);
     void attest_is_long (pn_data_t *, const std::string &, int);
     void attest_is_float (pn_data_t *, const std::string &, int);
     void attest_is_bool (pn_data_t *, const std::string &, int);

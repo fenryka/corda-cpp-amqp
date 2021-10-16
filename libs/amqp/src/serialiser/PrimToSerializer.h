@@ -71,7 +71,7 @@ namespace amqp::internal::serialiser {
         }
 
         [[maybe_unused]] static void get (std::string * rtn_, pn_data_t * data_) {
-            proton::attest_is_int (data_, __FILE__, __LINE__);
+            proton::attest_is_string (data_, __FILE__, __LINE__);
             *rtn_ = std::string (pn_data_get_string (data_).start);
             DBG ("PrimToSerializer<std::string>::get - return " << *rtn_ << std::endl);
         }
@@ -128,7 +128,7 @@ namespace amqp::internal::serialiser {
         }
 
         [[maybe_unused]] static void get (double * rtn_, pn_data_t * data_) {
-            proton::attest_is_float (data_, __FILE__, __LINE__);
+            proton::attest_is_double (data_, __FILE__, __LINE__);
             *rtn_ = pn_data_get_double(data_);
             DBG ("PrimToSerializer<double>::get - return " << *rtn_ << std::endl);
         }
@@ -148,7 +148,7 @@ namespace amqp::internal::serialiser {
 
         [[maybe_unused]] static void get (long * rtn_, pn_data_t * data_) {
             proton::attest_is_long (data_, __FILE__, __LINE__);
-            *rtn_ = pn_data_get_long);
+            *rtn_ = pn_data_get_long (data_);
             DBG ("PrimToSerializer<long>::get - return " << *rtn_ << std::endl);
         }
     };
