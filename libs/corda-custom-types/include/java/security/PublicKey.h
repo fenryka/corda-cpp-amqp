@@ -4,7 +4,7 @@ namespace java::security {
 
     class PublicKey {
         private :
-            char * m_bytes;
+            [[ maybe_unused ]] char * m_bytes;
 
         public :
             PublicKey();

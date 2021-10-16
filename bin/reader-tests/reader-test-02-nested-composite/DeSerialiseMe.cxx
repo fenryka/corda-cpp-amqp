@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 Inner::Inner (
-    const std::list<std::any> & l_
+    const std::vector<std::any> & l_
 ) : Serializable (
     javaTypeName<decltype(this)>(),
     "fingerprint123"
@@ -33,12 +33,12 @@ Inner::serialiseImpl (
 /******************************************************************************/
 
 [[maybe_unused]] // It's not, but compiler can't find it through the template invocation
-std::list<std::any>
+std::vector<std::any>
 Inner::deserialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
 ) {
-    std::list<std::any> rtn;
+    std::vector<std::any> rtn;
     rtn.emplace_back (sf_.read<int> (blob_));
 
     std::cout << "Inner::deserialiseImple:" << rtn.size() << std::endl;
@@ -51,7 +51,7 @@ Inner::deserialiseImpl (
  *
  ******************************************************************************/
 
-Outer::Outer (const std::list<std::any> & l_) : Serializable (
+Outer::Outer (const std::vector<std::any> & l_) : Serializable (
     javaTypeName<decltype(this)>(),
     "fingerprint456"),
     m_a (std::any_cast<Inner>(l_.front()))
@@ -71,12 +71,12 @@ Outer::serialiseImpl (
 /******************************************************************************/
 
 [[maybe_unused]] // It's not, but compiler can't find it through the template invocation
-std::list<std::any>
+std::vector<std::any>
 Outer::deserialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     const amqp::AMQPBlob & blob_
 ) {
-    std::list<std::any> rtn;
+    std::vector<std::any> rtn;
     rtn.emplace_back (sf_.read<Inner> (blob_));
     return rtn;
 }

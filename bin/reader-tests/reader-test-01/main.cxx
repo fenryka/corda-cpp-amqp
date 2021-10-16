@@ -10,7 +10,7 @@
 /******************************************************************************/
 
 int
-main (int argc, char ** argv) {
+main (int argc, [[ maybe_unused ]] char ** argv) {
     if (argc != 2) {
         std::cerr << "ERROR: usage ./reader-test-1 <<filename>>" << std::endl;
         return EXIT_FAILURE;

@@ -27,9 +27,9 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
             , m_val2 { new int (val_) }
         { }
 
-        explicit DeSerialiseMe (const std::list<std::any> &);
+        explicit DeSerialiseMe (const std::vector<std::any> &);
 
-        [[maybe_unused]] static std::list<std::any> deserialiseImpl(
+        [[maybe_unused]] static std::vector<std::any> deserialiseImpl(
             const amqp::assembler::SerialiserFactory &,
             const amqp::AMQPBlob &);
 

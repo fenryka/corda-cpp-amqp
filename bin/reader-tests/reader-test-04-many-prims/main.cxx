@@ -10,7 +10,7 @@
 /******************************************************************************/
 
 int
-main (int argc, char ** argv) {
+main (int argc, [[ maybe_unused ]] char ** argv) {
     if (argc != 1) {
         return EXIT_FAILURE;
     }
@@ -21,7 +21,7 @@ main (int argc, char ** argv) {
     amqp::CordaBytes cb (*blob);
     cb.toFile ("serialized.bin");
 
-    DBG ("\n\nDESERIALISE\n\n");
+    DBG ("\n\nDESERIALISE\n\n"); // NOLINT
 
     auto o2 = sf.deserialise<Outer> (*blob);
 
