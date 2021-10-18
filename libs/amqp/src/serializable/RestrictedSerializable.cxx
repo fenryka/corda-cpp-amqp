@@ -31,9 +31,3 @@ AutoRestrictedRead::AutoRestrictedRead (
 
 /******************************************************************************/
 
-amqp::internal::serializable::
-AutoRestrictedRead::~AutoRestrictedRead() {
-
-}
-
-/******************************************************************************/

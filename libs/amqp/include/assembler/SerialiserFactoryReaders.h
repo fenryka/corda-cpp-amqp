@@ -45,7 +45,7 @@ namespace amqp::assembler {
     };
 
     template<class T, bool = std::is_pointer_v<T>>
-    struct ReadComposite {
+    struct ReadNonPrim {
         static
         T
         read (const AMQPBlob &blob_,
@@ -63,7 +63,7 @@ namespace amqp::assembler {
      * Specialisation to read Composite pointers
      */
     template<class T>
-    struct ReadComposite<T, true> {
+    struct ReadNonPrim<T, true> {
         static
         T
         read (
@@ -78,7 +78,6 @@ namespace amqp::assembler {
             return new rtn_t {v};
         }
     };
-
 
     template<
         typename T,
@@ -131,7 +130,7 @@ namespace amqp::assembler {
 
             AutoComposite ac (blob_);
 
-            return ReadComposite<T>::read (blob_, sf_);
+            return ReadNonPrim<T>::read (blob_, sf_);
         }
     };
 

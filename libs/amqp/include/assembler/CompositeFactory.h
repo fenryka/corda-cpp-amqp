@@ -25,7 +25,7 @@ namespace amqp {
 
             virtual void process (const schema::ISchema &) = 0;
 
-            virtual sPtr<serialiser::ISerialiser> byType (
+            [[maybe_unused]] virtual sPtr<serialiser::ISerialiser> byType (
                     const std::string &) = 0;
 
             virtual sPtr<serialiser::ISerialiser> byDescriptor (

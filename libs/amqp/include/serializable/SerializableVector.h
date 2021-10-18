@@ -44,25 +44,6 @@ namespace amqp::serializable {
                 }
             }
 
-            /**
-             *
-             * @param sf_
-             * @param blob_
-             * @return
-             */
-            [[maybe_unused]]
-            static std::vector<std::any>
-            deserialiseImpl (
-                const amqp::assembler::SerialiserFactory & sf_,
-                const AMQPBlob & blob_
-            ) {
-
-
-                while (true) {
-                    sf_.readSingle<T> (blob_);
-                }
-            }
-
         protected :
             /**
              *
@@ -97,6 +78,13 @@ namespace amqp::serializable {
               , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
             { }
 
+            SerializableVector(
+                const std::string & fingerprint_,
+                const std::vector<std::any> &
+            ) : std::vector<T>()
+                , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
+            { }
+
             void serialise (
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
@@ -112,6 +100,25 @@ namespace amqp::serializable {
                 _serialise (sf_, *blob);
                 return blob->toBlob();
             }
+
+        /**
+         *
+         * @param sf_
+         * @param blob_
+         * @return
+         */
+        [[maybe_unused]]
+        static std::vector<std::any>
+        deserialiseImpl (
+                const amqp::assembler::SerialiserFactory & sf_,
+                const AMQPBlob & blob_
+        ) {
+
+
+            while (true) {
+                sf_.readSingle<T> (blob_);
+            }
+        }
     };
 }
 
