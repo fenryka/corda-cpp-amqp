@@ -18,7 +18,7 @@ main (int argc, [[ maybe_unused ]] char ** argv) {
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
     auto blob = Outer(100, "Hello World", 300, 4000000000, true, 69.96).serialise (sf);
-    amqp::CordaBytes cb (*blob);
+    amqp::CordaBytes cb (*blob, std::make_unique<amqp::AMQPConfig>());
     cb.toFile ("serialized.bin");
 
     DBG ("\n\nDESERIALISE\n\n"); // NOLINT

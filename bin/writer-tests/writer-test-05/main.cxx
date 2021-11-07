@@ -23,7 +23,7 @@ main (int argc, char ** argv) {
 
     auto blob = a.serialise (sf);
 
-    amqp::CordaBytes cb (*blob);
+    amqp::CordaBytes cb (*blob, std::make_unique<amqp::AMQPConfig>());
     cb.toFile (std::string (argv[1]));
 
     return EXIT_SUCCESS;

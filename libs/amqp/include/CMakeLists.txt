@@ -2,6 +2,7 @@ target_sources (${libName}
         PUBLIC
             AMQPBlob.h
             AMQPHeader.h
+            AMQPConfig.h
             AMQPSectionId.h
             ModifiableAMQPBlob.h
         )

@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
+#include "include/AMQPConfig.h"
 #include "include/CordaBytes.h"
+
 #include "../BlobInspector.h"
 
 const std::string filepath ("../../test-files/"); // NOLINT
@@ -14,7 +16,7 @@ const std::string filepath ("../../test-files/"); // NOLINT
 void
 test (const std::string & file_, const std::string & result_) {
     auto path { filepath + file_ } ;
-    amqp::CordaBytes cb (path);
+    amqp::CordaBytes cb (path, std::make_unique<amqp::AMQPConfig>());
     auto val = BlobInspector (cb).dump();
     ASSERT_EQ(result_, val);
 }

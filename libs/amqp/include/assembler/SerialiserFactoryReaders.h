@@ -116,7 +116,7 @@ namespace amqp::assembler {
         static
         amqp::serializable::SerializableVector<A, B>
         read (const AMQPBlob & blob_, const SerialiserFactory & sf_) {
-
+            throw std::logic_error ("ReadNonPrim no worky yet");
         }
     };
 

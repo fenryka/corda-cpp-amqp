@@ -18,7 +18,7 @@ main (int argc, [[ maybe_unused ]] char ** argv) {
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    amqp::CordaBytes cb (argv[1]);
+    amqp::CordaBytes cb (argv[1], std::make_unique<amqp::AMQPConfig>());
     amqp::AMQPBlob blob (cb);
 
     auto b = sf.deserialise<DeSerialiseMe>(blob);

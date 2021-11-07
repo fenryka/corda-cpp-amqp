@@ -9,13 +9,16 @@
 #include "AMQPBlob.h"
 #include "AMQPHeader.h"
 
+#include "include/AMQPConfig.h"
 #include "corda-utils/include/debug.h"
 
 /******************************************************************************/
 
 amqp::
-CordaBytes::CordaBytes (const std::string & file_)
+CordaBytes::CordaBytes (const std::string & file_, uPtr<AMQPConfig> config_)
     : m_blob { nullptr }
+    , m_config { std::move (config_) }
+    , m_header { m_config->header }
 {
     std::ifstream file { file_, std::ios::in | std::ios::binary };
     struct stat results { };
@@ -25,7 +28,7 @@ CordaBytes::CordaBytes (const std::string & file_)
     }
 
     // Disregard the Corda header
-    m_size = results.st_size - (amqp::AMQP_HEADER.size() + 1);
+    m_size = results.st_size - (amqp::AMQP_HEADERS[m_header].size() + 1);
 
     // Read the header, ignore encoding
     std::array<char, 7> header { };
@@ -37,8 +40,15 @@ CordaBytes::CordaBytes (const std::string & file_)
     }
 #endif
 
-    if (header != amqp::AMQP_HEADER) {
-        throw std::runtime_error ("Not a Corda stream");
+    if (std::find (amqp::AMQP_HEADERS.begin(), amqp::AMQP_HEADERS.end(), header) == amqp::AMQP_HEADERS.end()) {
+        if (!config_->ignoreHeader) {
+            throw std::runtime_error ("Not a Corda stream");
+        } else {
+            std::cerr << "Bad Header: ";
+            std::copy(header.begin(), header.end(),
+                      std::ostream_iterator<int>(std::cerr, " "));
+            std::cerr << std::endl;
+        }
     }
 
     // grab the encoding flag. This could / should be done with the above
@@ -67,8 +77,10 @@ CordaBytes::CordaBytes (const std::string & file_)
 /******************************************************************************/
 
 amqp::
-CordaBytes::CordaBytes (const AMQPBlob & bytes_)
+CordaBytes::CordaBytes (const AMQPBlob & bytes_, uPtr<AMQPConfig> config_)
     : m_encoding (DATA_AND_STOP)
+    , m_config { std::move (config_) }
+    , m_header { -1 }
 {
     m_size = pn_data_encoded_size (bytes_.data());
     m_blob = new char[m_size];
@@ -83,10 +95,10 @@ CordaBytes::toFile (const std::string & fileName_) const {
     DBG (__FUNCTION__ << " - " << fileName_ << std::endl); // NOLINT
 
     std::ofstream file { fileName_, std::ios::out | std::ios::binary };
-    file.write (amqp::AMQP_HEADER.data(), 7);
+    file.write (amqp::AMQP_HEADERS[amqp::header::AMQP_DEFAULT].data(), 7);
     char encoding = 0;
     file.write(&encoding, sizeof (encoding));
-    file.write (m_blob, m_size);
+    file.write (m_blob, static_cast<std::streamsize>(m_size));
 }
 
 /******************************************************************************/

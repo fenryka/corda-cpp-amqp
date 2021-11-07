@@ -21,7 +21,7 @@ main (
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
     auto blob = Outer().serialise (sf);
-    amqp::CordaBytes cb (*blob);
+    amqp::CordaBytes cb (*blob, std::make_unique<amqp::AMQPConfig>());
     cb.toFile ("serialized.bin");
 
     DBG ("\n\nDESERIALISE\n\n");

@@ -28,7 +28,7 @@ main (int argc, char **argv) {
     }
 
     try {
-        amqp::CordaBytes cb(argv[1]);
+        amqp::CordaBytes cb(argv[1], std::make_unique<amqp::AMQPConfig>());
 
         if (cb.encoding() == amqp::DATA_AND_STOP) {
             DataDumper dataDumper (cb);
