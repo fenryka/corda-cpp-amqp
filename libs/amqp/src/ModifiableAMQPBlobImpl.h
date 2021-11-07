@@ -14,6 +14,7 @@
 #include "serialiser/serialisers/property-serialisers/DoublePropertySerialiserBase.h"
 #include "serialiser/serialisers/property-serialisers/LongPropertySerialiserBase.h"
 #include "serialiser/serialisers/property-serialisers/FloatPropertySerialiserBase.h"
+#include "serialiser/serialisers/property-serialisers/CharPropertySerialiserBase.h"
 
 #include "amqp/src/schema/descriptors/corda-descriptors/CompositeDescriptor.h"
 #include "amqp/src/schema/descriptors/corda-descriptors/RestrictedDescriptor.h"
@@ -81,7 +82,7 @@ namespace amqp::internal {
             const std::string & name_,
             const std::string & fingerprint_
         ) const override {
-            DBG (__FUNCTION__ << std::endl);
+            DBG (__FUNCTION__ << std::endl); // NOLINT
             return schema::descriptors::RestrictedDescriptor::makeProton (
                 name_,
                 m_source,
@@ -200,7 +201,6 @@ ModifiableAMQPBlobImpl::writePrimitive (
     const std::pair<std::string, std::string> & key_)
 {
     DBG (__FUNCTION__ << "::" << propertyName_ << "::"<< propertyValue_ << std::endl); // NOLINT
-
 
     assert (m_schemas.find (key_) != m_schemas.end());
 
