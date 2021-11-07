@@ -1,55 +1,51 @@
-#include "StringPropertyReader.h"
-
-#include <proton/codec.h>
+#include "CharPropertyReader.h"
 
 #include "proton-wrapper/include/proton_wrapper.h"
 
 /******************************************************************************
  *
- * class StringPropertyReader
+ * CharPropertyReader
  *
  ******************************************************************************/
 
 std::any
 amqp::internal::serialiser::reader::
-StringPropertyReader::read (pn_data_t * data_) const {
-    return std::any { proton::readAndNext<std::string> (data_, __FILE__, __LINE__) };
+CharPropertyReader::read (pn_data_t * data_) const {
+    return std::any (proton::readAndNext<char> (data_, __FILE__, __LINE__));
 }
 
 /******************************************************************************/
 
 std::string
 amqp::internal::serialiser::reader::
-StringPropertyReader::readString (pn_data_t * data_) const {
-    return proton::readAndNext<std::string> (data_, __FILE__, __LINE__);
+CharPropertyReader::readString (pn_data_t * data_) const {
+    return std::to_string (proton::readAndNext<char> (data_, __FILE__, __LINE__));
 }
 
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::serialiser::reader::
-StringPropertyReader::dump (
+CharPropertyReader::dump (
     const std::string & name_,
     pn_data_t * data_,
-    const amqp::schema::ISchema & schema_
-) const {
-    DBG ("StringPropertyReader::dump - " << name_ << std::endl); // NOLINT
+    const amqp::schema::ISchema & schema_) const
+{
     return std::make_unique<TypedPair<std::string>> (
-            name_,
-            "\"" + proton::readAndNext<std::string> (data_, __FILE__, __LINE__) + "\"");
+        name_,
+        std::to_string (proton::readAndNext<char> (data_, __FILE__, __LINE__)));
 }
 
 /******************************************************************************/
 
 uPtr<amqp::serialiser::reader::IValue>
 amqp::internal::serialiser::reader::
-StringPropertyReader::dump (
+CharPropertyReader::dump (
     pn_data_t * data_,
-    const amqp::schema::ISchema & schema_
-) const {
-    DBG ("StringPropertyReader::dump - no-name" << std::endl); // NOLINT
+    const amqp::schema::ISchema & schema_) const
+{
     return std::make_unique<TypedSingle<std::string>> (
-            "\"" + proton::readAndNext<std::string> (data_, __FILE__, __LINE__) + "\"");
+        std::to_string (proton::readAndNext<char> (data_, __FILE__, __LINE__)));
 }
 
 /******************************************************************************/

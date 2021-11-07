@@ -1,5 +1,5 @@
 #pragma clang diagnostic push
-#pragma ide diagnostic ignored "cert-err58-cpp"
+#pragma clang diagnostic ignored "cert-err58-cpp"
 
 #include <gtest/gtest.h>
 #include <string>
@@ -78,7 +78,7 @@ TEST (serializableVector, autoName) {
 TEST (serializableVector, javaTypeName) {
     typedef amqp::serializable::SerializableVector<std::string> T;
 
-    T * l;
+    [[maybe_unused]] T * l; // It isn't unused byt clang seems to not see it
     T   l2("ABC");
 
     std::cout << typeName<T>() << std::endl;
@@ -103,8 +103,6 @@ TEST (serializableVector, javaTypeName2) {
             ASSERT_EQ("java.util.List<String>", javaTypeName<decltype (m_list)>());
             ASSERT_EQ("java.util.List<String>", javaTypeName<std::remove_pointer_t<decltype (&m_list)>>());
         }
-
-
     };
 
     Test t;

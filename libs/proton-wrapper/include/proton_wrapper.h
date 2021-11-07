@@ -26,6 +26,7 @@ namespace proton {
     bool pn_data_enter(pn_data_t *);
 
     void attest_is_double (pn_data_t *, const std::string &, int);
+    void attest_is_char (pn_data_t *, const std::string &, int);
     void attest_is_long (pn_data_t *, const std::string &, int);
     void attest_is_float (pn_data_t *, const std::string &, int);
     void attest_is_bool (pn_data_t *, const std::string &, int);
@@ -36,7 +37,8 @@ namespace proton {
     void attest_is_described(pn_data_t *, const std::string &, int);
 
     void is_map (pn_data_t *, const std::string &, int);
-    [[maybe_unused]] bool is_primitive (pn_data_t *);
+
+    [[maybe_unused]] [[maybe_unused]] bool is_primitive (pn_data_t *);
 
     void is_ulong(pn_data_t *);
     void is_symbol(pn_data_t *);

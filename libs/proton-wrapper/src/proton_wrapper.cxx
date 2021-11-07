@@ -143,6 +143,7 @@ proton::is_ulong (pn_data_t * data_) {
 
 /******************************************************************************/
 
+[[maybe_unused]]
 bool
 proton::is_bool (pn_data_t * data_) {
     return pn_data_type (data_) == PN_BOOL;
@@ -256,6 +257,20 @@ attest_is_long (pn_data_t * data_, const std::string & file_, int line_) {
 
 void
 proton::
+attest_is_char (pn_data_t * data_, const std::string & file_, int line_) {
+    if (pn_data_type (data_) != PN_CHAR) {
+        std::stringstream ss;
+        ss << "Expected a char type, got " << protonToString[pn_data_type (data_)].first
+           << ", " << file_ << "::" << line_ << std::endl;
+
+        throw std::runtime_error (ss.str());
+    }
+}
+
+/******************************************************************************/
+
+void
+proton::
 attest_is_double (pn_data_t * data_, const std::string & file_, int line_) {
     if (pn_data_type (data_) != PN_DOUBLE) {
         std::stringstream ss;
@@ -298,7 +313,7 @@ is_map (pn_data_t * data_, const std::string & file_, int line_) {
 
 /******************************************************************************/
 
-bool
+[[maybe_unused]] bool
 proton::
 is_primitive (pn_data_t * data_) {
     return protonToString[pn_data_type(data_)].second == PRIMITIVE;
@@ -326,7 +341,7 @@ std::string
 proton::get_string (pn_data_t * data_, bool allowNull) {
     if (pn_data_type(data_) == PN_STRING) {
         auto str = pn_data_get_string (data_);
-        return std::string (str.start, str.size);
+        return { str.start, str.size };
     } else  if (allowNull && pn_data_type (data_) == PN_NULL) {
         return "";
     }
@@ -343,14 +358,14 @@ std::string
 proton::get_symbol<std::string> (pn_data_t * data_) {
     is_symbol (data_);
     auto symbol = pn_data_get_symbol(data_);
-    return std::string (symbol.start, symbol.size);
+    return { symbol.start, symbol.size };
 }
 
 template<>
 pn_bytes_t
 proton::get_symbol (pn_data_t * data_) {
     is_symbol (data_);
-    return pn_data_get_symbol(data_);
+    return pn_data_get_symbol (data_);
 }
 
 /******************************************************************************/
@@ -391,7 +406,7 @@ auto_enter::auto_enter (pn_data_t * data_, bool next_)
 
 proton::
 auto_enter::~auto_enter() {
-    pn_data_exit(m_data);
+    pn_data_exit (m_data);
 }
 
 /******************************************************************************

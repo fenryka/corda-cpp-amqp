@@ -14,6 +14,8 @@ target_sources(amqp
         FloatPropertySerialiserBase.h
         BinaryPropertySerialiserBase.cxx
         BinaryPropertySerialiserBase.h
+        CharPropertySerialiserBase.cxx
+        CharPropertySerialiserBase.h
 
     PUBLIC
         BoolPropertySerialiser.h
@@ -23,4 +25,5 @@ target_sources(amqp
         StringPropertySerialiser.h
         FloatPropertySerialiser.h
         BinaryPropertySerialiser.h
+        CharPropertySerialiser.h
 )
