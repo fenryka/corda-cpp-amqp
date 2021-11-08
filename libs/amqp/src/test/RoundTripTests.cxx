@@ -131,35 +131,86 @@ TEST (RTT, singles) { // NOLINT
 
 /******************************************************************************/
 
-template<typename T1, typename T2>
-void
-doubleTest(
-    amqp::internal::assembler::SerialiserFactoryInternal & sfi_,
-    T1 val1_,
-    T2 val2_
-) {
-    typedef RTTDouble<T1, T2> Double;
-    Double deSerialiseMe (val1_, val2_);
+namespace {
 
-    auto blob = deSerialiseMe.serialise (sfi_);
-    auto b = sfi_.deserialise<Double> (*blob);
+    template<typename> struct defVal {};
+    template<> struct defVal<int> { static const int val = 10; };
+    template<> struct defVal<char> { static const char val = 'a'; };
+    template<> struct defVal<double> { constexpr static double val = 100.1; };
+    template<> struct defVal<float> { constexpr static float val = 69.69; };
+    template<> struct defVal<long> { constexpr static long val = 100000; };
+    template<> struct defVal<bool> { constexpr static bool val = true; };
+    template<> struct defVal<std::string> { static const std::string val; };
 
-    ASSERT_EQ(deSerialiseMe.val1 (), b.val1 ());
-    ASSERT_EQ(deSerialiseMe.val2 (), b.val2 ());
+    const std::string defVal<std::string>::val = "Hello World"; // NOLINT
+
 }
 
 /******************************************************************************/
 
-TEST (RTT, Doubles) { // NOLINT
+namespace {
+
+    template<typename T1, typename T2>
+    void
+    doubleTest (
+        amqp::internal::assembler::SerialiserFactoryInternal &sfi_,
+        T1 val1_,
+        T2 val2_
+    ) {
+        typedef RTTDouble<T1, T2> Double;
+        Double deSerialiseMe (val1_, val2_);
+
+        auto blob = deSerialiseMe.serialise (sfi_);
+        auto b = sfi_.deserialise<Double> (*blob);
+
+        ASSERT_EQ(deSerialiseMe.val1 (), b.val1 ());
+        ASSERT_EQ(deSerialiseMe.val2 (), b.val2 ());
+    }
+
+}
+
+/******************************************************************************/
+
+namespace {
+
+    template<typename T, typename ...Args>
+    struct
+    doubleTester {
+
+        template<typename OUTER, typename T2, typename ...Args2>
+        struct
+        with {
+            static void
+            test (amqp::internal::assembler::SerialiserFactoryInternal & sfi_) {
+                doubleTest<OUTER, T2>(sfi_, defVal<OUTER>::val, defVal<T2>::val);
+
+                if constexpr (sizeof...(Args2) > 0) {
+                    with<OUTER, Args2...>::test (sfi_);
+                }
+            }
+        };
+
+        template<typename T2, typename ...Args2>
+        static
+        void
+        test (amqp::internal::assembler::SerialiserFactoryInternal & sfi_) {
+            with<T, T2, Args2...>::test (sfi_);
+
+            // Recurse down our outer typelist
+            if constexpr (sizeof...(Args) > 0) {
+                doubleTester<Args...>::template test<T2, Args2...> (sfi_);
+            }
+        }
+    };
+}
+
+/******************************************************************************/
+
+TEST (RTT, things) { // NOLINT
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    doubleTest<int, int> (sf, 69, 1098);
-    doubleTest<float, int> (sf, 69.6969, 102);
-    doubleTest<double, int> (sf, 100, 103);
-    doubleTest<long, int> (sf, 400, 30);
-    doubleTest<std::string, int> (sf, "This is a test", 30);
-    doubleTest<bool, int> (sf, true, 1);
-    doubleTest<char, int> (sf, 'a', 909);
+    doubleTester<int, float, double, long, std::string, bool, char>
+        ::test<int, float, double, long, std::string, bool, char>(sf);
 }
 
 /******************************************************************************/
@@ -185,7 +236,6 @@ TEST (RTT, many_types) { // NOLINT
             sf_.write<std::string *> (m_val5, "m_val5", *this, blob_);
         }
 
-
         public :
             explicit DeSerialiseMe (int val1_, double val2_, long val3_, std::string val4_, const std::string & val5_)
                 : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
@@ -204,7 +254,6 @@ TEST (RTT, many_types) { // NOLINT
                 , m_val4 { std::any_cast<std::string>(l_[3]) }
                 , m_val5 { std::any_cast<std::string *>(l_[4]) }
             { }
-
 
             [[maybe_unused]] static std::vector<std::any> deserialiseImpl(
                 const SerialiserFactory & sf_,
