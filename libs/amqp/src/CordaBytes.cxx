@@ -41,7 +41,7 @@ CordaBytes::CordaBytes (const std::string & file_, uPtr<AMQPConfig> config_)
 #endif
 
     if (std::find (amqp::AMQP_HEADERS.begin(), amqp::AMQP_HEADERS.end(), header) == amqp::AMQP_HEADERS.end()) {
-        if (!config_->ignoreHeader) {
+        if (!m_config->ignoreHeader) {
             throw std::runtime_error ("Not a Corda stream");
         } else {
             std::cerr << "Bad Header: ";
