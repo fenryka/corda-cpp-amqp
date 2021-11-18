@@ -8,9 +8,9 @@
 
 /******************************************************************************/
 
-class ContainsList : public amqp::serializable::Serializable<ContainsList> {
+class DeSerialiseMe : public amqp::serializable::Serializable<DeSerialiseMe> {
     private :
-        amqp::serializable::SerializableVector<int> m_list;
+        amqp::serializable::SerializableVector<int> m_val;
 
         /**
          * Overriding this lets us actually specify how to serialise
@@ -21,12 +21,20 @@ class ContainsList : public amqp::serializable::Serializable<ContainsList> {
             amqp::ModifiableAMQPBlob &) const override;
 
     public :
-        explicit ContainsList (std::vector<int> list_)
-            : Serializable<ContainsList> (javaTypeName<decltype(this)>())
-            , m_list (std::move (list_))
-        {
+        DeSerialiseMe (std::initializer_list<int> list_)
+            : Serializable (javaTypeName<decltype(this)>())
+            , m_val (list_)
+        { }
+
+        explicit DeSerialiseMe (const std::vector<std::any> &);
+
+        [[maybe_unused]] static std::vector<std::any> deserialiseImpl(
+            const amqp::assembler::SerialiserFactory &,
+            const amqp::AMQPBlob &);
+
+        [[maybe_unused]] [[nodiscard]] const std::vector<int> & val() const {
+            return m_val;
         }
 };
 
 /******************************************************************************/
-

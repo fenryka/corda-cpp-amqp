@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-class Inner : public amqp::serializable::Serializable {
+class Inner : public amqp::serializable::Serializable<Inner> {
     private :
         /**
          * Overriding this lets us actually specify how to serialise
@@ -26,7 +26,7 @@ class Inner : public amqp::serializable::Serializable {
         float m_val6;
 
         explicit Inner (int a, const std::string & b, double c, long d, bool e, float f)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_val1 (a)
             , m_val2 (b)
             , m_val3 (c)
@@ -48,7 +48,7 @@ class Inner : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class Outer : public amqp::serializable::Serializable {
+class Outer : public amqp::serializable::Serializable<Outer> {
     private :
         Inner   m_a;
 
@@ -58,7 +58,7 @@ class Outer : public amqp::serializable::Serializable {
 
     public :
         explicit Outer (int a, const std::string & b, double c, long d, bool e, float f)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint456")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (Inner (a, b, c, d, e, f))
         { }
 

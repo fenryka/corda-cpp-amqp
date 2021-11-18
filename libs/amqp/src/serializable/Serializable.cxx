@@ -6,12 +6,9 @@
 /******************************************************************************/
 
 amqp::serializable::
-Serializable::Serializable (
-    std::string name_,
-    std::string fingerprint_
-) : m_name (std::move (name_))
-  , m_fingerprint (std::move (fingerprint_)
-) {
+SerializableBase::SerializableBase (
+    std::string name_
+) : m_name (std::move (name_)) {
 
 }
 
@@ -20,7 +17,7 @@ Serializable::Serializable (
 namespace {
 
     struct AutoComposite {
-        const amqp::serializable::Serializable & m_s;
+        const amqp::serializable::SerializableBase & m_s;
         amqp::ModifiableAMQPBlob & m_b;
 
         AutoComposite (decltype(m_s) s_, decltype(m_b) b_) : m_s (s_), m_b (b_) {
@@ -44,7 +41,7 @@ namespace {
  */
 uPtr<amqp::AMQPBlob>
 amqp::serializable::
-Serializable::serialise (
+SerializableBase::serialise (
     const amqp::assembler::SerialiserFactory & sf_
 ) const {
     auto blob = sf_.blob();
@@ -76,7 +73,7 @@ Serializable::deserialise (
 
 void
 amqp::serializable::
-Serializable::serialise (
+SerializableBase::serialise (
     const amqp::assembler::SerialiserFactory & sf_,
     ModifiableAMQPBlob & blob_) const
 {
@@ -91,16 +88,8 @@ Serializable::serialise (
 
 const std::string &
 amqp::serializable::
-Serializable::name() const {
+SerializableBase::name() const {
     return m_name;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::serializable::
-Serializable::fingerprint() const {
-    return m_fingerprint;
 }
 
 /******************************************************************************/

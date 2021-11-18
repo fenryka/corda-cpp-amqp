@@ -1,7 +1,7 @@
 #include "ModifiableAMQPBlobImpl.h"
 
 #include <proton/codec.h>
-#include <amqp/include/serializable/RestrictedSerializable.h>
+#include "amqp/include/serializable/RestrictedSerializable.h"
 
 #include "corda-utils/include/debug.h"
 
@@ -25,7 +25,7 @@ ModifiableAMQPBlobImpl::ModifiableAMQPBlobImpl()
 inline
 std::pair<std::string, std::string>
 amqp::internal::
-ModifiableAMQPBlobImpl::key (const amqp::serializable::Serializable & s_) {
+ModifiableAMQPBlobImpl::key (const amqp::serializable::SerializableBase & s_) {
     return std::make_pair (s_.name(), s_.fingerprint());
 }
 
@@ -34,7 +34,7 @@ ModifiableAMQPBlobImpl::key (const amqp::serializable::Serializable & s_) {
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startSerializable (
-    const amqp::serializable::Serializable & s_
+    const amqp::serializable::SerializableBase & s_
 ) {
     DBG ("  startSerializable: " << s_.fingerprint() << std::endl);
     pn_data_put_described (m_payload);
@@ -58,7 +58,7 @@ ModifiableAMQPBlobImpl::startSerializable (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startComposite (
-    const amqp::serializable::Serializable & composite_
+    const amqp::serializable::SerializableBase & composite_
 ) {
     DBG (__FUNCTION__
         << " - "
@@ -83,7 +83,7 @@ ModifiableAMQPBlobImpl::startComposite (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::startRestricted (
-    const amqp::serializable::RestrictedSerializable & restricted_
+    const amqp::serializable::SerializableBase & restricted_
 ) {
     DBG (__FUNCTION__
              << " - "
@@ -116,7 +116,7 @@ ModifiableAMQPBlobImpl::startRestricted (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::endComposite (
-    const amqp::serializable::Serializable & composite_
+    const amqp::serializable::SerializableBase & composite_
 ) {
     DBG ("endComposite - " << composite_.name() << std::endl);
     pn_data_exit (m_payload);
@@ -130,7 +130,7 @@ amqp::internal::
 ModifiableAMQPBlobImpl::writeNull (
     const std::string & propertyName_,
     const std::string & propertyType_,
-    const amqp::serializable::Serializable & parent_
+    const amqp::serializable::SerializableBase & parent_
 ) {
     DBG (__FUNCTION__
              << "::" << propertyName_
@@ -165,7 +165,7 @@ ModifiableAMQPBlobImpl::writeNull (
 void
 amqp::internal::
 ModifiableAMQPBlobImpl::endRestricted (
-    const amqp::serializable::RestrictedSerializable & restricted_
+    const amqp::serializable::SerializableBase & restricted_
 ) {
     DBG ("endRestricted - " << restricted_.name() << std::endl);
     pn_data_exit (m_payload);
@@ -179,7 +179,7 @@ amqp::internal::
 ModifiableAMQPBlobImpl::writeComposite (
     const std::string & propertyName_,
     const std::string & propertyType_,
-    const amqp::serializable::Serializable & composite_
+    const amqp::serializable::SerializableBase & composite_
 ) {
     DBG (__FUNCTION__
         << "::" << composite_.name() << std::endl); // NOLINT
@@ -206,10 +206,9 @@ amqp::internal::
 ModifiableAMQPBlobImpl::writeRestricted (
     const std::string & propertyName_,
     const std::string & propertyType_,
-    const amqp::serializable::Serializable & restricted_
+    const amqp::serializable::SerializableBase & restricted_
 ) {
-    DBG (__FUNCTION__
-             << "::" << restricted_.name() << std::endl); // NOLINT
+    DBG (__FUNCTION__ << "::" << restricted_.name() << std::endl); // NOLINT
 
     auto id = key (restricted_);
 

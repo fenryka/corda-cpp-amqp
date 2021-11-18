@@ -71,3 +71,19 @@ TEST (typeName, maps) {
 }
 
 /******************************************************************************/
+
+namespace {
+
+    class Anon {
+    public :
+        class Anon2 {};
+    };
+
+}
+
+TEST (typeName, anonNamespace) {
+    EXPECT_EQ ("Anon", javaTypeName<Anon>());
+    EXPECT_EQ ("Anon.Anon2", javaTypeName<Anon::Anon2>());
+}
+
+/******************************************************************************/

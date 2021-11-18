@@ -5,9 +5,22 @@
 #include "amqp/include/AMQPBlob.h"
 #include "amqp/include/assembler/SerialiserFactory.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Forward class declarations
+ *
+ ******************************************************************************/
 
-class Inner : public amqp::serializable::Serializable {
+class Inner;
+class Outer;
+
+/******************************************************************************
+ *
+ * class Inner
+ *
+ ******************************************************************************/
+
+class Inner : public amqp::serializable::Serializable<Inner> {
     private :
         int m_val;
 
@@ -21,7 +34,7 @@ class Inner : public amqp::serializable::Serializable {
 
     public :
         explicit Inner (int val_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_val (val_)
         { }
 
@@ -43,7 +56,7 @@ class Inner : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class Outer : public amqp::serializable::Serializable {
+class Outer : public amqp::serializable::Serializable<Outer> {
     private :
         Inner   m_a;
 
@@ -53,7 +66,7 @@ class Outer : public amqp::serializable::Serializable {
 
     public :
         explicit Outer (int val_= 1)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint456")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (Inner (val_))
         { }
 

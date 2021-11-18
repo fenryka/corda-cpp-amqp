@@ -4,7 +4,6 @@
 
 #include <utility>
 
-#include "include/serializable/Serializable.h"
 #include "include/serializable/SerializableMap.h"
 
 #include "amqp/include/AMQPBlob.h"
@@ -12,7 +11,7 @@
 
 /******************************************************************************/
 
-class MapIntInt : public amqp::serializable::Serializable {
+class MapIntInt : public amqp::serializable::Serializable<MapIntInt> {
     private :
         amqp::serializable::SerializableMap<int, int> m_map;
 
@@ -27,7 +26,7 @@ class MapIntInt : public amqp::serializable::Serializable {
     public :
         explicit MapIntInt (
             amqp::serializable::SerializableMap<int, int> map_
-        ) : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
+        ) : Serializable<MapIntInt> (javaTypeName<decltype(this)>())
           , m_map (std::move (map_))
         {
         }

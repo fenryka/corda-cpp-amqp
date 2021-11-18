@@ -15,18 +15,16 @@ main (int argc, char ** argv) {
         return EXIT_FAILURE;
     }
 
-    amqp::serializable::SerializableVector<int> l1 ("123", { 1, 2, 3});
-    amqp::serializable::SerializableVector<int> l2 ("123", { 4, 5, 6});
-    amqp::serializable::SerializableVector<int> l3 ("123", { 7, 8, 9});
+    amqp::serializable::SerializableVector<int> l1 { 1, 2, 3};
+    amqp::serializable::SerializableVector<int> l2 { 4, 5, 6};
+    amqp::serializable::SerializableVector<int> l3 { 7, 8, 9};
 
     amqp::serializable::SerializableVector<
-        amqp::serializable::SerializableVector<int>> l4 ( "456", { l1, l2, l3 });
-
+        amqp::serializable::SerializableVector<int>> l4 { l1, l2, l3 };
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
     ListOfLists lol (l4);
-
 
     auto blob = lol.serialise (sf);
 

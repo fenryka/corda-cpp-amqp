@@ -7,7 +7,11 @@
 
 /******************************************************************************/
 
-class DeSerialiseMe : public amqp::serializable::Serializable {
+class DeSerialiseMe;
+
+/******************************************************************************/
+
+class DeSerialiseMe : public amqp::serializable::Serializable<DeSerialiseMe> {
     private :
         int   m_val;
         int * m_val2;
@@ -22,7 +26,7 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit DeSerialiseMe (int val_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_val (val_)
             , m_val2 { new int (val_ + 50) }
         { }
@@ -33,3 +37,4 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
 };
 
 /******************************************************************************/
+

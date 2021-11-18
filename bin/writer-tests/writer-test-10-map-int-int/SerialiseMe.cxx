@@ -1,6 +1,22 @@
 #include "SerialiseMe.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ * Fingerprints for our types
+ *
+ ******************************************************************************/
+
+template<>
+const std::string amqp::serializable::Fingerprint<MapIntInt>::val = "MapIntInt"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<amqp::serializable::SerializableMap<int, int>>::val = "MAP"; // NOLINT
+
+/******************************************************************************
+ *
+ * MapIntInt impl
+ *
+ ******************************************************************************/
 
 void
 MapIntInt::serialiseImpl (

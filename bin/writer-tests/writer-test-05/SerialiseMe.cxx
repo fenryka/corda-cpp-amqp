@@ -1,7 +1,11 @@
 #include "SerialiseMe.h"
 
 #include "corda-utils/include/debug.h"
-#include "corda-utils/include/types.h"
+
+/******************************************************************************/
+
+template<>
+const std::string amqp::serializable::Fingerprint<Recursive>::val = "Outer-123";
 
 /******************************************************************************/
 
@@ -14,7 +18,6 @@ Recursive::serialiseImpl (
 
     sf_.write (m_a, "m_a", *this, blob_);
     sf_.write (m_b, "m_b", *this, blob_);
-    //sf_.writeComposite (*m_c, "m_c", *this, blob_);
     sf_.write (m_c, "m_c", *this, blob_);
 }
 

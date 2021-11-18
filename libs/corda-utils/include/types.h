@@ -11,6 +11,7 @@
 #include <cxxabi.h>
 
 #include <iostream>
+#include "debug.h"
 
 /******************************************************************************/
 
@@ -111,6 +112,7 @@ std::string
 javaTypeName () {
     const std::string find { "::" };
     const std::string replace { "." };
+    const std::string anon { "(anonymous namespace)::" };
 
     if (is_std_vector<T>::value) {
         return is_std_vector<T>::fun();
@@ -120,11 +122,20 @@ javaTypeName () {
 
     std::string str { typeName<T>() };
 
+    DBG (__FUNCTION__ << " = " << str << std::endl); // NOLINT
+
     size_t pos { 0 };
+    while ((pos = str.find(anon, pos)) != std::string::npos) {
+        str.replace(pos, anon.length(), "");
+    }
+
+    pos = 0;
     while ((pos = str.find(find, pos)) != std::string::npos) {
         str.replace(pos, find.length(), replace);
         pos += replace.length();
     }
+
+    DBG (__FUNCTION__ << " RTN = " << str << std::endl); // NOLINT
 
     return str;
 }

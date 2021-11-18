@@ -1,7 +1,11 @@
 #include "SerialiseMe.h"
 
 #include "corda-utils/include/debug.h"
-#include "corda-utils/include/types.h"
+
+/******************************************************************************/
+
+template<> const std::string amqp::serializable::Fingerprint<Composite>::val = "Composite123";
+template<> const std::string amqp::serializable::Fingerprint<CompositeList>::val = "CopmositeList123";
 
 /******************************************************************************/
 

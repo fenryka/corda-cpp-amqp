@@ -1,7 +1,14 @@
 #include "SerialiseMe.h"
 
 #include "corda-utils/include/debug.h"
-#include "corda-utils/include/types.h"
+
+/******************************************************************************/
+
+template<>
+const std::string amqp::serializable::Fingerprint<ContainsList>::val = "ContainsList-123"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::vector<int>>::val = "int-vector"; // NOLINT
 
 /******************************************************************************/
 

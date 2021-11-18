@@ -11,8 +11,6 @@
 
 namespace amqp::internal::assembler {
 
-    using Serializable = amqp::serializable::Serializable;
-
     class SerialiserFactoryInternal : public amqp::assembler::SerialiserFactory {
         public :
             [[nodiscard]] uPtr<ModifiableAMQPBlob> blob() const override;

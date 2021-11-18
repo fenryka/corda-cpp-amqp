@@ -5,6 +5,14 @@
 
 /******************************************************************************/
 
+template<>
+const std::string amqp::serializable::Fingerprint<ContainsList>::val = "Contains-List-123"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::vector<std::string>>::val = "vector-of-string"; // NOLINT
+
+/******************************************************************************/
+
 void
 ContainsList::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,

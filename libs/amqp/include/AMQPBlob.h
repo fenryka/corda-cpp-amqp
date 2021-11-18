@@ -23,8 +23,8 @@ namespace amqp {
 
 namespace amqp::serializable {
 
-    class Serializable;
-    class RestrictedSerializable;
+//    template<typename T> class Serializable;
+//    class RestrictedSerializable;
 
 }
 
@@ -62,8 +62,10 @@ namespace amqp {
             void startPrim() const;
             void endPrim() const;
 
+            #if 0
             void startRestricted (const amqp::serializable::RestrictedSerializable &);
             void endRestricted (const amqp::serializable::RestrictedSerializable &);
+            #endif
 
     };
 

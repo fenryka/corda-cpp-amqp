@@ -10,9 +10,10 @@ set (amqp-test-sources
         RestrictedDescriptor.cxx
         OrderedTypeNotationTest.cxx
         SchemaUtils.cxx
-        RoundTripTests.cxx)
+        RoundTripTests.cxx
+        RoundTripListTests.cxx)
 
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
 
 add_executable (${EXE} ${amqp-test-sources})
 

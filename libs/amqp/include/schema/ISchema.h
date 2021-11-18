@@ -21,7 +21,7 @@ namespace amqp::schema {
 
     class ISchema {
         public :
-            [[nodiscard]] virtual const ISchemaElement & fromType (const std::string &) const = 0;
+            [[maybe_unused]] [[nodiscard]] virtual const ISchemaElement & fromType (const std::string &) const = 0;
             [[nodiscard]] virtual const ISchemaElement & fromDescriptor (const std::string &) const = 0;
     };
 

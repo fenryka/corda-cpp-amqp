@@ -8,7 +8,11 @@
 
 /******************************************************************************/
 
-class ContainsList : public amqp::serializable::Serializable {
+class ContainsList;
+
+/******************************************************************************/
+
+class ContainsList : public amqp::serializable::Serializable<ContainsList> {
     private :
         amqp::serializable::SerializableVector<std::string> m_list;
 
@@ -22,8 +26,8 @@ class ContainsList : public amqp::serializable::Serializable {
 
     public :
         explicit ContainsList (std::vector<std::string> list_)
-            : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
-            , m_list ("fingerprint456", std::move (list_))
+            : Serializable (javaTypeName<decltype(this)>())
+            , m_list (std::move (list_))
         {
         }
 };

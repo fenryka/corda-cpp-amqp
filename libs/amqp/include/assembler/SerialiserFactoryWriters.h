@@ -8,8 +8,7 @@
 namespace amqp {
 
     namespace serializable {
-        class Serializable;
-        class RestrictedSerializable;
+        class SerializableBase;
 
         template<typename, typename> class SerializableVector;
         template<typename, typename, typename, typename> class SerializableMap;
@@ -25,21 +24,25 @@ namespace amqp {
 
 namespace amqp::assembler {
 
-using Serializable = amqp::serializable::Serializable;
-using RestrictedSerializable = amqp::serializable::RestrictedSerializable;
+using Serializable = amqp::serializable::SerializableBase;
 
 /******************************************************************************/
 
 /*
  * Since we can't partially specialise functions we need
- * to pull out the writing of single values into two functions. Use
- * basic meta-programing to switch between primitives and
- * composites
+ * to pull out the writing of single values into two functions, one for
+ * prims and one for composites.
  */
 template<typename T,  bool = std::is_base_of<Serializable , T>::value>
 struct SingleWriter {
-    static void write (T propertyValue_, ModifiableAMQPBlob & blob_, const SerialiserFactory & sf_) {
-        DBG ("  SingleWriter::" << javaTypeName<T>() << " - primitive" << std::endl); // NOLINT
+    static void write (
+        T propertyValue_,
+        ModifiableAMQPBlob & blob_,
+        const SerialiserFactory & sf_
+    ) {
+        auto typeName =  javaTypeName<T>();
+        DBG ("  SingleWriter::" << typeName << " - primitive" << std::endl); // NOLINT
+
         dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).writePrimitiveSingle<T>(
             propertyValue_);
     }
@@ -106,6 +109,7 @@ struct NonPrimWriter<amqp::serializable::SerializableVector<A, B>> {
         const Serializable & parent_,
         internal::ModifiableAMQPBlobImpl & blob_
     ) {
+        DBG (__FUNCTION__ << "::VECTOR<" << typeid(A).name() << ", " << typeid(B).name() << ">" << std::endl); // NOLINT
         blob_.writeRestricted (propertyName_, type_, parent_);
     }
 };

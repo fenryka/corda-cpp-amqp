@@ -24,7 +24,7 @@ main (
     amqp::CordaBytes cb (*blob, std::make_unique<amqp::AMQPConfig>());
     cb.toFile ("serialized.bin");
 
-    DBG ("\n\nDESERIALISE\n\n");
+    DBG ("\n\nDESERIALISE\n\n"); // NOLINT
 
     auto o2 = sf.deserialise<Outer> (*blob);
 

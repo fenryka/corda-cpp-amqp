@@ -7,7 +7,11 @@
 
 /******************************************************************************/
 
-class DeSerialiseMe : public amqp::serializable::Serializable {
+class DeSerialiseMe;
+
+/******************************************************************************/
+
+class DeSerialiseMe : public amqp::serializable::Serializable<DeSerialiseMe> {
     private :
         int m_a;
         int m_b;
@@ -23,7 +27,7 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
 
     public :
         explicit DeSerialiseMe (int a_, int b_, int c_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (a_)
             , m_b (b_)
             , m_c (c_)

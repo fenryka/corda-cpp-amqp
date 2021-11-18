@@ -22,7 +22,7 @@ AutoRestrictedWrite::~AutoRestrictedWrite() {
  *
  ******************************************************************************/
 
-amqp::internal::serializable::
+[[maybe_unused]] amqp::internal::serializable::
 AutoRestrictedRead::AutoRestrictedRead (
     decltype (m_s) s_, decltype (m_b) b_
 ) : m_s (s_)

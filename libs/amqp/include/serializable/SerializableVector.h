@@ -24,9 +24,14 @@ namespace amqp::assembler {
 namespace amqp::serializable {
 
     template<typename T, typename A = std::allocator<T>>
-    class SerializableVector final : public std::vector<T, A>, public RestrictedSerializable {
+    class SerializableVector final
+        : public std::vector<T, A>
+        , public RestrictedSerializable<std::vector<T>>
+    {
         private :
             friend class amqp::assembler::SerialiserFactory;
+
+            static const std::string s_javaType;
 
             /**
              *
@@ -35,7 +40,7 @@ namespace amqp::serializable {
                 const amqp::assembler::SerialiserFactory & sf_,
                 ModifiableAMQPBlob & blob_
             ) const {
-                DBG (__FUNCTION__ << "::" << name() << std::endl); // NOLINT
+                DBG (__FUNCTION__ << "::" << this->name() << std::endl); // NOLINT
 
                 amqp::internal::serializable::AutoRestrictedWrite ar (*this, blob_);
 
@@ -56,33 +61,27 @@ namespace amqp::serializable {
             }
 
         public :
-            SerializableVector() = delete;
-
-            explicit SerializableVector(
-                const std::string & fingerprint_
-            ) : std::vector<T>()
-              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
+            explicit SerializableVector()
+                : std::vector<T>()
+                , RestrictedSerializable<std::vector<T>> (javaTypeName<std::vector<T, A>>())
             { }
 
             SerializableVector(
-                const std::string& fingerprint_,
                 std::initializer_list<T> l_
             ) : std::vector<T>(l_)
-              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
+              , RestrictedSerializable<std::vector<T>> (javaTypeName<std::vector<T, A>>())
             { }
 
-            SerializableVector(
-                const std::string & fingerprint_,
+            explicit SerializableVector(
                 std::vector<T> && v_
             ) : std::vector<T>(v_)
-              , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
+              , RestrictedSerializable<std::vector<T>> (javaTypeName<std::vector<T, A>>())
             { }
 
-            SerializableVector(
-                const std::string & fingerprint_,
+            explicit SerializableVector(
                 const std::vector<std::any> &
             ) : std::vector<T>()
-                , RestrictedSerializable (javaTypeName<std::vector<T, A>>(), fingerprint_, "list")
+                , RestrictedSerializable<std::vector<T>> (javaTypeName<std::vector<T, A>>())
             { }
 
             void serialise (
@@ -101,6 +100,12 @@ namespace amqp::serializable {
                 return blob->toBlob();
             }
 
+            [[nodiscard]]
+            const std::string & javaType() const override {
+                return s_javaType;
+            }
+
+
         /**
          *
          * @param sf_
@@ -113,15 +118,32 @@ namespace amqp::serializable {
                 const amqp::assembler::SerialiserFactory & sf_,
                 const AMQPBlob & blob_
         ) {
-
+            proton::attest_is_list(blob_.data(), __FILE__, __LINE__);
+            DBG ("ARSE" << std::endl;)
+            SerializableVector<T, A> v;
+#if 0
+            amqp::internal::serializable::AutoRestrictedRead ar (&v, blob_);
 
             while (true) {
                 sf_.readSingle<T> (blob_);
             }
+#endif
+
+            /*
+            std::vector<std::any> rtn;
+            rtn.template emplace_back (v);
+             */
         }
     };
 }
 
+/******************************************************************************/
+
+template<typename T, typename A>
+[[maybe_unused]]
+const std::string
+amqp::serializable::
+SerializableVector<T, A>::s_javaType = "list"; // NOLINT
 
 /******************************************************************************/
 

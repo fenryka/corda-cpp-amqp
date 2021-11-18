@@ -12,7 +12,7 @@
 
 /******************************************************************************/
 
-class ListOfLists : public amqp::serializable::Serializable {
+class ListOfLists : public amqp::serializable::Serializable<ListOfLists> {
     private :
         amqp::serializable::SerializableVector<
             amqp::serializable::SerializableVector<int> > m_list;
@@ -28,7 +28,7 @@ class ListOfLists : public amqp::serializable::Serializable {
     public :
         explicit ListOfLists (
             amqp::serializable::SerializableVector<amqp::serializable::SerializableVector<int>> list_
-        ) : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
+        ) : Serializable<ListOfLists> (javaTypeName<decltype(this)>())
             , m_list (std::move (list_))
         {
         }

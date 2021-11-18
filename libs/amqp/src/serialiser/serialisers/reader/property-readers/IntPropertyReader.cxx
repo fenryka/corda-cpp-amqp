@@ -61,6 +61,7 @@ IntPropertyReader::dump (
     const amqp::schema::ISchema & schema_) const
 {
     DBG ("IntPropertyReader::dump - no-name" << std::endl); // NOLINT
+
     return std::make_unique<TypedSingle<std::string>> (
             std::to_string (proton::readAndNext<int> (data_, __FILE__, __LINE__)));
 }

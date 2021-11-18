@@ -6,12 +6,17 @@
 
 /******************************************************************************/
 
+template<> const std::string amqp::serializable::Fingerprint<Inner>::val = "Inner-123";
+template<> const std::string amqp::serializable::Fingerprint<Outer>::val = "Outer-123";
+
+/******************************************************************************/
+
 void
 Inner::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
-    DBG (__FUNCTION__ << std::endl);
+    DBG (__FUNCTION__ << std::endl); // NOLINT
 
     sf_.write (m_a, "m_a", *this, blob_);
     sf_.write<const std::string &> (m_b, "m_b", *this, blob_);
@@ -27,10 +32,8 @@ Outer::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,
     amqp::ModifiableAMQPBlob & blob_
 ) const {
-    DBG (__FUNCTION__ << std::endl);
-    DBG (javaTypeName<decltype(m_a)>() << std::endl);
+    DBG (__FUNCTION__ << std::endl); // NOLINT
 
-//    sf_.writeComposite (m_a, "m_a", *this, blob_);
     sf_.write (m_a, "m_a", *this, blob_);
 }
 

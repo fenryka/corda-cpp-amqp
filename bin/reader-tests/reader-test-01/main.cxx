@@ -24,6 +24,7 @@ main (int argc, [[ maybe_unused ]] char ** argv) {
     auto b = sf.deserialise<DeSerialiseMe>(blob);
 
     std::cout << b.val() << ", " << b.val2() << std::endl;
+    std::cout << "Fingerprint = " << b.fingerprint() << std::endl;
 
     return EXIT_SUCCESS;
 }

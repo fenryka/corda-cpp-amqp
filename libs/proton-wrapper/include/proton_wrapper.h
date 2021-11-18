@@ -4,9 +4,12 @@
 
 #include <iosfwd>
 #include <string>
+#include <sstream>
+#include <typeinfo>
 
 #include <proton/types.h>
 #include <proton/codec.h>
+#include <corda-utils/include/debug.h>
 
 /******************************************************************************/
 
@@ -138,11 +141,14 @@ namespace proton {
     T
     readAndNext (
         pn_data_t *,
-        const std::string &,
-        int,
+        const std::string & file_,
+        int line_,
         [[maybe_unused]] bool tolerateDeviance_ = false
     ) {
-        throw std::runtime_error ("This is very bad");
+        std::stringstream ss;
+        DBG ("readAndNext::" << typeid(T).name() << " " << file_ << "::" << line_ << std::endl);
+        ss << "This is very bad " << typeid(T).name() << " " << std::endl;
+        throw std::runtime_error (ss.str());
     }
 
 }
@@ -151,6 +157,18 @@ namespace proton {
 
     template<>
     int32_t
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    int64_t
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    uint32_t
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    uint64_t
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>
@@ -175,6 +193,10 @@ namespace proton {
 
     template<>
     bool
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    u_long
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
 }

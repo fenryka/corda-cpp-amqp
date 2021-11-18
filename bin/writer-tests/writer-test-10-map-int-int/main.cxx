@@ -17,7 +17,7 @@ main (int argc, char ** argv) {
 
     amqp::internal::assembler::SerialiserFactoryInternal sf;
 
-    amqp::serializable::SerializableMap<int, int> m ("MAP-FP-123", { { 1, 2}, { 3, 4} });
+    amqp::serializable::SerializableMap<int, int> m { { 1, 2}, { 3, 4} };
     MapIntInt mapIntInt (m);
 
     auto blob = mapIntInt.serialise (sf);

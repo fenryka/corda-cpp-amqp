@@ -333,7 +333,13 @@ AMQPBlob::readyPayload () const {
     proton::pn_data_enter (m_data);
 
     auto key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
-    assert (stripCorda (key) == amqp::internal::schema::descriptors::ENVELOPE);
+    DBG ("KEY == " << key << std::endl);
+
+    auto stripKey = stripCorda (key);
+    if (stripKey != amqp::internal::schema::descriptors::ENVELOPE) {
+        DBG ("Strip Key " << stripKey  << " != "  << amqp::internal::schema::descriptors::ENVELOPE << std::endl);
+    }
+
     proton::attest_is_list (m_data, __FILE__, __LINE__);
     proton::pn_data_enter (m_data);
     proton::attest_is_described (m_data, __FILE__, __LINE__);
@@ -390,7 +396,7 @@ AMQPBlob::endPrim () const {
 
 /******************************************************************************/
 
-
+#if 0
 void
 amqp::
 AMQPBlob::startRestricted (const amqp::serializable::RestrictedSerializable &) {
@@ -404,5 +410,7 @@ amqp::
 AMQPBlob::endRestricted (const amqp::serializable::RestrictedSerializable &) {
 
 }
+
+#endif
 
 /******************************************************************************/

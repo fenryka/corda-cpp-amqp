@@ -4,29 +4,22 @@
 
 /******************************************************************************/
 
-namespace amqp::serializable {
-    class RestrictedSerializable;
-}
-
-/******************************************************************************/
-
 namespace amqp::internal::serializable {
 
     struct AutoRestrictedWrite {
-        const amqp::serializable::RestrictedSerializable & m_s;
+        const amqp::serializable::SerializableBase & m_s;
         amqp::ModifiableAMQPBlob & m_b;
 
         AutoRestrictedWrite (decltype(m_s), decltype(m_b) b_);
         ~AutoRestrictedWrite();
     };
 
-    struct AutoRestrictedRead {
-        const amqp::serializable::RestrictedSerializable & m_s;
+    struct [[maybe_unused]] AutoRestrictedRead {
+        const amqp::serializable::SerializableBase & m_s;
         amqp::AMQPBlob & m_b;
 
-        AutoRestrictedRead (decltype(m_s), decltype(m_b) b_);
+        [[maybe_unused]] AutoRestrictedRead (decltype(m_s), decltype(m_b) b_);
         ~AutoRestrictedRead() = default;
-
     };
 
 }
@@ -35,21 +28,16 @@ namespace amqp::internal::serializable {
 
 namespace amqp::serializable {
 
-    class RestrictedSerializable : public Serializable {
-        private :
-            std::string m_javaType;
-
+    template<typename FINGERPRINT>
+    class RestrictedSerializable : public SerializableBase, private Fingerprint<FINGERPRINT> {
         public :
-            RestrictedSerializable (
-                std::string name_,
-                std::string fingerprint_,
-                std::string javaType_
-            ) : Serializable (std::move (name_), std::move (fingerprint_))
-                , m_javaType (std::move (javaType_))
+            explicit RestrictedSerializable (
+                std::string name_
+            ) : SerializableBase (std::move (name_))
             { }
 
-            [[nodiscard]] const std::string & javaType() const {
-                return m_javaType;
+            [[nodiscard]] const std::string & fingerprint() const override {
+                return this->_fingerprint();
             }
     };
 

@@ -73,6 +73,7 @@ namespace amqp::internal::serialiser::serialisers {
                 }
             }
 
+            [[maybe_unused]]
             static std::shared_ptr<amqp::serialiser::ISerialiser>
             makeList (const std::string & type_, std::weak_ptr<amqp::serialiser::ISerialiser> serialser_) {
                 return std::make_shared<ListSerialiser<reader::ListReader, writer::Writer>> (type_, serialser_);

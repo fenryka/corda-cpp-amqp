@@ -10,9 +10,12 @@
 
 /******************************************************************************/
 
+template<> const std::string amqp::serializable::Fingerprint<std::vector<int>>::val = "IntVector";
+
+/******************************************************************************/
+
 TEST (serializableVector, test1) {
-    amqp::serializable::SerializableVector<int> vi {
-        "things123"};
+    amqp::serializable::SerializableVector<int> vi;
 
     ASSERT_EQ(0, vi.size());
     ASSERT_EQ("java.util.List<int>", vi.name());
@@ -28,7 +31,6 @@ TEST (serializableVector, test1) {
 TEST (serializableVector, test2) {
     std::vector<int> a {1, 2, 3};
     amqp::serializable::SerializableVector<int> vi {
-        "things123",
         std::move (a)
     };
 
@@ -45,7 +47,6 @@ TEST (serializableVector, test2) {
 
 TEST (serializableVector, test3) {
     amqp::serializable::SerializableVector<int> vi {
-        "things123",
         { 1, 2, 3, 4, 5, 6 }
     };
 
@@ -61,8 +62,7 @@ TEST (serializableVector, test3) {
 /******************************************************************************/
 
 TEST (serializableVector, autoName) {
-    amqp::serializable::SerializableVector<int> vi {
-        "things123"};
+    amqp::serializable::SerializableVector<int> vi;
 
     ASSERT_EQ(0, vi.size());
     ASSERT_EQ("java.util.List<int>", vi.name());
@@ -79,7 +79,7 @@ TEST (serializableVector, javaTypeName) {
     typedef amqp::serializable::SerializableVector<std::string> T;
 
     [[maybe_unused]] T * l; // It isn't unused byt clang seems to not see it
-    T   l2("ABC");
+    T   l2;
 
     std::cout << typeName<T>() << std::endl;
     std::cout << typeName<decltype(l2)>() << std::endl;
@@ -97,7 +97,7 @@ TEST (serializableVector, javaTypeName2) {
     struct Test {
         amqp::serializable::SerializableVector<std::string> m_list;
 
-        Test() : m_list ("abc123") {}
+        Test() : m_list() {}
 
         void fun() {
             ASSERT_EQ("java.util.List<String>", javaTypeName<decltype (m_list)>());
@@ -117,7 +117,7 @@ TEST (serializableVector, javaTypeName3) {
             amqp::serializable::SerializableVector<std::string> m_list;
         public :
 
-            Test() : m_list ("abc123") {}
+            Test() : m_list () {}
 
             void fun() {
                 std::cout << javaTypeName<decltype (m_list)>() << std::endl;

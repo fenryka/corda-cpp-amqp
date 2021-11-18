@@ -17,10 +17,9 @@
 
 namespace amqp::serializable {
 
-    class Serializable;
-    class RestrictedSerializable;
+    class SerializableBase;
 
-    template<typename, typename> class SerializableVector;
+//    template<typename, typename> class SerializableVector;
     template<typename, typename, typename, typename> class SerializableMap;
 
 }
@@ -33,8 +32,7 @@ namespace amqp::serializable {
 
 namespace amqp::assembler {
 
-    using Serializable = amqp::serializable::Serializable;
-    using RestrictedSerializable = amqp::serializable::RestrictedSerializable;
+    using Serializable = amqp::serializable::SerializableBase;
 
     class SerialiserFactory {
         public :
@@ -55,14 +53,14 @@ namespace amqp::assembler {
             }
 
             static void startRestricted (
-                const RestrictedSerializable & clazz_,
+                const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             )  {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).startRestricted (clazz_);
             }
 
             static void endRestricted (
-                const RestrictedSerializable & clazz_,
+                const Serializable & clazz_,
                 ModifiableAMQPBlob & blob_
             )  {
                 dynamic_cast<internal::ModifiableAMQPBlobImpl &>(blob_).endRestricted (clazz_);
@@ -97,7 +95,7 @@ namespace amqp::assembler {
             }
 
             template<typename T>
-            T
+            [[maybe_unused]] T
             readSingle (
                 const AMQPBlob & blob_
             ) const {
@@ -109,7 +107,7 @@ namespace amqp::assembler {
             T
             deserialise (const AMQPBlob & blob_) {
                 DBG (__FUNCTION__ << ":-:" << typeName<T>() << std::endl); // NOLINT
-                blob_.readyPayload ();
+                blob_.readyPayload();
 
                 return PropertyReader<T>::read (blob_, *this);
             }

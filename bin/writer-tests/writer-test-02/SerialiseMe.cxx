@@ -2,6 +2,10 @@
 
 /******************************************************************************/
 
+template<> const std::string amqp::serializable::Fingerprint<DeSerialiseMe>::val = "DSM123";
+
+/******************************************************************************/
+
 void
 DeSerialiseMe::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,

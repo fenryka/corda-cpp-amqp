@@ -31,8 +31,8 @@
 
 namespace amqp::serializable {
 
-    class Serializable;
-    class RestrictedSerializable;
+    class SerializableBase;
+//    class RestrictedSerializable;
 
 }
 
@@ -72,10 +72,14 @@ namespace amqp::internal {
     struct ListBlob : public BaseBlob {
         std::string m_source;
 
-        explicit ListBlob (const std::string & source_) : m_source (source_) { }
+        explicit ListBlob (std::string source_) : m_source (std::move(source_)) { }
 
         [[nodiscard]] size_t size () const override {
             return 0;
+        }
+
+        [[maybe_unused]] [[nodiscard]] const std::string & source() const {
+            return m_source;
         }
 
         [[nodiscard]] pn_data_t * make (
@@ -108,35 +112,35 @@ namespace amqp::internal {
                 uPtr<BaseBlob>> m_schemas;
 
             void startSerializable (
-                const amqp::serializable::Serializable & composite);
+                const amqp::serializable::SerializableBase & composite);
 
         public :
             ModifiableAMQPBlobImpl();
 
             static std::pair<std::string, std::string> key (
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::SerializableBase &);
 
             void startComposite (
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::SerializableBase &);
 
             void endComposite (
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::SerializableBase &);
 
             void startRestricted (
-                const amqp::serializable::RestrictedSerializable &);
+                const amqp::serializable::SerializableBase &);
 
             void endRestricted (
-                const amqp::serializable::RestrictedSerializable &);
+                const amqp::serializable::SerializableBase &);
 
             void writeComposite (
                 const std::string &propertyName_,
                 const std::string &propertyType_,
-                const amqp::serializable::Serializable &composite_);
+                const amqp::serializable::SerializableBase &composite_);
 
             void writeRestricted (
                 const std::string &propertyName_,
                 const std::string &propertyType_,
-                const amqp::serializable::Serializable &restricted_);
+                const amqp::serializable::SerializableBase &restricted_);
 
             template<typename T>
             void writePrimitive(
@@ -150,7 +154,7 @@ namespace amqp::internal {
             void writeNull (
                 const std::string &,
                 const std::string &,
-                const amqp::serializable::Serializable &);
+                const amqp::serializable::SerializableBase &);
 
             [[nodiscard]] uPtr<AMQPBlob> toBlob() const override;
 

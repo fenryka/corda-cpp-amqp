@@ -7,7 +7,7 @@
 
 /******************************************************************************/
 
-class Recursive: public amqp::serializable::Serializable {
+class Recursive: public amqp::serializable::Serializable<Recursive> {
     private :
         int m_a;
         std::string m_b;
@@ -23,7 +23,7 @@ class Recursive: public amqp::serializable::Serializable {
 
     public :
         explicit Recursive (int a_, std::string b_, Recursive * c_)
-            : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (a_)
             , m_b (std::move (b_))
             , m_c (c_)

@@ -2,6 +2,17 @@
 
 /******************************************************************************/
 
+template<>
+const std::string amqp::serializable::Fingerprint<Inner>::val = "FP-Inner"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<DeSerialiseMe>::val = "FP-DSM"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::map<int, Inner>>::val = "FP-MapItoInner"; // NOLINT
+
+/******************************************************************************/
+
 void
 Inner::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,

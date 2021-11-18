@@ -10,7 +10,7 @@
 
 /******************************************************************************/
 
-class Composite : public amqp::serializable::Serializable {
+class Composite : public amqp::serializable::Serializable<Composite> {
     private:
         std::string m_a;
         double m_b;
@@ -21,7 +21,7 @@ class Composite : public amqp::serializable::Serializable {
 
     public :
         Composite (std::string  a_, double b_)
-            : Serializable (javaTypeName<decltype(this)>(),"FingerIt")
+            : Serializable<Composite> (javaTypeName<decltype(this)>())
             , m_a (std::move(a_))
             , m_b (b_)
         {
@@ -32,7 +32,7 @@ class Composite : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class CompositeList : public amqp::serializable::Serializable {
+class CompositeList : public amqp::serializable::Serializable<CompositeList> {
     private :
         amqp::serializable::SerializableVector<Composite> m_list;
 
@@ -46,8 +46,8 @@ class CompositeList : public amqp::serializable::Serializable {
 
     public :
         explicit CompositeList (std::vector<Composite> list_)
-            : Serializable (javaTypeName<decltype(this)>(),"fingerprint123")
-            , m_list ("fingerprint456", std::move (list_))
+            : Serializable<CompositeList> (javaTypeName<decltype(this)>())
+            , m_list (std::move (list_))
         {
         }
 

@@ -2,6 +2,26 @@
 
 /******************************************************************************/
 
+template<>
+const std::string amqp::serializable::Fingerprint<Inner>::val = "FP-Inner"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<DeSerialiseMe>::val = "FP-DSM"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::vector<int>>::val = "FP-IntVector"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::vector<Inner>>::val = "FP-InnerVector"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::map<int, std::vector<Inner>>>::val = "FP-PANTS"; // NOLINT
+
+template<>
+const std::string amqp::serializable::Fingerprint<std::map<int, amqp::serializable::SerializableVector<Inner>>>::val = "FP-PANTS"; // NOLINT
+
+/******************************************************************************/
+
 void
 Inner::serialiseImpl (
     const amqp::assembler::SerialiserFactory & sf_,

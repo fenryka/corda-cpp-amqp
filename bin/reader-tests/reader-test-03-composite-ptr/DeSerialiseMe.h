@@ -7,7 +7,12 @@
 
 /******************************************************************************/
 
-class Inner : public amqp::serializable::Serializable {
+class Inner;
+class Outer;
+
+/******************************************************************************/
+
+class Inner : public amqp::serializable::Serializable<Inner> {
     private :
         int m_val1;
         int m_val2;
@@ -22,7 +27,7 @@ class Inner : public amqp::serializable::Serializable {
 
     public :
         explicit Inner (int val1_, int val2_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_val1 (val1_)
             , m_val2 (val2_)
         { }
@@ -43,7 +48,7 @@ class Inner : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class Outer : public amqp::serializable::Serializable {
+class Outer : public amqp::serializable::Serializable<Outer> {
     private :
         Inner   m_a;
         Inner * m_b;
@@ -54,7 +59,7 @@ class Outer : public amqp::serializable::Serializable {
 
     public :
         explicit Outer ()
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint456")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (Inner (1, 2))
             , m_b (new Inner (3, 4))
         { }

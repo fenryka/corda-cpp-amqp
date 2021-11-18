@@ -1,5 +1,8 @@
 #include "DeSerialiseMe.h"
 
+template<> const std::string amqp::serializable::Fingerprint<Inner>::val = "Inner123";
+template<> const std::string amqp::serializable::Fingerprint<Outer>::val = "Outer123";
+
 /******************************************************************************
  *
  * Inner
@@ -8,10 +11,7 @@
 
 Inner::Inner (
     const std::vector<std::any> & l_
-) : Serializable (
-    javaTypeName<decltype(this)>(),
-    "fingerprint123"
-) {
+) : Serializable (javaTypeName<decltype(this)>()) {
     auto i = l_.begin();
     m_val1 = std::any_cast<int> (*i++);
     m_val2 = std::any_cast<int> (*i++);
@@ -63,8 +63,7 @@ Inner::deserialiseImpl (
  ******************************************************************************/
 
 Outer::Outer (const std::vector<std::any> & l_) : Serializable (
-    javaTypeName<decltype(this)>(),
-    "fingerprint456"),
+    javaTypeName<decltype(this)>()),
     m_a (std::any_cast<Inner>(l_.front()))
 {
 }

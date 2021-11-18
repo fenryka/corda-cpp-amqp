@@ -22,7 +22,7 @@ namespace {
 
     };
 
-    std::map<pn_type_t, std::pair<std::string, protonTypeTypes>> protonToString {
+    std::map<pn_type_t, std::pair<std::string, protonTypeTypes>> protonToString { // NOLINT
             { PN_NULL, { "null", COMPLEX } },
             { PN_BOOL, { "bool", PRIMITIVE } },
             { PN_UBYTE, { "unsigned byte", PRIMITIVE } },
@@ -295,6 +295,8 @@ attest_is_list (pn_data_t * data_, const std::string & file_, int line_) {
             << ", " << file_ << "::" << line_ << std::endl;
 
         throw std::runtime_error (ss.str());
+    } else {
+        DBG ("YEP! it's a list" << std::endl);
     }
 }
 
@@ -520,6 +522,50 @@ readAndNext<int32_t> (
 /******************************************************************************/
 
 template<>
+int64_t
+proton::
+readAndNext<int64_t> (
+        pn_data_t * data_,
+        const std::string & file_,
+        int,
+        bool
+) {
+    auto_next an (data_);
+    return pn_data_get_long(data_);
+}
+
+/******************************************************************************/
+
+template<>
+uint32_t
+proton::
+readAndNext<uint32_t> (
+        pn_data_t * data_,
+        const std::string & file_,
+        int,
+        bool
+) {
+    auto_next an (data_);
+    return pn_data_get_uint(data_);
+}
+
+/******************************************************************************/
+
+template<>
+uint64_t
+proton::
+readAndNext<uint64_t> (
+        pn_data_t * data_,
+        const std::string & file_,
+        int,
+        bool
+) {
+    auto_next an (data_);
+    return pn_data_get_ulong(data_);
+}
+
+/******************************************************************************/
+template<>
 std::string
 proton::
 readAndNext<std::string> (
@@ -554,8 +600,8 @@ proton::
 readAndNext<bool> (
     pn_data_t * data_,
     const std::string & file_,
-    int line_,
-    [[maybe_unused]] bool tolerateDeviance_
+    int,
+    bool
 ) {
     auto_next an (data_);
     return pn_data_get_bool (data_);
@@ -569,8 +615,8 @@ proton::
 readAndNext<double> (
     pn_data_t * data_,
     const std::string & file_,
-    int line_,
-    [[maybe_unused]] bool tolerateDeviance_
+    int,
+    bool
 ) {
     auto_next an (data_);
     return pn_data_get_double (data_);
@@ -584,8 +630,8 @@ proton::
 readAndNext<long> (
     pn_data_t * data_,
     const std::string & file_,
-    int line_,
-    [[maybe_unused]] bool tolerateDeviance_
+    int,
+    bool
 ) {
     auto_next an (data_);
     return pn_data_get_long (data_);
@@ -594,13 +640,13 @@ readAndNext<long> (
 /******************************************************************************/
 
 template<>
-uint64_t
+u_long
 proton::
-readAndNext<uint64_t> (
+readAndNext<u_long> (
         pn_data_t * data_,
         const std::string & file_,
         int,
-        [[maybe_unused]] bool tolerateDeviance_
+        bool
 ) {
     auto_next an (data_);
     return pn_data_get_ulong (data_);
@@ -633,10 +679,10 @@ template<>
 std::pair<size_t, char *>
 proton::
 readAndNext<std::pair<size_t, char *>> (
-        pn_data_t * data_,
-        const std::string & file_,
-        int line_,
-        bool tolerateDeviance_
+    pn_data_t * data_,
+    const std::string & file_,
+    int,
+    bool
 ) {
     auto_next an (data_);
 

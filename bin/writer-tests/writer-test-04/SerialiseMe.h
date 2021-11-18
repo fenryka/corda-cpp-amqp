@@ -7,7 +7,12 @@
 
 /******************************************************************************/
 
-class Inner : public amqp::serializable::Serializable {
+class Inner;
+class Outer;
+
+/******************************************************************************/
+
+class Inner : public amqp::serializable::Serializable<Inner> {
     private :
         int m_a;
         std::string m_b;
@@ -25,7 +30,7 @@ class Inner : public amqp::serializable::Serializable {
             amqp::ModifiableAMQPBlob &) const override;
 
         explicit Inner (int a_, std::string b_, bool c_, double d_, float e_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (a_)
             , m_b (std::move (b_))
             , m_c (c_)
@@ -36,7 +41,7 @@ class Inner : public amqp::serializable::Serializable {
 
 /******************************************************************************/
 
-class Outer : public amqp::serializable::Serializable {
+class Outer : public amqp::serializable::Serializable<Outer> {
     private :
         Inner m_a;
 
@@ -50,7 +55,7 @@ class Outer : public amqp::serializable::Serializable {
 
     public :
         explicit Outer (Inner & a_)
-            : Serializable (javaTypeName<decltype(this)>(), "fingerprintABC")
+            : Serializable (javaTypeName<decltype(this)>())
             , m_a (std::move (a_))
         { }
 };

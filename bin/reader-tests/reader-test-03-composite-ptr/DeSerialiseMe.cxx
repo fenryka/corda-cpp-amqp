@@ -1,12 +1,23 @@
 #include "DeSerialiseMe.h"
 
-/******************************************************************************/
+/******************************************************************************
+ *
+ *  Fingerprints for our types
+ *
+ ******************************************************************************/
+
+template<> const std::string amqp::serializable::Fingerprint<Inner>::val = "Inner123";
+template<> const std::string amqp::serializable::Fingerprint<Outer>::val = "Outer123";
+
+/******************************************************************************
+ *
+ * Inner impl
+ *
+ ******************************************************************************/
 
 Inner::Inner (
     const std::vector<std::any> & l_
-) : Serializable (
-    javaTypeName<decltype(this)>(),
-    "fingerprint123")
+) : Serializable (javaTypeName<decltype(this)>())
   , m_val1 { std::any_cast<int>(l_[0])}
   , m_val2 { std::any_cast<int>(l_[1])}
 {
@@ -48,8 +59,7 @@ Inner::deserialiseImpl (
 Outer::Outer (
     const std::vector<std::any> & l_
 ) : Serializable (
-    javaTypeName<decltype(this)>(),
-    "fingerprint456")
+    javaTypeName<decltype(this)>())
   , m_a  { std::any_cast<Inner> (l_[0]) }
   , m_b { std::any_cast<Inner *> (l_[1]) }
 {
