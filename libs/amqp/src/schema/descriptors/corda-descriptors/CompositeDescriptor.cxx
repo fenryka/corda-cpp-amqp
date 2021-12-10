@@ -201,7 +201,7 @@ CompositeDescriptor::readAvro (
             AutoIndent ai2 { ai }; // NOLINT (performance-unnecessary-copy-initialization)
 
             proton::auto_list_enter ale (data_);
-            for (int i { 1 } ; pn_data_next (data_) ; ++i) {
+            for (size_t i { 1 } ; pn_data_next (data_) ; ++i) {
                 AMQPDescriptorRegistory[pn_data_type (data_)]->readAvro (
                         data_, ss_, ai2);
 
@@ -236,7 +236,7 @@ CompositeDescriptor::makeProton (
     const std::map<std::string, pn_data_t *> & fields_,
     const std::string & label_
 ) {
-    DBG (__FUNCTION__ << " - " << name_ << " fields: #" << fields_.size() << std::endl);
+    DBG (__FUNCTION__ << " - " << name_ << " fields: #" << fields_.size() << std::endl); // NOLINT
 
     auto rtn = pn_data (0);
 

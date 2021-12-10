@@ -3,12 +3,15 @@
 /******************************************************************************/
 
 #include <iosfwd>
-#include "include/CordaBytes.h"
-#include "include/AMQPBlob.h"
+#include "amqp/include/AMQPBlob.h"
 
 /******************************************************************************/
 
-struct pn_data_t;
+namespace amqp {
+
+    class CordaBytes;
+
+}
 
 /******************************************************************************/
 

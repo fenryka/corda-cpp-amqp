@@ -8,6 +8,7 @@
 #include <proton/codec.h>
 #include <map>
 #include <utility>
+#include <cstring>
 #include "include/colours.h"
 
 /******************************************************************************/

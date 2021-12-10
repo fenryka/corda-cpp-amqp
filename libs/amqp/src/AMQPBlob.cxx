@@ -61,17 +61,7 @@ AMQPBlob::dumpSchema (schema::DumpTarget target_) const -> std::string {
         ss,
        target_);
 
-/**
- * I have zero idea why clan things *this* line is an infinite loop, but it
- * does and that's vexing so shut up the warning
- */
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
     return ss.str();
-#pragma clang diagnostic pop
-#pragma clang diagnostic pop
 }
 
 /******************************************************************************
@@ -182,7 +172,7 @@ namespace {
             /*
              * Map isn't empty
              */
-            for (int i {0} ; i < am.elements() ; i += 2) {
+            for (size_t i {0} ; i < am.elements() ; i += 2) {
                 IValPtr key, value;
 
                 auto type = pn_data_type ((pn_data_t *)proton::auto_next (data_));
@@ -258,7 +248,7 @@ AMQPBlob::dumpData() const -> std::string {
         proton::attest_is_described (m_data, __FILE__, __LINE__);
         {
             proton::auto_enter p (m_data);
-            uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+            auto key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
             assert (stripCorda (key) == amqp::internal::schema::descriptors::ENVELOPE);
         }
 
@@ -342,7 +332,7 @@ AMQPBlob::readyPayload () const {
 
     proton::pn_data_enter (m_data);
 
-    uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    auto key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
     assert (stripCorda (key) == amqp::internal::schema::descriptors::ENVELOPE);
     proton::attest_is_list (m_data, __FILE__, __LINE__);
     proton::pn_data_enter (m_data);
@@ -362,7 +352,7 @@ AMQPBlob::startComposite() const {
     DBG (__FUNCTION__ << std::endl); // NOLINT
     proton::attest_is_described (m_data, __FILE__, __LINE__);
     proton::pn_data_enter (m_data);
-    [[maybe_unused]]uint64_t key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    [[maybe_unused]]auto key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
     DBG (__FUNCTION__ << "::" << describedToString (key) <<  " " << key << std::endl); // NOLINT
     proton::attest_is_list (m_data, __FILE__, __LINE__);
     DBG (__FUNCTION__  << ":: list sz " << pn_data_get_list (m_data) << std::endl); // NOLINT
