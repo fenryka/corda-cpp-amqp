@@ -24,7 +24,7 @@ class DeSerialiseMe : public amqp::serializable::Serializable {
         explicit DeSerialiseMe (int val_)
             : Serializable (javaTypeName<decltype(this)>(), "fingerprint123")
             , m_val (val_)
-            , m_val2 { new int (val_) }
+            , m_val2 { new int (val_ + 50) }
         { }
 
         [[maybe_unused]] [[nodiscard]] int val() const {
