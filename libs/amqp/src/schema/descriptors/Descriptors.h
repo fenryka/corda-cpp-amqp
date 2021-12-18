@@ -24,17 +24,17 @@ namespace amqp::internal::schema::descriptors {
 
 namespace amqp::internal::schema::descriptors {
 
-    extern const int ENVELOPE;
-    extern const int SCHEMA;
-    extern const int OBJECT;
-    extern const int FIELD;
-    extern const int COMPOSITE_TYPE;
-    extern const int RESTRICTED_TYPE;
-    extern const int CHOICE;
-    extern const int REFERENCED_OBJECT;
-    extern const int TRANSFORM_SCHEMA;
-    extern const int TRANSFORM_ELEMENT;
-    extern const int TRANSFORM_ELEMENT_KEY;
+    extern const unsigned int ENVELOPE;
+    extern const unsigned int SCHEMA;
+    extern const unsigned int OBJECT;
+    extern const unsigned int FIELD;
+    extern const unsigned int COMPOSITE_TYPE;
+    extern const unsigned int RESTRICTED_TYPE;
+    extern const unsigned int CHOICE;
+    extern const unsigned int REFERENCED_OBJECT;
+    extern const unsigned int TRANSFORM_SCHEMA;
+    extern const unsigned int TRANSFORM_ELEMENT;
+    extern const unsigned int TRANSFORM_ELEMENT_KEY;
 
 }
 

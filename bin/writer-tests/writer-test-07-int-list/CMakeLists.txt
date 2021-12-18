@@ -1,7 +1,7 @@
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/amqp)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/amqp)
 
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/corda-utils)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/corda-utils)
 
 set (writer-test-07-srcs
         main.cxx SerialiseMe.cxx SerialiseMe.h)

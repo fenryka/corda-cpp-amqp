@@ -32,16 +32,6 @@
 
 /******************************************************************************/
 
-/**
- *
- * YES, this global is bad and should be injected into the framework. It
- * will be, right now this is a hack
- *
- */
-static amqp::internal::serialiser::serialisers::SerialisersFactory g_sf;
-
-/******************************************************************************/
-
 namespace {
 
 /**
@@ -161,12 +151,12 @@ CompositeFactoryInternal::processComposite (
 
         switch (field->AMQPType()) {
             case schema::Field::Type::primitive_t : {
-                DBG ("    Field " << field->name() << "[" << field->type() << "] is primitive" << std::endl);
+                DBG ("    Field " << field->name() << "[" << field->type() << "] is primitive" << std::endl); // NOLINT
                 serialiser = computeIfAbsent<amqp::serialiser::ISerialiser> (
                         m_serialisersByType,
                         field->resolvedType(),
                         [&field]() -> sPtr<amqp::serialiser::ISerialiser> {
-                            return g_sf.makePropertyReader (field->type());
+                            return serialiser::serialisers::SerialisersFactory::makePropertyReader (field->type());
                         });
                 break;
             }
@@ -179,7 +169,7 @@ CompositeFactoryInternal::processComposite (
                 if (field->resolvedType() == type_.name()) {
                     // Special case where a composite type has a property that
                     // is a reference to that type itself.
-                    DBG ("IT ME!!!!" << std::endl);
+                    DBG ("IT ME!!!!" << std::endl); // NOLINT
                     serialiser = rtn;
 
                 } else {
@@ -238,7 +228,7 @@ CompositeFactoryInternal::fetchReaderForRestricted (const std::string & type_) {
                 m_serialisersByType,
                 type_,
                 [& type_]() -> sPtr<amqp::serialiser::ISerialiser> {
-                    return g_sf.makePropertyReader (type_);
+                    return serialiser::serialisers::SerialisersFactory::makePropertyReader (type_);
                 });
     } else {
         rtn = m_serialisersByType[type_];
@@ -371,7 +361,7 @@ amqp::internal::assembler::
 CompositeFactoryInternal::installCustomSerialiser (
     sPtr<amqp::serialiser::ISerialiser> serialiser_
 ) {
-    DBG (__FUNCTION__ << "::" << serialiser_->name() << "::" << serialiser_->type() << std::endl);
+    DBG (__FUNCTION__ << "::" << serialiser_->name() << "::" << serialiser_->type() << std::endl); // NOLINT
     m_serialisersByType[serialiser_->type()] = serialiser_;
 }
 

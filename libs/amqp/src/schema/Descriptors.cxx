@@ -4,17 +4,17 @@
 
 namespace amqp::internal::schema::descriptors {
 
-    const int ENVELOPE              =  1;
-    const int SCHEMA                =  2;
-    const int OBJECT                =  3;
-    const int FIELD                 =  4;
-    const int COMPOSITE_TYPE        =  5;
-    const int RESTRICTED_TYPE       =  6;
-    const int CHOICE                =  7;
-    const int REFERENCED_OBJECT     =  8;
-    const int TRANSFORM_SCHEMA      =  9;
-    const int TRANSFORM_ELEMENT     = 10;
-    const int TRANSFORM_ELEMENT_KEY = 11;
+    const unsigned int ENVELOPE              =  1;
+    const unsigned int SCHEMA                =  2;
+    const unsigned int OBJECT                =  3;
+    const unsigned int FIELD                 =  4;
+    const unsigned int COMPOSITE_TYPE        =  5;
+    const unsigned int RESTRICTED_TYPE       =  6;
+    const unsigned int CHOICE                =  7;
+    const unsigned int REFERENCED_OBJECT     =  8;
+    const unsigned int TRANSFORM_SCHEMA      =  9;
+    const unsigned int TRANSFORM_ELEMENT     = 10;
+    const unsigned int TRANSFORM_ELEMENT_KEY = 11;
 
 }
 

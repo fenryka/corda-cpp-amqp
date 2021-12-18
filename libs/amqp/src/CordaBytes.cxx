@@ -4,6 +4,8 @@
 #include <cstring>
 #include <sys/stat.h>
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 #include <proton/codec.h>
 
 #include "AMQPBlob.h"

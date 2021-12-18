@@ -1,5 +1,5 @@
 #include "BlobInspector.h"
-#include "include/CordaBytes.h"
+#include "amqp/include/CordaBytes.h"
 
 #include "amqp/src/assembler/CompositeFactoryInternal.h"
 #include "corda-custom-types/include/java/security/PublicKeySerialiser.h"

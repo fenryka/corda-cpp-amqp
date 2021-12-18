@@ -22,7 +22,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (LINUX)
-    target_link_libraries (${EXE} pthread qpid-proton proton)
+    target_link_libraries (${EXE} pthread qpid-proton)
 endif (LINUX)
 
 if (APPLE)
