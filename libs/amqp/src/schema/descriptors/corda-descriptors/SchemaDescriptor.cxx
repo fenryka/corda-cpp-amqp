@@ -44,7 +44,7 @@ SchemaDescriptor::build (pn_data_t * data_) const {
     {
         proton::auto_list_enter ale (data_);
 
-        for (int i { 1 } ; pn_data_next(data_) ; ++i) {
+        for (size_t i { 1 } ; pn_data_next(data_) ; ++i) {
             DBG ("  " << i << "/" << ale.elements() << std::endl); // NOLINT
             proton::auto_list_enter ale2 (data_);
             while (pn_data_next(data_)) {
@@ -121,15 +121,15 @@ SchemaDescriptor::readAvro (
         {
             proton::auto_list_enter ale2 (data_);
 
-            for (int j { 1 }; pn_data_next (data_); ++j) {
-                ss_.seekg (0, ss_.end);
+            for (size_t j { 1 }; pn_data_next (data_); ++j) {
+                ss_.seekg (0, std::stringstream::end);
                 auto pos = ss_.tellg();
 
                 AMQPDescriptorRegistory[pn_data_type(data_)]->readAvro (
                         data_, ss_,
                         ai_);
 
-                ss_.seekg (0, ss_.end);
+                ss_.seekg (0, std::stringstream::end);
 
                 // Slightly non obvious bit here but its possible we don't actually add a type
                 // to the Avro schema. This is normally where we find a restricted type we've

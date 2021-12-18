@@ -43,6 +43,8 @@ namespace amqp::internal::schema {
             std::list<std::string> m_requires;
             std::string            m_default;
             std::string            m_label;
+
+
             [[maybe_unused]] bool  m_mandatory;
             [[maybe_unused]] bool  m_multiple;
 

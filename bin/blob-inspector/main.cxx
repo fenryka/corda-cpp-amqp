@@ -1,10 +1,9 @@
 #include <iostream>
 
-#include <cassert>
 #include <sys/stat.h>
 
-#include "include/AMQPConfig.h"
-#include "include/CordaBytes.h"
+#include "amqp/include/AMQPConfig.h"
+#include "amqp/include/CordaBytes.h"
 #include "BlobInspector.h"
 
 /******************************************************************************/

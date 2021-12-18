@@ -11,7 +11,7 @@ build
 
 # CLion / JetBrains
 .idea
-BLOB-INSPECTOR.cbp
+*.cbp
 cmake-build-debug
 
 Testing

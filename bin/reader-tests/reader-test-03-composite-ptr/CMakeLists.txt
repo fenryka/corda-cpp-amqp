@@ -1,6 +1,6 @@
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/amqp)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/amqp)
 
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
 
 set (reader-test-3-srcs
         main.cxx DeSerialiseMe.cxx DeSerialiseMe.h)
