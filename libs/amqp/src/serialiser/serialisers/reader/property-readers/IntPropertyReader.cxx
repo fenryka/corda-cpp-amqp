@@ -37,9 +37,18 @@ IntPropertyReader::dump (
     const amqp::schema::ISchema & schema_) const
 {
     DBG ("IntPropertyReader::dump - " << name_ << std::endl); // NOLINT
+#if defined AMQP_DEBUG && AMQP_DEBUG >= 1
+    auto v = proton::readAndNext<int> (data_, __FILE__, __LINE__);
+
+    DBG ("    -> " << v << std::endl);
+
+    return std::make_unique<TypedPair<std::string>> (
+            name_, std::to_string (v));
+#else
     return std::make_unique<TypedPair<std::string>> (
             name_,
             std::to_string (proton::readAndNext<int> (data_, __FILE__, __LINE__)));
+#endif
 }
 
 /******************************************************************************/
