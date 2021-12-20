@@ -80,12 +80,12 @@ AMQPDescriptor::readRaw (
 
         switch (pn_data_type (data_)) {
             case PN_ULONG : {
-                auto key = proton::readAndNext<u_long> (data_, __FILE__, __LINE__);
+                auto key = proton::readAndNext<uint64_t> (data_, __FILE__, __LINE__);
 
                 ss_ << ai << "key  : "
                     << key << " :: " << amqp::stripCorda (key)
                     << " -> "
-                    <<  amqp::describedToString ((uint64_t)key)
+                    <<  amqp::describedToString (key)
                     << std::endl;
 
                 proton::attest_is_list (data_, __FILE__, __LINE__);

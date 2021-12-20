@@ -64,7 +64,7 @@ namespace proton {
 
     std::string get_symbol (pn_data_t *);
 
-    [[maybe_unused]] int get_int (pn_data_t *);
+    [[maybe_unused]] [[maybe_unused]] int get_int (pn_data_t *);
     bool get_boolean (pn_data_t *);
     std::string get_string (pn_data_t *, bool allowNull = false);
 
@@ -142,8 +142,40 @@ namespace proton {
         int,
         [[maybe_unused]] bool tolerateDeviance_ = false
     ) {
-        return T{};
+        throw std::runtime_error ("This is very bad");
     }
+
+}
+
+namespace proton {
+
+    template<>
+    int32_t
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    std::string
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    char *
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    std::pair<size_t, char *>
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    long
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    double
+    readAndNext(pn_data_t *, const std::string &, int, bool);
+
+    template<>
+    bool
+    readAndNext(pn_data_t *, const std::string &, int, bool);
 
 }
 

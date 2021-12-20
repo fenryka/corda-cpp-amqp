@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <stdexcept>
 #include <iostream>
 
 #include <proton/types.h>
@@ -381,6 +382,7 @@ proton::get_boolean (pn_data_t * data_) {
 
 /******************************************************************************/
 
+[[maybe_unused]]
 int
 proton::get_int (pn_data_t * data_) {
     if (pn_data_type(data_) == PN_INT) {
@@ -420,6 +422,9 @@ proton::
 auto_next::auto_next (
     pn_data_t * data_
 ) : m_data (data_) {
+    if (!m_data) {
+        throw std::logic_error ("Cannot create Auto Next with null ptr");
+    }
 }
 
 /******************************************************************************/
@@ -505,8 +510,8 @@ proton::
 readAndNext<int32_t> (
     pn_data_t * data_,
     const std::string & file_,
-    int line_,
-    [[maybe_unused]] bool tolerateDeviance_
+    int,
+    bool
 ) {
     auto_next an (data_);
     return pn_data_get_int (data_);
@@ -523,6 +528,7 @@ readAndNext<std::string> (
     int line_,
     bool tolerateDeviance_
 ) {
+    std::cout << "STRING" << std::endl;
     auto_next an (data_);
 
     if (pn_data_type (data_) == PN_STRING) {
@@ -588,12 +594,12 @@ readAndNext<long> (
 /******************************************************************************/
 
 template<>
-u_long
+uint64_t
 proton::
-readAndNext<u_long > (
+readAndNext<uint64_t> (
         pn_data_t * data_,
         const std::string & file_,
-        int line_,
+        int,
         [[maybe_unused]] bool tolerateDeviance_
 ) {
     auto_next an (data_);
@@ -608,8 +614,8 @@ proton::
 readAndNext<char *> (
     pn_data_t * data_,
     const std::string & file_,
-    int line_,
-    bool tolerateDeviance_
+    int,
+    bool
 ) {
     auto_next an (data_);
 

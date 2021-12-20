@@ -2,10 +2,8 @@
 
 #include <any>
 #include <string>
-#include <proton/codec.h>
 
-#include "proton-wrapper/include/proton_wrapper.h"
-#include "serialiser/reader/IReader.h"
+#include "include/proton_wrapper.h"
 
 /******************************************************************************
  *
@@ -37,7 +35,9 @@ IntPropertyReader::dump (
     const amqp::schema::ISchema & schema_) const
 {
     DBG ("IntPropertyReader::dump - " << name_ << std::endl); // NOLINT
-#if defined AMQP_DEBUG && AMQP_DEBUG >= 1
+#if defined (AMQP_DEBUG) && (AMQP_DEBUG >= 1)
+    DBG ("FUCK 1" << std::endl);
+    //auto v = proton::readAndNext<int32_t> (data_, __FILE__, __LINE__);
     auto v = proton::readAndNext<int> (data_, __FILE__, __LINE__);
 
     DBG ("    -> " << v << std::endl);
@@ -45,9 +45,10 @@ IntPropertyReader::dump (
     return std::make_unique<TypedPair<std::string>> (
             name_, std::to_string (v));
 #else
+    DBG ("FUCK 2" << std::endl);
     return std::make_unique<TypedPair<std::string>> (
             name_,
-            std::to_string (proton::readAndNext<int> (data_, __FILE__, __LINE__)));
+            std::to_string (proton::readAndNext<int32_t> (data_, __FILE__, __LINE__)));
 #endif
 }
 

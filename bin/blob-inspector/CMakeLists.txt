@@ -1,19 +1,20 @@
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/corda-utils)
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/proton-wrapper)
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/amqp)
-include_directories (${BLOB-INSPECTOR_SOURCE_DIR}/libs/corda-custom-types)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/corda-utils)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/proton-wrapper)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/amqp)
+include_directories (${CORDA-AMQP-CPP_SOURCE_DIR}/libs/corda-custom-types)
 
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/amqp)
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/proton-wrapper)
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/corda-custom-types)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/proton-wrapper)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/corda-custom-types)
+
+set (exe-name blob-inspector)
 
 set (blob-inspector-sources
         BlobInspector.cxx)
 
+add_executable (${exe-name} main.cxx ${blob-inspector-sources})
 
-add_executable (blob-inspector main.cxx ${blob-inspector-sources})
-
-target_link_libraries (blob-inspector amqp proton-wrapper qpid-proton corda-custom-types)
+target_link_libraries (${exe-name} amqp proton-wrapper qpid-proton corda-custom-types)
 
 #
 # Unit tests for the blob inspector. For this to work we also need to create
