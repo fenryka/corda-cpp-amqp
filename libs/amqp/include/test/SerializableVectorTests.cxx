@@ -11,6 +11,7 @@
 /******************************************************************************/
 
 template<> const std::string amqp::serializable::Fingerprint<std::vector<int>>::val = "IntVector";
+template<> const std::string amqp::serializable::Fingerprint<std::vector<std::string>>::val = "StringVector";
 
 /******************************************************************************/
 

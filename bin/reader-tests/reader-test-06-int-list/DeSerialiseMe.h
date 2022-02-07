@@ -1,7 +1,7 @@
 #pragma once
 
-#include "include/serializable/Serializable.h"
-#include "include/serializable/SerializableVector.h"
+#include "amqp/include/serializable/Serializable.h"
+#include "amqp/include/serializable/SerializableVector.h"
 
 #include "amqp/include/AMQPBlob.h"
 #include "amqp/include/assembler/SerialiserFactory.h"

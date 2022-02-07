@@ -7,10 +7,6 @@
 
 /******************************************************************************/
 
-class DeSerialiseMe;
-
-/******************************************************************************/
-
 class DeSerialiseMe : public amqp::serializable::Serializable<DeSerialiseMe> {
     private :
         int   m_val;

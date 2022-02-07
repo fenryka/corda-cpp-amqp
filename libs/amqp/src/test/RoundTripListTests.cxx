@@ -59,6 +59,10 @@ namespace {
 
 /******************************************************************************/
 
+template<> const std::string amqp::serializable::Fingerprint<RTTSingleList<int>>::val = "SingleListTestInt"; // NOLINT
+
+/******************************************************************************/
+
 namespace {
 
     template<typename T, bool = std::is_pointer_v<T>>

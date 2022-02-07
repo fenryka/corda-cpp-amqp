@@ -184,19 +184,11 @@ namespace proton {
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>
-    long
-    readAndNext(pn_data_t *, const std::string &, int, bool);
-
-    template<>
     double
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>
     bool
-    readAndNext(pn_data_t *, const std::string &, int, bool);
-
-    template<>
-    u_long
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
 }

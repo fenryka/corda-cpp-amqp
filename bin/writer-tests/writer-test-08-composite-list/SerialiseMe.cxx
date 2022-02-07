@@ -5,7 +5,8 @@
 /******************************************************************************/
 
 template<> const std::string amqp::serializable::Fingerprint<Composite>::val = "Composite123";
-template<> const std::string amqp::serializable::Fingerprint<CompositeList>::val = "CopmositeList123";
+template<> const std::string amqp::serializable::Fingerprint<std::vector<Composite>>::val = "Composite123Vector";
+template<> const std::string amqp::serializable::Fingerprint<CompositeList>::val = "CompositeList123";
 
 /******************************************************************************/
 

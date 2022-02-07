@@ -579,10 +579,10 @@ readAndNext<std::string> (
 
     if (pn_data_type (data_) == PN_STRING) {
         auto str = pn_data_get_string (data_);
-        return std::string (str.start, str.size);
+        return std::string { str.start, str.size };
     } else if (pn_data_type (data_) == PN_SYMBOL) {
         auto symbol = pn_data_get_symbol (data_);
-        return std::string(symbol.start, symbol.size);
+        return std::string { symbol.start, symbol.size };
     } else  if (tolerateDeviance_ && pn_data_type(data_) == PN_NULL) {
         return "";
     }
@@ -620,36 +620,6 @@ readAndNext<double> (
 ) {
     auto_next an (data_);
     return pn_data_get_double (data_);
-}
-
-/******************************************************************************/
-
-template<>
-long
-proton::
-readAndNext<long> (
-    pn_data_t * data_,
-    const std::string & file_,
-    int,
-    bool
-) {
-    auto_next an (data_);
-    return pn_data_get_long (data_);
-}
-
-/******************************************************************************/
-
-template<>
-u_long
-proton::
-readAndNext<u_long> (
-        pn_data_t * data_,
-        const std::string & file_,
-        int,
-        bool
-) {
-    auto_next an (data_);
-    return pn_data_get_ulong (data_);
 }
 
 /******************************************************************************/

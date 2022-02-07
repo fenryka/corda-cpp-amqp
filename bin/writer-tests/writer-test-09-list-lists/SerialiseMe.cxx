@@ -13,6 +13,9 @@ const std::string amqp::serializable::Fingerprint<std::vector<int>>::val = "intL
 template<>
 const std::string amqp::serializable::Fingerprint<std::vector<std::vector<int>>>::val = "ListIntList"; // NOLINT
 
+template<>
+const std::string amqp::serializable::Fingerprint<std::vector<amqp::serializable::SerializableVector<int>>>::val = "ListIntList2"; // NOLINT
+
 /******************************************************************************/
 
 void

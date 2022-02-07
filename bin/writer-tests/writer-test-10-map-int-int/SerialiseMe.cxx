@@ -12,6 +12,9 @@ const std::string amqp::serializable::Fingerprint<MapIntInt>::val = "MapIntInt";
 template<>
 const std::string amqp::serializable::Fingerprint<amqp::serializable::SerializableMap<int, int>>::val = "MAP"; // NOLINT
 
+template<>
+const std::string amqp::serializable::Fingerprint<std::map<int, int>>::val = "MAP2-int-int"; // NOLINT
+
 /******************************************************************************
  *
  * MapIntInt impl
