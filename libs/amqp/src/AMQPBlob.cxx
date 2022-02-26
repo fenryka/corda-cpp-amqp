@@ -332,7 +332,7 @@ AMQPBlob::readyPayload () const {
 
     proton::pn_data_enter (m_data);
 
-    auto key = proton::readAndNext<u_long>(m_data, __FILE__, __LINE__);
+    auto key = proton::readAndNext<uint64_t>(m_data, __FILE__, __LINE__);
     DBG ("KEY == " << key << std::endl);
 
     auto stripKey = stripCorda (key);

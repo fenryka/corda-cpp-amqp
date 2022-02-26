@@ -160,11 +160,11 @@ namespace proton {
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>
-    int64_t
+    uint32_t
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>
-    uint32_t
+    int64_t
     readAndNext(pn_data_t *, const std::string &, int, bool);
 
     template<>

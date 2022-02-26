@@ -6,8 +6,8 @@
  *
  ******************************************************************************/
 
-template<> const std::string amqp::serializable::Fingerprint<Inner>::val = "Inner123";
-template<> const std::string amqp::serializable::Fingerprint<Outer>::val = "Outer123";
+template<> const std::string amqp::serializable::Fingerprint<Inner>::val = "Inner123"; // NOLINT
+template<> const std::string amqp::serializable::Fingerprint<Outer>::val = "Outer123"; // NOLINT
 
 /******************************************************************************
  *
