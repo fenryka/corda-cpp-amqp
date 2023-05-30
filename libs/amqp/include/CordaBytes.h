@@ -27,7 +27,7 @@ namespace amqp {
             size_t            m_size{};
             char            * m_blob{};
             uPtr<AMQPConfig>  m_config;
-            int               m_header;
+            int               m_version;
 
         public :
             explicit CordaBytes (const std::string &, uPtr<AMQPConfig>);
@@ -44,6 +44,8 @@ namespace amqp {
             [[nodiscard]] decltype (m_size) size() const { return m_size; }
 
             [[nodiscard]] const char * bytes() const { return m_blob; }
+
+            [[nodiscard]]  int version() const { return m_version; }
 
             void toFile (const std::string &) const;
     };

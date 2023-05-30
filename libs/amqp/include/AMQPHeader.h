@@ -34,7 +34,7 @@ namespace amqp {
     };
 
     const std::array<char, 7> AMQP_HEADER_C5 {
-        { 'c', 'o', 'r', 'd', 'a', ' ', ' ' }
+        { 'c', 'o', 'r', 'd', 'a', 4, 0 }
     };
 
     const std::array<std::array<char, 7>, header::AMQP_DEFAULT + 1> AMQP_HEADERS {

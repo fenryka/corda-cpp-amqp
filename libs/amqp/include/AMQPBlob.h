@@ -9,6 +9,7 @@
 #include "schema/SchemaDumpTargets.h"
 
 #include "amqp/src/serialiser/PrimToSerializer.h"
+#include "include/AMQPHeader.h"
 
 /******************************************************************************/
 
@@ -34,7 +35,10 @@ namespace amqp {
 
     class AMQPBlob {
         private :
-           mutable pn_data_t * m_data;
+            /* which version of corda created the file, value should be restricted
+               to those values found in [AMQPHeader.h] */
+            int m_version;
+            mutable pn_data_t * m_data;
 
         protected :
             /*

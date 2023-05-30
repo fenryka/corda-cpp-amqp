@@ -11,7 +11,8 @@ set (amqp-test-sources
         OrderedTypeNotationTest.cxx
         SchemaUtils.cxx
         RoundTripTests.cxx
-        RoundTripListTests.cxx)
+        RoundTripListTests.cxx
+        HeaderTests.cxx)
 
 link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
 

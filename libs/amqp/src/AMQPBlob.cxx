@@ -20,6 +20,7 @@
  */
 amqp::AMQPBlob::AMQPBlob()
     : m_data { pn_data (0) }
+    , m_version { -1 }
 {
 
 }
@@ -28,12 +29,12 @@ amqp::AMQPBlob::AMQPBlob()
 
 amqp::
 AMQPBlob::AMQPBlob (amqp::CordaBytes & cb_)
-    : m_data { pn_data (cb_.size()) }
+    : m_version { cb_.version() }
+    , m_data { pn_data (cb_.size()) }
 {
     // returns how many bytes we processed which right now we don't care
-    // about but I assume there is a case where it doesn't process the
+    // about. However, I assume there is a case where it doesn't process the
     // entire file
-
     auto rtn = pn_data_decode(m_data, cb_.bytes(), cb_.size());
     assert (static_cast<size_t>(rtn) == cb_.size());
 }
@@ -296,7 +297,18 @@ AMQPBlob::dumpContents (amqp::CompositeFactory & cf_) const {
         // can't grab an actual copy of our data pointer
         proton::auto_enter p (m_data, true);
         proton::attest_is_list (m_data, __FILE__, __LINE__);
-        assert (pn_data_get_list (m_data) == 3);
+
+        switch (m_version) {
+            case amqp::header::AMQP_V1 :
+            case amqp::header::AMQP_V2 :
+                assert (pn_data_get_list(m_data) == 3);
+                break;
+            case amqp::header::AMQP_V3 :
+                assert (pn_data_get_list(m_data) == 4);
+                break;
+            default :
+                throw std::runtime_error ("Unknown AMQP HEADER version");
+        }
 
         {
             proton::auto_enter p2 (m_data);
@@ -325,7 +337,7 @@ AMQPBlob::data() const {
 
 void
 amqp::
-AMQPBlob::readyPayload () const {
+AMQPBlob::readyPayload() const {
     DBG (__FUNCTION__ << std::endl);
 
     proton::attest_is_described (m_data, __FILE__, __LINE__);
