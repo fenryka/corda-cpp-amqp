@@ -19,8 +19,8 @@
  * Should only be being invoked by Modifiable Blob
  */
 amqp::AMQPBlob::AMQPBlob()
-    : m_data { pn_data (0) }
-    , m_version { -1 }
+    : m_version { -1 }
+    , m_data { pn_data (0) }
 {
 
 }

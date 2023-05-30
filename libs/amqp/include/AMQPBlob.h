@@ -9,7 +9,7 @@
 #include "schema/SchemaDumpTargets.h"
 
 #include "amqp/src/serialiser/PrimToSerializer.h"
-#include "include/AMQPHeader.h"
+#include "amqp/include/AMQPHeader.h"
 
 /******************************************************************************/
 

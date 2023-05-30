@@ -9,9 +9,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/bin/blob-inspector)
-link_directories (${BLOB-INSPECTOR_BINARY_DIR}/libs/corda-custom-types)
-include_directories (${BLOB-INSPECTOR_BINARY_DIR}/bin/blob-inspector)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/amqp)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/bin/blob-inspector)
+link_directories (${CORDA-AMQP-CPP_BINARY_DIR}/libs/corda-custom-types)
+include_directories (${CORDA-AMQP-CPP_BINARY_DIR}/bin/blob-inspector)
 
 add_executable (${EXE} ${blob-inspector-test-sources})
 
