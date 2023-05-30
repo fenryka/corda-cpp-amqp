@@ -11,7 +11,7 @@ ADD_DEFINITIONS ("-Wall -g -ansi -pedantic")
 # Enable for help debugging the code, will cause verbose output from
 # the code to be enabled
 #
-# ADD_DEFINITIONS ("-DSRC_DEBUG")
+ADD_DEFINITIONS ("-DSRC_DEBUG")
 
 #
 # Set this to true to help debug any issues with cmake

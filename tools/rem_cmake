@@ -10,6 +10,7 @@ function cmake_rem_func {
 
 rm -f BLOB-INSPECTOR.cbp
 rm -rf cmake-build-debug
+rm -rf .cmake
 
 
 for x in `find . -name CMakeFiles -type d`; do

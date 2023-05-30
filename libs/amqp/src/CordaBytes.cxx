@@ -38,7 +38,11 @@ CordaBytes::CordaBytes (const std::string & file_, uPtr<AMQPConfig> config_)
 
 #ifdef SRC_DEBUG
     for (int i { 0 } ; i < 7 ; ++i) {
-        std::cout << header[i] << " " << static_cast<int>(header[i]) << std::endl;
+        std::cout << "'" << amqp::AMQP_HEADERS[i] << "' " << static_cast<int>(amqp::AMQP_HEADERS[i]) << std::endl;
+    }
+
+    for (int i { 0 } ; i < 7 ; ++i) {
+        std::cout << "'" << header[i] << "' " << static_cast<int>(header[i]) << std::endl;
     }
 #endif
 

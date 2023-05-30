@@ -40,7 +40,10 @@ main (int argc, char **argv) {
     }
 
     try {
-        amqp::CordaBytes cb (std::string (argv[1]), std::make_unique<amqp::AMQPConfig>());
+        //amqp::CordaBytes cb (std::string (argv[1]), std::make_unique<amqp::AMQPConfig>());
+        auto config = std::make_unique<amqp::AMQPConfig>();
+        config->ignoreHeader = true;
+        amqp::CordaBytes cb (std::string (argv[1]), std::move(config));
 
         if (cb.encoding() == amqp::DATA_AND_STOP) {
             SchemaDumper schemaDumper (cb);
