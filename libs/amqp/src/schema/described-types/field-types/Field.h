@@ -24,6 +24,11 @@ namespace amqp::internal::schema {
      *   - label     : nullable String
      *   - mandatory : Boolean
      *   - multiple  : Boolean
+     *
+     *   NOTE
+     *  ------
+     *  type - types with a  dollar symble, for example net.corda.v5.crypto.DigitalSignature$WithKeyID,
+     *         are referring to a nested class, where WithKeyID is a nested class (or i nterface)
      */
     class Field : public amqp::schema::ISchemaElement {
         public :

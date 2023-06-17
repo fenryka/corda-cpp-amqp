@@ -233,8 +233,8 @@ namespace {
 /******************************************************************************/
 
 /**
- * Take a aCorda serialized blob and walk the data section of it dumping
- * the contents. Less usful than the schema dumper but a useful debugging
+ * Take a Corda serialized blob and walk the data section of it dumping
+ * the contents. Less useful than the schema dumper but a useful debugging
  * tool none the less
  */
 auto

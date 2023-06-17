@@ -44,6 +44,8 @@ Field::make (
         bool mandatory_,
         bool multiple_
 ) {
+    DBG (" name: " << name_ << ", type: " << type_ << std::endl);
+
     if (typeIsPrimitive (type_)) {
         DBG ("-> primitive" << std::endl); // NOLINT
         return std::make_unique<PrimitiveField>(
@@ -65,8 +67,9 @@ Field::make (
                 multiple_);
 
     } else if (type_ == "*") {
-        DBG ("-> restricted " << name_ << std::endl); // NOLINT
         if (requires_.empty()) {
+            DBG ("-> unknown type, assume custom " << name_ << std::endl); // NOLINT
+
             // Likely to be an internal Java composite type we'll need a
             // custom / plugin serialiser
             return std::make_unique<CustomField>(
@@ -79,22 +82,33 @@ Field::make (
                 multiple_);
         }
         else if (amqp::internal::schema::types::isContainer (requires_.front())) {
-            DBG (name_ << " is a container" << std::endl);
-            return std::make_unique<RestrictedField>(
+                DBG ("-> restricted " << name_ << std::endl); // NOLINT
+
+                return std::make_unique<RestrictedField>(
+                        std::move(name_),
+                        std::move(type_),
+                        std::move(requires_),
+                        std::move(default_),
+                        std::move(label_),
+                        mandatory_,
+                        multiple_);
+        } else {
+
+            return std::make_unique<CompositeField>(
                     std::move (name_),
                     std::move (type_),
                     std::move (requires_),
                     std::move (default_),
+
                     std::move (label_),
                     mandatory_,
                     multiple_);
-        } else {
-            throw std::runtime_error ("THIS IS BAD");
-        }
+       }
     } else {
-        auto name = types::listType (type_);
+//        auto name = types::listType (type_);
 
-        DBG ("-> composite" << std::endl); // NOLINT
+//        DBG ("-> composite (" << name.first << ", " << name.second << ")" << std::endl); // NOLINT
+
         return std::make_unique<CompositeField>(
                 std::move (name_),
                 std::move (type_),

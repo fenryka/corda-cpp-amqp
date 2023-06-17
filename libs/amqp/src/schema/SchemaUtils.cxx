@@ -2,6 +2,7 @@
 
 #include <map>
 #include <vector>
+#include <stdexcept>
 
 /******************************************************************************/
 
@@ -56,6 +57,10 @@ std::pair<std::string, std::string>
 amqp::internal::schema::types::
 listType (const std::string & list_) {
     auto pos = list_.find ('<');
+
+    if (pos == std::string::npos) {
+        throw std::runtime_error ("not a list type");
+    }
 
     return std::make_pair (
             std::string { types::unbox (list_.substr (0, pos)) },

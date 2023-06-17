@@ -16,8 +16,12 @@ namespace amqp::internal::schema {
                 std::string, std::string, bool, bool);
 
             [[nodiscard]] Type AMQPType() const override;
+            /**
+             * What fundamental type is this, composite, restricted, etc
+             * @return
+             */
             [[nodiscard]] const std::string & fieldType() const override;
-            [[nodiscard]] const std::string & resolvedType() const override;
+            [[nodiscard]] const std::set resolvedType() const override;
     };
 
 }
