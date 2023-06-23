@@ -84,8 +84,8 @@ namespace amqp::internal::schema {
 template<class T>
 std::ostream &
 operator << (
-        std::ostream &stream_,
-        const amqp::internal::schema::OrderedTypeNotations<T> &otn_
+        std::ostream & stream_,
+        const amqp::internal::schema::OrderedTypeNotations<T> & otn_
 ) {
     int idx1 {0};
     for (const auto &i : otn_.m_schemas) {

@@ -118,6 +118,9 @@ CompositeFactoryInternal::process (
                 case schema::AMQPTypeNotation::restricted_t : {
                     return processRestricted (schema_);
                 }
+                default: {
+                    throw std::runtime_error("TYPE FAIL");
+                }
             }
         });
 }
@@ -144,8 +147,8 @@ CompositeFactoryInternal::processComposite (
 
     for (const auto & field : fields) {
         DBG ("  Field: " << field->name() << ": \"" << field->type()
-            << "\" {" << field->resolvedType()[0] << "} "
-            << field->fieldType() << std::endl); // NOLINT
+            << "\" {" << field->resolvedType() << "} "
+            << field->AMQPType() << std::endl); // NOLINT
 
         decltype (m_serialisersByType)::mapped_type serialiser;
 

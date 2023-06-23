@@ -6,13 +6,6 @@
 
 /******************************************************************************/
 
-const std::string
-amqp::internal::schema::CompositeField::m_fieldType {
-        "composite"
-};
-
-/******************************************************************************/
-
 amqp::internal::schema::
 CompositeField::CompositeField (
         std::string name_,
@@ -46,16 +39,9 @@ CompositeField::AMQPType() const {
 
 const std::string &
 amqp::internal::schema::
-CompositeField::fieldType() const {
-    return m_fieldType;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::schema::
-CompositeField::resolvedType() const {
+CompositeField::resolvedType() const  {
     return type();
 }
 
 /******************************************************************************/
+

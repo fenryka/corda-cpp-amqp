@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 #include <iostream>
-#include <amqp/include/schema/ISchema.h>
 
+#include "amqp/include/schema/ISchema.h"
 #include "amqp/include/schema/SchemaDumpTargets.h"
 
 /******************************************************************************

@@ -45,10 +45,10 @@ ArrayField::resolvedType() const {
 
 /******************************************************************************/
 
-const std::string &
+amqp::internal::schema::Field::Type
 amqp::internal::schema::
-ArrayField::fieldType() const {
-    return m_fieldType;
+ArrayField::AMQPType() const {
+    return array_t;
 }
 
 /******************************************************************************/

@@ -181,7 +181,7 @@ Field::type() const {
 
 /******************************************************************************/
 
-const std::string &
+[[maybe_unused]] const std::string &
 amqp::internal::schema::
 Field::label() const {
     return m_label;
@@ -197,3 +197,10 @@ Field::requires() const {
 
 /******************************************************************************/
 
+std::ostream &
+operator << (std::ostream& os, const amqp::internal::schema::Field::Type & obj) {
+    os << "write me";
+    return os;
+}
+
+/******************************************************************************/

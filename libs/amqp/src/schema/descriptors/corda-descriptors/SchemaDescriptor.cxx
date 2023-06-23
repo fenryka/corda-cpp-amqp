@@ -16,7 +16,7 @@
 
 #include <sstream>
 #include <cassert>
-#include <amqp/src/schema/descriptors/Descriptors.h>
+#include "amqp/src/schema/descriptors/Descriptors.h"
 
 /******************************************************************************/
 
@@ -52,7 +52,7 @@ SchemaDescriptor::build (pn_data_t * data_) const {
                     descriptors::dispatchDescribed<schema::AMQPTypeNotation> (
                         data_));
 
-                DBG("=======" << std::endl << schemas << "======" << std::endl); // NOLINT
+//                DBG("=======" << std::endl << schemas << "======" << std::endl); // NOLINT
             }
         }
     }

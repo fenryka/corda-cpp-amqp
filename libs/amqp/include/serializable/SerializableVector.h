@@ -130,9 +130,13 @@ namespace amqp::serializable {
 #endif
 
             /*
+             * XXX
+             */
             std::vector<std::any> rtn;
+            /*
             rtn.template emplace_back (v);
              */
+           return rtn;
         }
     };
 }

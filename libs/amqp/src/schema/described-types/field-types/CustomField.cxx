@@ -2,13 +2,6 @@
 
 /******************************************************************************/
 
-const std::string
-amqp::internal::schema::CustomField::m_fieldType { // NOLINT
-    "custom"
-};
-
-/******************************************************************************/
-
 amqp::internal::schema::
 CustomField::CustomField (
     std::string name_,
@@ -35,14 +28,6 @@ amqp::internal::schema::Field::Type
 amqp::internal::schema::
 CustomField::AMQPType() const {
     return custom_t;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::schema::
-CustomField::fieldType() const {
-    return m_fieldType;
 }
 
 /******************************************************************************/

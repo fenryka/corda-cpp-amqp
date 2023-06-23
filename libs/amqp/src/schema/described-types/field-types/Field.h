@@ -1,11 +1,15 @@
 #pragma once
 
+#ifndef __FIELD_H__
+#define __FIELD_H__
+
 /******************************************************************************/
 
 #include "amqp/src/schema/described-types/Descriptor.h"
 
 #include "corda-utils/include/types.h"
 
+#include <set>
 #include <list>
 #include <string>
 #include <iosfwd>
@@ -27,8 +31,8 @@ namespace amqp::internal::schema {
      *
      *   NOTE
      *  ------
-     *  type - types with a  dollar symble, for example net.corda.v5.crypto.DigitalSignature$WithKeyID,
-     *         are referring to a nested class, where WithKeyID is a nested class (or i nterface)
+     *  type - types with a  dollar symbol, for example net.corda.v5.crypto.DigitalSignature$WithKeyID,
+     *         are referring to a nested class, where WithKeyID is a nested class (or interface)
      */
     class Field : public amqp::schema::ISchemaElement {
         public :
@@ -40,7 +44,7 @@ namespace amqp::internal::schema {
                 std::string, std::string, std::list<std::string>,
                 std::string, std::string, bool, bool);
 
-            enum Type { composite_t, restricted_t, primitive_t, custom_t };
+            enum Type { composite_t, restricted_t, array_t, primitive_t, custom_t };
 
     private :
             std::string            m_name;
@@ -60,11 +64,23 @@ namespace amqp::internal::schema {
         public :
             [[nodiscard]] const std::string & name() const;
             [[nodiscard]] const std::string & type() const;
-            [[nodiscard]] const std::string & label() const;
+
+            [[maybe_unused]] [[nodiscard]] const std::string & label() const;
             [[nodiscard]] const std::list<std::string> & requires() const;
 
+            /**
+             * Is the field composite, restricted etc
+             * @return
+             */
             [[nodiscard]] virtual Type AMQPType() const = 0;
-            [[nodiscard]] virtual const std::string & fieldType() const = 0;
+
+            /**
+             * Resole from the header what type the field is. If named in the schema
+             * then its trivial, its the named type. If it's a wildcard though
+             * we have to work out what it might be based on the interfaces it requires
+             *
+             * @return
+             */
             [[nodiscard]] virtual const std::string & resolvedType() const = 0;
     };
 
@@ -72,3 +88,9 @@ namespace amqp::internal::schema {
 
 /******************************************************************************/
 
+std::ostream &
+operator << (std::ostream& os, const amqp::internal::schema::Field::Type & obj);
+
+/******************************************************************************/
+
+#endif

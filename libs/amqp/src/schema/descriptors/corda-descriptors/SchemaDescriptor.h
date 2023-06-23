@@ -1,6 +1,6 @@
 #pragma once
 
-#include "descriptors/AMQPDescriptor.h"
+#include "amqp/src/schema/descriptors/AMQPDescriptor.h"
 
 /******************************************************************************/
 
@@ -28,7 +28,8 @@ namespace amqp::internal::schema::descriptors {
                 std::stringstream &,
                 const AutoIndent &) const override;
 
-        [[nodiscard]] static pn_data_t * makeProton (
+        [[nodiscard]]
+        static pn_data_t * makeProton (
                 const std::vector<pn_data_t *> &);
     };
 

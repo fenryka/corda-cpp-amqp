@@ -16,7 +16,6 @@ namespace amqp::internal::schema {
                 std::string, bool, bool);
 
             [[nodiscard]] Type AMQPType() const override;
-            [[nodiscard]] const std::string & fieldType() const override;
             [[nodiscard]] const std::string & resolvedType() const override;
     };
 

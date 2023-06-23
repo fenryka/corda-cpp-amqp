@@ -1,5 +1,7 @@
 #pragma once
 
+#include <set>
+
 #include "Field.h"
 
 /******************************************************************************/
@@ -20,8 +22,7 @@ namespace amqp::internal::schema {
              * What fundamental type is this, composite, restricted, etc
              * @return
              */
-            [[nodiscard]] const std::string & fieldType() const override;
-            [[nodiscard]] const std::set resolvedType() const override;
+            [[nodiscard]] const std::string & resolvedType() const override;
     };
 
 }

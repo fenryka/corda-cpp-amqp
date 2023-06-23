@@ -4,13 +4,6 @@
 
 /******************************************************************************/
 
-const std::string
-amqp::internal::schema::RestrictedField::m_fieldType { // NOLINT
-    "restricted"
-};
-
-/******************************************************************************/
-
 amqp::internal::schema::
 RestrictedField::RestrictedField (
     std::string name_,
@@ -42,14 +35,6 @@ amqp::internal::schema::Field::Type
 amqp::internal::schema::
 RestrictedField::AMQPType() const {
     return restricted_t;
-}
-
-/******************************************************************************/
-
-const std::string &
-amqp::internal::schema::
-RestrictedField::fieldType() const {
-    return m_fieldType;
 }
 
 /******************************************************************************/
